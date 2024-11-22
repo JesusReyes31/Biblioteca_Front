@@ -20,7 +20,7 @@ body.loading{
     display: none; /* Oculta el contenido principal */
 }
 /* cambiar el estilo del scroll */
-body::-webkit-scrollbar{
+body::-webkit-scrollbar,.navbar-lateral::-webkit-scrollbar{
     width: 7px;
 }
 

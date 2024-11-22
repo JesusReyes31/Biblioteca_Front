@@ -95,7 +95,10 @@ export class CambiarInformacionComponent {
   updateUserInfo(): void {
     this.userService.updateUserInfo(this.userData).subscribe({
       next: (response) => {
-        console.log('Información actualizada exitosamente');
+        if(response.message==='Información actualizada exitosamente'){
+          console.log('Información actualizada exitosamente');
+          this.sweetalert.showReload(response.message);
+        } 
       },
       error: (error) => {
         console.error('Error al actualizar la información:', error);

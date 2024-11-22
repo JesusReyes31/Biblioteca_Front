@@ -22,7 +22,7 @@ export class UsersService {
 
   updateUserInfo(userData: any): Observable<any> {
     const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
-    return this.http.put(`${this.apiUrl}/users/profile`, userData,{headers});
+    return this.http.put(`${this.apiUrl}users/${sessionStorage.getItem('ID_Uss')}`, userData,{headers});
   }
 
   updateUserImage(id: number, imageData: any): Observable<any> {

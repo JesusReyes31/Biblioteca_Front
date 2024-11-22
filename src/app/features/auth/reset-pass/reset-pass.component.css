@@ -112,5 +112,20 @@
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
-    font-size: 18px; /* Ajusta el tamaño del ícono */
+    display: flex;
+    align-items: center;
+    
+    svg {
+      fill: currentColor;
+      color: #666; 
+      
+      &:hover {
+        color: #333;
+      }
+    }
+  }
+
+  .input-container {
+    position: relative;
+    width: 100%;
   }
