@@ -17,6 +17,8 @@ export class CambiarInformacionComponent {
   selectedFile: File | null = null;
   sucursalInfo: any = null;
   userTypes = ['Admin', 'Sucursal', 'Prestamos', 'Inventario'];
+  newPasswordVisible: boolean = false;
+  confirmPasswordVisible: boolean = false;
   constructor(private userService:UsersService,private fb:FormBuilder,private sweetalert:SweetalertService) {}
 
   ngOnInit(): void {
@@ -27,8 +29,11 @@ export class CambiarInformacionComponent {
     this.userService.getUserInfo().subscribe({
       next: (data) => {
         this.userData = data;
+        if(this.userData.Imagen!==null){
+          sessionStorage.setItem('Imagen',this.userData.Imagen);
+        }
         // Si el usuario es de alguno de los tipos especificados, obtener info de sucursal
-        if (this.userTypes.includes(this.userData.Tipo_Usuario)) {
+        if (this.userData.Tipo_Usuario==='Admin Sucursal') {
           this.getSucursalInfo();
         }
       },
@@ -42,7 +47,8 @@ export class CambiarInformacionComponent {
   getSucursalInfo(): void {
     this.userService.getSucursal().subscribe({
       next: (data) => {
-        this.sucursalInfo = data;
+        this.sucursalInfo = data[0];
+        console.log(this.sucursalInfo)
       },
       error: (error) => {
         console.error('Error al obtener información de la sucursal:', error);
@@ -75,7 +81,8 @@ export class CambiarInformacionComponent {
 
       this.userService.updateUserImage(this.userData.ID, formData).subscribe({
         next: (response) => {
-          this.sweetalert.showNoReload('Imagen actualizada exitosamente');
+          console.log(response)
+          this.sweetalert.showReload('Imagen actualizada exitosamente');
           this.getUserInfo();
         },
         error: (error) => {
@@ -98,21 +105,31 @@ export class CambiarInformacionComponent {
 
   updatePassword(): void {
     if (this.userData.newPassword !== this.userData.confirmPassword) {
-      console.error('Las contraseñas no coinciden');
+      this.sweetalert.showNoReload('Las contraseñas no coinciden');
       return;
     }
-
+    console.log(this.userData.newPassword)
     this.userService.updatePassword({
-      newPassword: this.userData.newPassword
+      Password: this.userData.newPassword
     }).subscribe({
       next: (response) => {
-        console.log('Contraseña actualizada exitosamente');
-        this.userData.newPassword = '';
-        this.userData.confirmPassword = '';
+        if(response.message==='Contraseña actualizada exitosamente'){
+          this.sweetalert.showReload(response.message);
+          this.userData.newPassword = '';
+          this.userData.confirmPassword = '';
+        }
       },
       error: (error) => {
         console.error('Error al actualizar la contraseña:', error);
       }
     });
+  }
+
+  toggleNewPasswordVisibility() {
+    this.newPasswordVisible = !this.newPasswordVisible;
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.confirmPasswordVisible = !this.confirmPasswordVisible;
   }
 }

@@ -13,10 +13,23 @@
               [type]="passwordVisible ? 'text' : 'password'" 
               [(ngModel)]="Contra" 
               placeholder="Contraseña" 
+              aria-label="Contraseña"
             />
-            <span class="toggle-password" (click)="togglePasswordVisibility()">
-              <i class="zmdi zmdi-eye"></i>
-            </span>
+            <button 
+              type="button"
+              class="toggle-password" 
+              (click)="togglePasswordVisibility()"
+              [attr.aria-label]="passwordVisible ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+              tabindex="0"
+            >
+              <svg *ngIf="!passwordVisible" viewBox="0 0 24 24" width="24" height="24">
+                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+              </svg>
+              <svg *ngIf="passwordVisible" viewBox="0 0 24 24" width="24" height="24">
+                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                <path d="M2 2L22 22" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </button>
           </div>             
         </div>
         <button type="submit" (click)="ingresar()" class="login-button">INGRESAR</button>

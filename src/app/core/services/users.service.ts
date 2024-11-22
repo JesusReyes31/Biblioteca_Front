@@ -32,7 +32,7 @@ export class UsersService {
 
   updatePassword(passwordData: any): Observable<any> {
     const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
-      return this.http.put(`${this.apiUrl}/users/profile/password`, passwordData,{headers});
+      return this.http.put(`${this.apiUrl}users/cambiar/contra/${sessionStorage.getItem('ID_Uss')}`, passwordData,{headers});
   }
   //Traer la sucursal del usuario
   getSucursal(): Observable<any> {

@@ -103,25 +103,53 @@
   .password-container input[type="password"],
   .password-container input[type="text"] {
     width: 100%;
-    padding-right: 30px; /* Ajusta el espacio para el icono */
+    padding: 12px 40px 12px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+  }
+  
+  .password-container input:focus {
+    outline: none;
+    border-color: #7f5af0;
   }
   
   .toggle-password {
     position: absolute;
-    right: 10px;
+    right: 12px;
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
-    color: #666;
     display: flex;
     align-items: center;
-  }
-  
-  .toggle-password i {
-    font-size: 16px;
+    opacity: 0.6;
+    transition: opacity 0.3s;
+    background: none;
+    border: none;
+    padding: 4px;
   }
   
   .toggle-password:hover {
+    opacity: 1;
+  }
+  
+  .toggle-password:focus {
+    outline: none;
+  }
+  
+  .toggle-password:focus svg {
+    outline: 2px solid #7f5af0;
+    border-radius: 4px;
+  }
+  
+  .toggle-password svg {
+    fill: currentColor;
+    color: #666;
+    transition: all 0.3s;
+  }
+  
+  .toggle-password:hover svg {
     color: #7f5af0;
   }
   

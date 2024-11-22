@@ -24,11 +24,10 @@ export class LoginComponent {
     setTimeout(() => document.body.classList.remove('loading'), 500);
   }
 
-  passwordVisible: boolean = false; // Propiedad para controlar la visibilidad de la contraseña
-  password: string = ''; // Propiedad para enlazar con el ngModel del input
+  passwordVisible: boolean = false;
 
   togglePasswordVisibility() {
-    this.passwordVisible = !this.passwordVisible; // Alterna el valor de passwordVisible entre true y false
+    this.passwordVisible = !this.passwordVisible;
   }
   ingresar(){
     const loginData = {
