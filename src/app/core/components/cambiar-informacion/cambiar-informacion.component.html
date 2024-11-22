@@ -1,0 +1,60 @@
+<div class="cont-prof">
+  <h1>{{userData.Nombre_Usuario || 'NOMBRE DE USUARIO'}}</h1>
+  
+  <div class="profile-section">
+    <div class="profile-image">
+      <img [src]="userData.Imagen || 'assets/imgs/user.png'" alt="Foto de perfil">
+    </div>
+    
+    <div class="image-buttons">
+      <input type="file" (change)="onFileSelected($event)" style="display: none" #fileInput>
+      <button class="btn-gray" (click)="fileInput.click()">Subir Imagen de Usuario</button>
+      <button class="btn-gray" (click)="uploadImage()">Actualizar Imagen</button>
+    </div>
+  </div>
+
+  <div class="info-section">
+    <h2>INFORMACIÓN GENERAL</h2>
+    
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Nombre Completo</label>
+        <input type="text" [(ngModel)]="userData.Nombre_completo" name="nombreCompleto">
+      </div>
+      
+      <div class="form-group">
+        <label>CURP</label>
+        <span class="span">{{userData.CURP || 'No aplica'}}</span>
+      </div>
+      
+      <div class="form-group">
+        <label>Correo</label>
+        <span class="span">{{userData.Correo || 'No aplica'}}</span>
+      </div>
+      
+      <div class="form-group">
+        <label>Sucursal</label>
+        <span class="span">{{sucursalInfo?.Nombre_Sucursal || 'No aplica'}}</span>
+    </div>
+
+    <button class="btn-gray" (click)="updateUserInfo()">Actualizar Datos</button>
+  </div>
+
+  <div class="password-section">
+    <h2>CAMBIAR CONTRASEÑA</h2>
+    
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Nueva Contraseña</label>
+        <input type="password" [(ngModel)]="userData.newPassword" name="newPassword">
+      </div>
+      
+      <div class="form-group">
+        <label>Confirmar nueva Contraseña</label>
+        <input type="password" [(ngModel)]="userData.confirmPassword" name="confirmPassword">
+      </div>
+    </div>
+
+    <button class="btn-gray" (click)="updatePassword()">Actualizar Contraseña</button>
+  </div>
+</div>

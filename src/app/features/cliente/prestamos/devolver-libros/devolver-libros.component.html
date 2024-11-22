@@ -1,0 +1,19 @@
+<div class="devolver-container">
+    <div class="devolver-card">
+      <h2>DEVOLVER LIBRO</h2>
+      
+      <div class="input-group">
+        <label for="idLibro">ID Libro</label>
+        <input 
+          type="text" 
+          id="idLibro"
+          [(ngModel)]="idLibro" 
+          placeholder="Ingrese el ID del libro"
+        >
+      </div>
+  
+      <button class="btn-devolver" (click)="onDevolver()">
+        Devolver
+      </button>
+    </div>
+  </div>

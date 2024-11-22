@@ -1,0 +1,80 @@
+<div class="content-container">
+    <div class="search-bar">
+      <input
+        type="text"
+        placeholder="Buscar por ID, Título, Fecha Préstamo..."
+        [(ngModel)]="searchTerm"
+        (input)="filterPrestamos()"
+      />
+    </div>
+  
+    <div class="pagination">
+      <div class="pagination-info">
+        Mostrando {{ startIndex + 1 }} - {{ endIndex }} de {{ filteredPrestamos.length }} registros
+      </div>
+      <div class="pagination-controls">
+        <button 
+          [disabled]="currentPage === 0"
+          (click)="changePage(currentPage - 1)"
+          class="pagination-button">
+          Anterior
+        </button>
+        
+        <div class="pagination-pages">
+          <button 
+            *ngFor="let page of getPages()"
+            [class.active]="page === currentPage"
+            (click)="changePage(page)"
+            class="pagination-number">
+            {{ page + 1 }}
+          </button>
+        </div>
+  
+        <button 
+          [disabled]="currentPage >= totalPages - 1"
+          (click)="changePage(currentPage + 1)"
+          class="pagination-button">
+          Siguiente
+        </button>
+      </div>
+    
+      <div class="pagination-size">
+        <label>Registros por página:</label>
+        <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+          <option [value]="5">5</option>
+          <option [value]="10">10</option>
+          <option [value]="25">25</option>
+          <option [value]="50">50</option>
+        </select>
+      </div>
+    </div>
+  
+    <div *ngIf="paginatedPrestamos.length > 0; else noRecords">
+      <table class="loan-history-table">
+        <thead>
+          <tr>
+            <th>NOMBRE DE USUARIO</th>
+            <th>TITULO LIBRO</th>
+            <th>FECHA PRÉSTAMO</th>
+            <th>FECHA DEVOLUCIÓN</th>
+            <th>ESTADO</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let prestamo of paginatedPrestamos">
+            <td>{{ prestamo.Nombre_Usuario }}</td>
+            <td>{{ prestamo.Titulo }}</td>
+            <td>{{ prestamo.Fecha_prestamo }}</td>
+            <td>{{ prestamo.Fecha_devolucion_prevista }}</td>
+            <td>{{ prestamo.Estado }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <ng-template #noRecords>
+      <p>No se encontraron registros.</p>
+    </ng-template>
+  
+    <button class="export-button">Exportar</button>
+  </div>

@@ -1,0 +1,127 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+  
+  .login-container {
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    background-color: #f3f3f3;
+  }
+  
+  .login-background {
+    background-image: url('../../../../../public/assets/imgs/Login.jpg');
+    background-size: cover;
+    background-position: center;
+    width: 60%;
+    height: 100%;
+  }
+  
+  .login-form {
+    width: 40%;
+    height: 100%;
+    padding: 50px;
+    padding-top: 8%;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+  }
+  .login-form *{
+    margin-bottom: 20px;
+  }
+  
+  .login-form h1 {
+    font-size: calc(16px + 2vw);
+  }
+  
+  .login-form a {
+    font-size: calc(6px + 0.8vw);
+    color: #666;
+    margin-bottom: 30px;
+  }
+  
+  .input-group {
+    position: relative;
+    width: 100%;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 10px 40px 10px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .login-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #7f5af0;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .login-button:hover {
+    background-color: #6c4ed9;
+  }
+  
+  .forgot-password,
+  .register-link {
+    font-size: 14px;
+  }
+  
+  .forgot-password {
+    cursor: pointer;
+    color: #666;
+    text-decoration: none;
+  }
+  
+  .register-link {
+    color: #666;
+  }
+  
+  .register-link a {
+    color: #7f5af0;
+    text-decoration: none;
+  }
+
+
+  .password-container {
+    position: relative;
+    width: 100%;
+  }
+  
+  .password-container input[type="password"],
+  .password-container input[type="text"] {
+    width: 100%;
+    padding-right: 30px; /* Ajusta el espacio para el icono */
+  }
+  
+  .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #666;
+    display: flex;
+    align-items: center;
+  }
+  
+  .toggle-password i {
+    font-size: 16px;
+  }
+  
+  .toggle-password:hover {
+    color: #7f5af0;
+  }
+  

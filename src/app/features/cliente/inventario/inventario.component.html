@@ -1,0 +1,183 @@
+<section class="inventario-contenedor">
+  <form [formGroup]="bookForm" (ngSubmit)="addBook()">
+    <div class="fila">
+      <div class="campo">
+        <label for="idLibro">ID Libro</label>
+        <input id="idLibro" formControlName="ID" type="text" required />
+      </div>
+      <div class="campo">
+        <label for="Titulo">Título</label>
+        <input id="Titulo" formControlName="Titulo" type="text" required />
+      </div>
+    </div>
+  
+    <div class="campo">
+      <label for="Autor">Autor</label>
+      <input id="Autor" formControlName="Autor" type="text" />
+    </div>
+  
+    <div class="fila">
+      <div class="campo">
+        <label for="Genero">Género</label>
+        <select id="Genero" formControlName="Genero" required>
+          <option value="">Seleccione</option>
+          <option *ngFor="let genero of generos" [value]="genero">{{ genero }}</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </div>
+  
+      <div *ngIf="bookForm.get('Genero')?.value === 'Otro'" class="campo">
+        <label for="OtroGenero">Ingrese otro género</label>
+        <input id="OtroGenero" formControlName="OtroGenero" type="text" placeholder="Ingrese género" />
+      </div>
+    </div>
+  
+    <div class="fila">
+      <div class="campo">
+        <label for="ISBN">ISBN</label>
+        <input id="ISBN" formControlName="ISBN" type="text" required />
+      </div>
+  
+      <div class="campo">
+        <label for="Anio">Año de Publicación</label>
+        <input id="Anio" formControlName="Anio_publicacion" type="number" required max="2024" />
+      </div>
+    </div>
+  
+    <div class="fila">
+      <div class="campo">
+        <label for="Cantidad">Cantidad</label>
+        <input id="Cantidad" formControlName="Cantidad" type="number" required />
+      </div>
+  
+      <div class="campo">
+        <label for="Precio">Precio</label>
+        <input id="Precio" formControlName="Precio" type="number" required step="0.01" />
+      </div>
+    </div>
+  
+    <div class="campo">
+      <label for="Resumen">Resumen</label>
+      <textarea id="Resumen" formControlName="Resumen" required></textarea>
+    </div>
+  
+    <div class="fila">
+      <div class="campo cont-img">
+        <label for="Imagen">Imagen</label>
+        <input id="Imagen" type="file" (change)="onFileChange($event)" formControlName="Imagen" required accept=".png,.jpg,.jpeg" />
+        <div class="img-cont" *ngIf="bookForm.get('ImagenURL')?.value">
+          <img [src]="bookForm.get('ImagenURL')?.value" alt="Imagen cargada" width="200" />
+        </div>
+      </div>
+  
+      <div class="campo">
+        <label for="Sucursal">Sucursal</label>
+        <select id="Sucursal" formControlName="ID_Sucursal" required>
+          <option value="">Seleccione</option>
+          <option *ngFor="let sucursal of sucursales" [value]="sucursal.ID">
+            {{ sucursal.Nombre }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="botones">
+      <button type="submit">
+          <i class="fas fa-user-plus"></i> Registrar
+      </button>
+      <button type="button" (click)="deleteBook()">
+          <i class="fas fa-user-minus"></i> Eliminar
+      </button>
+      <button type="button" (click)="updateBook()">
+          <i class="fas fa-user-edit"></i> Modificar
+      </button>
+      <button type="button" (click)="clearForm()">
+          <i class="fas fa-broom"></i> Limpiar
+      </button>
+  </div>
+  </form>  
+</section>
+<div class="content-container">
+  <!-- Barra de búsqueda -->
+  <div class="search-bar">
+    <input
+      type="text"
+      placeholder="Buscar por ID, Título, Autor..."
+      [(ngModel)]="searchTerm"
+      (input)="filterRecords()"
+    />
+  </div>
+    
+    <!-- Paginación personalizada -->
+  <div class="pagination">
+    <div class="pagination-info">
+      Mostrando {{ startIndex + 1 }} - {{ endIndex }} de {{ paginatedRecords.length }} registros
+    </div>
+    <div class="pagination-controls">
+      <button 
+        [disabled]="currentPage === 0"
+        (click)="changePage(currentPage - 1)"
+        class="pagination-button">
+        Anterior
+      </button>
+      
+      <div class="pagination-pages">
+        <button 
+          *ngFor="let page of getPages()"
+          [class.active]="page === currentPage"
+          (click)="changePage(page)"
+          class="pagination-number">
+          {{ page + 1 }}
+        </button>
+      </div>
+
+      <button 
+        [disabled]="currentPage >= totalPages - 1"
+        (click)="changePage(currentPage + 1)"
+        class="pagination-button">
+        Siguiente
+      </button>
+    </div>
+  
+    <div class="pagination-size">
+      <label>Registros por página:</label>
+      <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+        <option [value]="5">5</option>
+        <option [value]="10">10</option>
+        <option [value]="25">25</option>
+        <option [value]="50">50</option>
+      </select>
+    </div>
+  </div>
+    <!-- Tabla de resultados -->
+  <div *ngIf="paginatedRecords.length > 0; else noRecords">
+    <table class="loan-history-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>TÍTULO</th>
+          <th>AUTOR</th>
+          <th>GÉNERO</th>
+          <th>ISBN</th>
+          <th>AÑO</th>
+          <th>RESUMEN</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let record of paginatedRecords" (click)="selectRow(record)">
+          <td>{{ record.ID }}</td>
+          <td>{{ record.Titulo }}</td>
+          <td>{{ record.Autor }}</td>
+          <td>{{ record.Genero }}</td>
+          <td>{{ record.ISBN }}</td>
+          <td>{{ record.Anio_publicacion }}</td>
+          <td>{{ truncateText(record.Resumen, 50) }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- Mensaje cuando no hay registros -->
+  </div>
+  <ng-template #noRecords>
+    <p>No se encontraron registros.</p>
+  </ng-template>
+</div>

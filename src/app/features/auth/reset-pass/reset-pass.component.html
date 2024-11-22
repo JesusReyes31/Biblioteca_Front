@@ -1,0 +1,35 @@
+<div class="login-container">
+    <div class="login-form">
+        <h1>CAMBIE CONTRASEÑA</h1>
+        <div>
+            <div class="input-group">
+                <div class="password-container">
+                    <input 
+                    [type]="passwordVisible1 ? 'text' : 'password'" 
+                    [(ngModel)]="Contra1" 
+                    placeholder="Contraseña" 
+                    />
+                    <span class="toggle-password" (click)="togglePasswordVisibility1()">
+                    {{ passwordVisible1 ? '🙈' : '👁️' }}
+                    
+                    </span>
+                </div>
+            </div>
+            <div class="input-group">    
+                <div class="password-container">
+                    <input 
+                    [type]="passwordVisible2 ? 'text' : 'password'" 
+                    [(ngModel)]="Contra2" 
+                    placeholder="Confirmar Contraseña" 
+                    />
+                    <span class="toggle-password" (click)="togglePasswordVisibility2()">
+                    {{ passwordVisible2 ? '🙈' : '👁️' }}
+                    
+                    </span>
+                </div>      
+            </div>
+        </div>
+        <button type="submit" (click)="cambiar()" class="login-button">Cambiar Contraseña</button>
+    </div>
+    <div class="login-background"></div>
+  </div>

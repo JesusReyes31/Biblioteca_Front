@@ -1,0 +1,146 @@
+<section class="inventario-contenedor">
+  <form class="formulario" [formGroup]="userForm" (ngSubmit)="addUser()">
+    <div class="fila">
+      <div class="campo">
+        <label for="ID">ID de usuario</label>
+        <input id="ID" formControlName="ID" type="number" min="1"autocomplete="off"/>
+      </div>
+      <div class="campo">
+        <label for="Tipo_Usuario">Tipo de Usuario</label>
+        <select id="Tipo_Usuario" formControlName="Tipo_Usuario" required>
+          <option value="">Seleccione una opción</option>
+          <option *ngFor="let usuario of typeusers" [value]="usuario">
+            {{ usuario }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="campo">
+      <label for="Nombre_completo">Nombre Completo</label>
+      <input id="Nombre_completo" formControlName="Nombre_completo" type="text" required autocomplete="off"/>
+    </div>
+    <div class="fila">
+      <div class="campo">
+        <label for="CURP">CURP</label>
+        <input id="CURP" formControlName="CURP" type="text" required autocomplete="off"/>
+      </div>
+  
+      <div class="campo">
+        <label for="Nombre_Usuario">Nombre de Usuario</label>
+        <input id="Nombre_Usuario" formControlName="Nombre_Usuario" type="text" required autocomplete="off"/>
+      </div>
+    </div>
+    <div class="campo">
+      <label for="Correo">Correo</label>
+      <input id="Correo" formControlName="Correo" type="text" required autocomplete="off"/>
+    </div>
+
+    <div class="campo">
+      <label for="Contra">Contraseña</label>
+      <input id="Contra" formControlName="Contra" type="text" autocomplete="off"/>
+    </div>
+  
+    <div class="botones">
+      <button type="submit">
+          <i class="fas fa-user-plus"></i> Registrar
+      </button>
+      <button type="button" (click)="deleteUser()">
+          <i class="fas fa-user-minus"></i> Eliminar
+      </button>
+      <button type="button" (click)="updateUser()">
+          <i class="fas fa-user-edit"></i> Modificar
+      </button>
+      <button type="button" (click)="clearForm()">
+          <i class="fas fa-broom"></i> Limpiar
+      </button>
+  </div>
+  </form>  
+</section>
+<div class="content-container">
+<!-- Barra de búsqueda -->
+  <div class="search-bar">
+    <input
+      type="text"
+      placeholder="Buscar por ID, Nombre completo, Correo, Nombre de Usuario,..."
+      [(ngModel)]="searchTerm"
+      (input)="filterRecords()"
+      autocomplete="off"
+    />
+  </div>
+
+    <!-- Agregar la paginación -->
+  <div class="pagination">
+    <div class="pagination-info">
+      Mostrando {{ startIndex + 1 }} - {{ endIndex }} de {{ filteredRecords.length }} registros
+    </div>
+    <div class="pagination-controls">
+      <button 
+        [disabled]="currentPage === 0"
+        (click)="changePage(currentPage - 1)"
+        class="pagination-button"
+      >
+        Anterior
+      </button>
+      
+      <div class="pagination-pages">
+        <button 
+          *ngFor="let page of getPages()"
+          [class.active]="page === currentPage"
+          (click)="changePage(page)"
+          class="pagination-number"
+        >
+          {{ page + 1 }}
+        </button>
+      </div>
+
+      <button 
+        [disabled]="currentPage >= totalPages - 1"
+        (click)="changePage(currentPage + 1)"
+        class="pagination-button"
+      >
+        Siguiente
+      </button>
+    </div>
+
+    <div class="pagination-size">
+      <label>Registros por página:</label>
+      <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+        <option [value]="5">5</option>
+        <option [value]="10">10</option>
+        <option [value]="25">25</option>
+        <option [value]="50">50</option>
+      </select>
+    </div>
+  </div> 
+
+  <!-- Tabla de resultados -->
+  <div *ngIf="filteredRecords.length > 0; else noRecords">
+    <table class="loan-history-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>NOMBRE COMPLETO</th>
+          <th>CORREO</th>
+          <th>CURP</th>
+          <th>NOMBRE DE USUARIO</th>
+          <th>TIPO DE USUARIO</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of paginatedRecords" (click)="selectRow(user)">
+          <td>{{ user.ID }}</td>
+          <td>{{ user.Nombre_completo }}</td>
+          <td>{{ user.Correo }}</td>
+          <td>{{ user.CURP }}</td>
+          <td>{{ user.Nombre_Usuario }}</td>
+          <td>{{ user.Tipo_Usuario }}</td>
+        </tr>
+      </tbody>      
+    </table>
+  </div>
+
+  <!-- Mensaje cuando no hay registros -->
+  <ng-template #noRecords>
+    <p>No se encontraron registros.</p>
+  </ng-template>
+</div>

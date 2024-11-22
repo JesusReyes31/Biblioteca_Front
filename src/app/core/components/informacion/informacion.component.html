@@ -1,0 +1,119 @@
+<section class="margen container cont-inf" id="contenido">
+  <div class="book-advertisement info">
+    <img [src]="libro?.Imagen" class="libro-imagen" alt="Portada del Libro">
+    <div class="book-details">
+      <h2>{{ libro?.Titulo }}</h2>
+      <p><strong>Autor:</strong> {{ libro?.Autor }}</p>
+      <p><strong>Género:</strong> {{ libro?.Genero }}</p>
+      <p><strong>Año de publicación:</strong> {{ libro?.Anio_publicacion }}</p>
+      <p><strong>Resumen:</strong> {{ libro?.Resumen }}</p>
+      @if(USS !== 'Anonimo'){
+        <div class="button-container">
+          <button id="reservar" (click)="reservarLibro(libro?.ID)">Reservar</button>
+          <button id="carrito" (click)="carrito()">Añadir al carrito</button>
+        </div>
+      }
+    </div>
+  </div>
+  <div class="resenas">
+    <div class="resenas-header">
+      <h3>Reseñas</h3>
+      <!-- Botón para añadir reseña -->
+      @if(puedeResenar && !resenaExistente && !mostrarFormulario){
+        <button class="btn-agregar-resena" (click)="mostrarFormularioNuevo()">
+          <i class="fa fa-plus"></i> Añadir reseña
+        </button>
+      }
+    </div>
+    <!-- Formulario para agregar/editar reseña -->
+    @if(mostrarFormulario){
+      <div class="resena-form" #resenaFormElement>
+        <h4>{{ resenaExistente ? 'Editar tu reseña' : 'Agregar reseña' }}</h4>
+        <form (ngSubmit)="guardarResena()" #resenaForm="ngForm">
+          <div class="rating-input">
+            <label>Calificación:</label>
+            <input type="number" 
+                   [(ngModel)]="calificacion"
+                   name="calificacion"
+                   min="0"
+                   max="5"
+                   step="1"
+                   required
+                   class="calificacion-input"
+                   (input)="setCalificacion(calificacion)"
+                   (blur)="ajustarCalificacion()"
+                   onkeypress="return event.charCode >= 48 && event.charCode <= 53">
+            <small class="rating-help">Califica del 0 al 5 (solo números enteros)</small>
+          </div>
+          
+          <div class="descripcion-input">
+            <label>Tu opinión:</label>
+            <textarea 
+              [(ngModel)]="nuevaResena.descripcion"
+              name="descripcion"
+              required
+              minlength="10"
+              maxlength="500"
+              rows="4"
+              placeholder="Comparte tu opinión sobre el libro...">
+            </textarea>
+            <small class="caracteres-contador">
+              {{nuevaResena.descripcion.length || 0}}/500
+            </small>
+          </div>
+    
+          <div class="form-actions">
+            <button type="submit" 
+                    [disabled]="!resenaForm.valid || !calificacion">
+              {{ resenaExistente ? 'Actualizar' : 'Publicar' }}
+            </button>
+            @if(resenaExistente){
+              <button type="button" 
+                      class="btn-eliminar"
+                      (click)="eliminarResena()">
+                Eliminar
+              </button>
+            }
+          </div>
+        </form>
+      </div>
+    }
+
+    <!-- Lista de reseñas existente -->
+    <div *ngIf="resenas.length > 0" class="resenas-lista">
+      <div *ngFor="let resena of resenas" class="resena" [ngClass]="{'resena-propia': resena.ID_Usuario === getCurrentUserId()}">
+        <div class="resena-header">
+          <div class="usuario-info">
+            <p class="nombre-usuario">{{ resena.Nombre_Usuario }} {{ resena.ID_Usuario }}</p>
+            <span class="stars">
+              <span *ngFor="let star of getStarArray(resena.Calificacion)">
+                <i class="fa" [ngClass]="{
+                  'fa-star': star === 1, 
+                  'fa-star-half-alt': star === 0.5, 
+                  'fa-star-o': star === 0,
+                  'fa-star-quarter': star === 0.25,
+                  'fa-star-three-quarters': star === 0.75
+                }"></i>
+              </span>
+            </span>
+          </div>
+          <div class="resena-actions">
+            <!-- Solo mostrar el botón si es la reseña del usuario actual -->
+            <button *ngIf="nuevaResena.ID_Usuario === getCurrentUserId() && puedeResenar && resena.Nombre_Usuario === Nombre" 
+                    class="btn-editar"
+                    (click)="mostrarFormularioEdicion(resena)">
+              <i class="fa fa-edit"></i> Editar
+            </button>
+            <span class="fecha-resena">{{ resena.Fecha | date:'dd/MM/yyyy' }}</span>
+          </div>
+        </div>
+        <div class="resena-contenido">
+          <p class="resena-descripcion">{{ resena.Descripcion }}</p>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="resenas.length === 0">
+      <p>No hay reseñas para este libro aún.</p>
+    </div>
+  </div>
+</section>

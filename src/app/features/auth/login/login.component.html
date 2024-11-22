@@ -1,0 +1,27 @@
+<div class="login-container">
+    <div class="login-background"></div>
+    <div class="login-form">
+      <h1>INICIAR SESIÓN</h1>
+      <p>Inicie sesión en su cuenta en unos segundos</p>
+      <div>
+        <div class="input-group">
+          <input type="text" [(ngModel)]="Correo" placeholder="Correo o Nombre de Usuario" />
+        </div>
+        <div class="input-group">
+          <div class="password-container">
+            <input 
+              [type]="passwordVisible ? 'text' : 'password'" 
+              [(ngModel)]="Contra" 
+              placeholder="Contraseña" 
+            />
+            <span class="toggle-password" (click)="togglePasswordVisibility()">
+              <i class="zmdi zmdi-eye"></i>
+            </span>
+          </div>             
+        </div>
+        <button type="submit" (click)="ingresar()" class="login-button">INGRESAR</button>
+      </div>
+      <a routerLink="/recover" class="forgot-password">¿Olvidó su contraseña?</a><br><br>
+      <a routerLink="/" class="forgot-password">Ingresar como invitado</a>
+    </div>
+  </div>

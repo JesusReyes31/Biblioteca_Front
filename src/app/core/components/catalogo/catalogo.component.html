@@ -1,0 +1,20 @@
+<section id="contenido" class="contenedor">
+    <div class="generos-libros">
+      <ul class="ul-generos">
+        <li *ngFor="let genero of generos" (click)="selecciongenero($event, genero)">
+          {{ genero }}
+        </li>
+      </ul>
+    </div>
+    <div class="imagenes-libros">
+      <div class="libros-container">
+        <div *ngFor="let libro of libros" [title]="libro.Disponibilidad === 'Disponible' ? 'Disponible' : 'No disponible'" class="libro" (click)="seleccionarLibro(libro)">
+          <img [src]="libro.Imagen" 
+               alt="{{ libro.Titulo }}" 
+               [ngClass]="['libro-imagen', libro.Disponibilidad === 'Disponible' ? 'disponible' : 'nod']">
+          <h3>{{ libro.Titulo }}</h3>
+          <p>{{ libro.Autor }}</p>
+        </div>
+      </div>
+    </div>
+</section>

@@ -1,0 +1,80 @@
+import { Component } from '@angular/core';
+import { UsersService } from '../../services/users.service';
+import { SweetalertService } from '../../services/sweetalert.service';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Router, RouterLink } from '@angular/router';
+import { FooterService } from '../../services/footer.service';
+
+@Component({
+  selector: 'app-catalogo',
+  standalone: true,
+  imports: [FormsModule,CommonModule,RouterLink],
+  templateUrl: './catalogo.component.html',
+  styleUrl: './catalogo.component.css'
+})
+export class CatalogoComponent {
+  generos:string[]=[];
+  libros:any[]=[];
+  constructor(private userService:UsersService,private sweetalert:SweetalertService,private router:Router,private footerService:FooterService){}
+  ngOnInit(): void {
+    this.userService.getGeneros().subscribe(
+      (data) => {
+        if (data.message) {
+          this.sweetalert.showNoReload(data.message);
+        } else {
+          data.forEach((gen: any) => {
+            this.generos.push(gen.Genero);
+          });
+          // Seleccionar automáticamente el primer género
+          setTimeout(() => {
+            const primerGenero = document.querySelector('.generos-libros ul li');
+            if (primerGenero) {
+              primerGenero.classList.add('selected');
+              this.traerLibros(this.generos[0]);
+            }
+          });
+        }
+      },
+      (error) => {
+        console.error('Error al cargar el archivo JSON:', error);
+      }
+    );
+  }
+  selecciongenero(event: any, genero: string): void {
+    const listaGeneros = document.querySelectorAll('.generos-libros ul li');
+    listaGeneros.forEach((item: any) => {
+      item.classList.remove('selected');
+    });
+    // Agregar la clase 'selected' al item clickeado
+    event.target.classList.add('selected');
+    // Llamar al método traerLibros con el género seleccionado
+    this.traerLibros(genero);
+  }
+  traerLibros(genero: string): void {
+    this.borrarlibros();
+    console.log(`Género seleccionado: ${genero}`);
+    this.userService.getBooksByGenre(genero).subscribe({
+      next: (data) => {
+        if (data.message) {
+          this.sweetalert.showNoReload(data.message);
+        } else {
+          this.libros = data;
+          console.log("Adjusting footer position");
+          this.footerService.adjustFooterPosition();
+        }
+      },
+      error: (error) => {
+        console.error(`Error al obtener libros del género ${genero}:`, error);
+      }
+    });
+  }
+  borrarlibros(): void {
+    this.libros = []; // Limpiar el arreglo de libros
+  }
+  seleccionarLibro(libro: any): void {
+    console.log("Entró a libros")
+    sessionStorage.setItem('selectedLibro', JSON.stringify(libro)); // Guardamos el id en sessionStorage
+    this.router.navigate(['/informacion']);
+  }
+}

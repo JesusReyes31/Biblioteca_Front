@@ -1,0 +1,35 @@
+<div class="content-container">
+  <div class="search-bar">
+    <input
+      type="text"
+      placeholder="Buscar por Título del Libro, Fecha de préstamo o devolución, Estado"
+      [(ngModel)]="searchTerm"
+      (input)="filterRecords()"
+    />
+  </div>
+  
+  <div *ngIf="filteredRecords.length > 0; else noRecords">
+    <table class="loan-history-table">
+      <thead>
+        <tr>
+          <th>TÍTULO DEL LIBRO</th>
+          <th>FECHA DE PRÉSTAMO</th>
+          <th>FECHA DE DEVOLUCIÓN</th>
+          <th>ESTADO</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let record of filteredRecords">
+          <td>{{ record.Titulo }}</td>
+          <td>{{ record.Fecha_prestamo }}</td>
+          <td>{{ record.Fecha_devolucion_prevista }}</td>
+          <td>{{ record.Estado }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <ng-template #noRecords>
+    <p>No se encontraron registros de prestamos.</p>
+  </ng-template>
+</div>
+  

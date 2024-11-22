@@ -1,0 +1,92 @@
+.cont-prof {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1, h2 {
+  color: #000;
+  margin-bottom: 20px;
+}
+
+.span{
+    margin-top: 0.5rem;
+    font-size: 16px;
+}
+
+.profile-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.profile-image {
+  width: 150px;
+  height: 150px;
+  border: 2px solid #000;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.profile-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  position: relative;
+}
+
+label {
+  font-weight: 500;
+}
+
+input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.note {
+  position: absolute;
+  right: -120px;
+  top: 50%;
+  font-size: 0.8em;
+  color: #666;
+}
+
+.btn-gray {
+  background-color: #e0e0e0;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 12rem;
+  transition: background-color 0.3s;
+}
+
+.btn-gray:hover {
+  background-color: #d0d0d0;
+}
+
+.info-section, .password-section {
+  margin-bottom: 40px;
+}

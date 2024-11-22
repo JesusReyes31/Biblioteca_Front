@@ -1,0 +1,82 @@
+<div class="prestar-contenedor">
+    <section id="contenido" class="center">
+        <div class="formulario">
+            <div class="conta">
+                <button id="reservado" 
+                        [ngClass]="{'button-encendido': estadoReservado, 'button-apagado': !estadoReservado}"
+                        type="button" 
+                        (click)="cambiarEstado('reservado')">
+                    Reservado
+                </button>
+                <button id="noreservado" 
+                        [ngClass]="{'button-encendido': !estadoReservado, 'button-apagado': estadoReservado}"
+                        type="button" 
+                        (click)="cambiarEstado('noreservado')">
+                    No Reservado
+                </button>
+            </div>
+            <div class="group-material-login">
+                <input id="IDUsuario" 
+                    class="material-login-control" 
+                    type="text" 
+                    required 
+                    maxlength="70" 
+                    [(ngModel)]="idUsuario"
+                    autocomplete="off" />
+                <span class="highlight-login"></span>
+                <span class="bar-login"></span>
+                <label *ngIf="estadoReservado" id="campo">ID Usuario</label>
+                <label *ngIf="!estadoReservado" id="campo">ID Libro</label>
+            </div>
+            <button class="botonformulario" 
+                    type="button" 
+                    (click)="consultar()">
+                Consultar
+            </button>
+
+        </div>
+    </section>
+    <!-- Mensaje de error -->
+    @if (error) {
+        <div class="error-message">
+            {{ error }}
+        </div>
+    }
+
+    <!-- Tabla de resultados -->
+    @if (reservas.length > 0) {
+        <table class="loan-history-table">
+            <thead>
+                <tr>
+                    <th>ID LIBRO</th>
+                    <th>TÍTULO</th>
+                    <th>AUTOR</th>
+                    <th>{{ estadoReservado ? 'FECHA RESERVA' : 'CANTIDAD' }}</th>
+                    <th>PRESTAR</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (reserva of reservas; track reserva.ID_Reserva) {
+                    <tr>
+                        <td>{{ reserva.ID_Libro }}</td>
+                        <td>{{ reserva.Titulo }}</td>
+                        <td>{{ reserva.Autor }}</td>
+                        <td>
+                            @if (reserva.fecha1) {
+                                {{ reserva.fecha1 | date:'dd/MM/yyyy' }}
+                            } @else {
+                                {{ reserva.Cantidad }}
+                            }
+                        </td>
+                        <td>
+                            <button class="prestar-btn" 
+                                (click)="prestar(reserva)">
+                                Prestar
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

@@ -1,0 +1,62 @@
+.content-container {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .search-bar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .search-bar input {
+    flex: 1;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .search-bar button {
+    padding: 8px 12px;
+    font-size: 16px;
+    margin-left: 8px;
+    background-color: #004080;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .search-bar button:hover {
+    background-color: #003366;
+  }
+  
+  .loan-history-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .loan-history-table th {
+    padding: 12px;
+    text-align: center; /* Centra los encabezados */
+    background-color: #f4f4f4;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .loan-history-table td {
+    padding: 12px;
+    text-align: left; /* Mantiene los datos alineados a la izquierda */
+    border-bottom: 1px solid #ccc;
+  }
+  
+  
+  .loan-history-table th {
+    background-color: #f4f4f4;
+  }
+  
+  .loan-history-table tbody tr:hover {
+    background-color: #f9f9f9;
+  }

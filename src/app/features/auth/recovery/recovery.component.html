@@ -1,0 +1,20 @@
+<div class="login-container">
+    <div class="login-form">
+        <h1>RECUPERAR CONTRASEÑA</h1>
+        <div>
+            <div class="input-group">
+                <input type="text" [(ngModel)]="Correo" placeholder="Utilizando el Correo" />
+            </div>
+            <button type="submit" (click)="recuperar('Correo')" class="login-button">Recuperar</button>
+        </div>
+        <div>
+            <div class="input-group">
+                <input type="text" [(ngModel)]="Nombre_Usuario" placeholder="Utilizando el Nombre de Usuario" />
+            </div>
+            <button type="submit" (click)="recuperar('Nombre')" class="login-button">Recuperar</button>
+        </div>
+        <a routerLink="/login" class="forgot-password">Ya tiene cuenta, Inicie Sesión</a><br><br>
+        <a routerLink="/" class="forgot-password">Ingresar como invitado</a>
+    </div>
+    <div class="login-background"></div>
+  </div>

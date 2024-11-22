@@ -1,0 +1,29 @@
+.nav-lateral-list-menu ul li a {
+    width: 100%;
+    min-height: 45px;
+    line-height: 45px;
+    display: block;
+    padding: 0;
+    padding-left: 20px;
+    font-size: 14px;
+    text-decoration: none;
+    color: #fff;
+    border-bottom: 1px solid rgba(230,233,238,.1);
+    transition: .3s all ease-in-out;
+}
+
+/* Estilo para el enlace activo */
+.nav-lateral-list-menu ul li a.active-link {
+    background-color: #E75A5A;
+    color: #fff;
+}
+
+/* Estilo para el hover */
+.nav-lateral-list-menu ul li a:hover {
+    background-color: #E75A5A;
+}
+
+/* Estilo para el dropdown cuando está activo */
+.dropdown-menu-button.active-dropdown {
+    background-color: #E75A5A;
+}

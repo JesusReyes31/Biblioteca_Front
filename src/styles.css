@@ -1,0 +1,1936 @@
+body{
+    margin: 0 !important;
+}
+
+@font-face{
+    font-family: "Parrafos";
+    /* src: url("../fonts/OpenSans-CondLight.ttf"), url("../fonts/OpenSans-CondLight.eot"), url("../fonts/OpenSans-CondLight.woff"), url("../fonts/OpenSans-CondLight.woff2"), url("../fonts/OpenSans-CondLight.svg"); */
+}
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    font-size: 16px;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif !important;
+    background-color: #fff;
+    color: black;
+}
+body.loading{
+    display: none; /* Oculta el contenido principal */
+}
+/* cambiar el estilo del scroll */
+body::-webkit-scrollbar{
+    width: 7px;
+}
+
+body::-webkit-scrollbar-thumb{
+    border-radius: 2px;
+    background-color: #2D3945;
+}
+
+/* Body/Contenido */
+.container {
+    display: flex;
+    /* align-items: center; */
+    width: auto;
+    border-radius: 5px;
+    padding-top: 1rem;
+}
+.contenedor {
+    display: flex;
+    width: auto;
+    border-radius: 5px;
+    padding-top: 1rem;
+}
+.linea{
+    position: relative; 
+}
+.linea::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: black; 
+}
+.container h1 {
+    margin-left: 1rem;
+    color: black;
+    font-weight: bold;
+    text-decoration: underline;
+}
+.superior {
+    flex-grow: 1;
+    text-align: left;
+}
+
+.zmdi.zmdi-help-outline.zmdi-hc-fw{
+    /* display: none; */
+}
+
+/* Barra de búsqueda */
+.search-bar {
+    margin-left: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.search-bar input {
+    padding: 8px;
+    margin-right: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+}
+.search-bar button {
+    padding: 8px 15px;
+    background-color: #2D3945;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.search-bar button:hover {
+    background-color: #0056b3;
+}
+.search-bar input::placeholder {
+    color: #b0b0b0;
+}
+/* Estilo para el foco en el input */
+.search-bar input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Horarios */
+.horarios-container {
+    text-align: center;
+    margin-top: 20px;
+    color: black;
+}
+.horarios-titulo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.horarios-dias {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.horario-dia {
+    margin-bottom: 10px;
+}
+.horario-dia span {
+    display: block;
+}
+.dia-titulo {
+    display: block;
+    font-weight: bold;
+    color: #333;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+.social-icons li {
+    margin-left: 2rem;
+}
+/* Recomendaciones */
+.recomendaciones-container {
+    margin-top: 20px;
+}
+.recomendaciones-titulo {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+.recomendaciones-libros {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.recomendacion-libro {
+    text-align: center;
+    margin-bottom: 20px;
+    width: calc(25% - 20px); /* Esto divide en 4 columnas con márgenes */
+    /* Ajusta el ancho según cuántos libros quieras mostrar por línea */
+    box-sizing: border-box; /* Incluye el margen en el ancho total */
+}
+.recomendacion-libro img {
+    width: 100%; /* El ancho de la imagen ocupa el 100% del contenedor */
+    height: auto;
+    border-radius: 5px;
+}
+.libro-nombre {
+    display: block;
+    margin-top: 5px;
+    font-weight: bold;
+}
+/* Catalogo de libros */
+.generos-libros {
+    display: flex;
+    float: left;
+    width: 20%;
+    line-height: 1.5;
+}
+.generos-libros ul {
+    list-style-type: none;
+    padding: 0;
+    line-height: 1.5; 
+}
+.generos-libros ul li {
+    margin-bottom: 5px;
+    margin-left: 2rem;
+    cursor: pointer;
+}
+.generos-libros ul li.selected,.generos-libros ul li:hover{
+    color: blue;
+}
+.imagenes-libros {
+    border-left: 5px solid black;
+    /* padding-left: 2rem; */
+    float: right;
+    width: 80%;
+}
+.libros-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+    width: 100%;
+    margin: 0 auto;
+}
+.libro {
+    display: flex;
+    width: 25%;
+    flex-direction: column;
+    align-items: center; 
+    position: relative;
+    cursor: pointer;
+}
+.libro-imagen {
+    display: block;
+    width: 150px; 
+    height: 230px; 
+    object-fit: cover; 
+}
+.disponible{
+    box-shadow: 0 10px 5px rgb(38, 253, 0);
+}
+.nod{
+    box-shadow: 0 10px 5px rgb(253, 0, 0);
+}
+.contenedor-contra {
+    position: relative;
+    width: 100%;
+}
+.toggle {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    user-select: none;
+}
+.descripcion {
+    display: none;
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    animation: mostrarDescripcion 1s ease-in-out 1s forwards;
+    z-index: 1000;
+}
+.libro:hover .descripcion {
+    display: block;
+    opacity: 0; /* Asegura que la descripción comience invisible */
+    animation-delay: 0s; /* Elimina el retraso inicial en la animación */
+    animation-fill-mode: forwards; 
+}
+@keyframes mostrarDescripcion {
+    0% { opacity: 0; } /* Inicio de la animación: opacidad 0 */
+    80% { opacity: 0; }
+    100% { opacity: 1; } /* Fin de la animación: opacidad 1 */
+}
+/* Styles.css */
+.tabla {
+    text-align: center;
+}
+.center {
+    text-align: center; 
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.center input {
+    margin: 5px;
+}
+button {
+    margin: 5px;
+}
+table {
+    width: 80%;
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+table, th, td {
+    /* border: 1px solid black; */
+}
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+.encabezado{
+    font-weight: bold;
+    background-color: #f0f0f0;
+    text-align: center;
+    padding: 8px; 
+    /* border: 1px solid #ccc;  */
+}
+.celda{
+    text-align: center;
+    padding: 8px; 
+    /* border: 1px solid #ccc; */
+}
+.conta {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+.button-encendido,.button-apagado {
+    margin: 0 !important;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+    transition: transform 0.2s;
+}
+.button-encendido {
+    background-color: #333;
+    border-bottom: 2px solid blue;
+}
+.button-apagado {
+    background-color: #555;
+    color: #ffffff6e;
+}
+.button-encendido:hover,.button-apagado:hover {
+    transform: scale(1.05);
+}
+/* Styles for the book advertisement layout */
+.book-advertisement {
+    display: flex;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+.book-advertisement img {
+    width: 300px;
+    height: auto;
+    margin-right: 20px;
+}
+.book-details {
+    flex-grow: 1;
+}
+.book-details h2 {
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 30px;
+}
+.book-details p {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+}
+.book-details button {
+    display: block;
+    margin: 0 auto;
+    font-size: 1.2rem;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.book-details button:hover {
+    background-color: #0056b3;
+}
+/* Libro Reservado */
+.reserva{
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border: 5px solid #000;
+    margin-left: 12rem;
+    margin-right: 12rem;
+}
+.imgreserva{
+    width: 300px;
+    height: auto;
+    margin-right: 20px;
+}
+.detallesreserva{
+    flex-grow: 1;
+}
+.detallesreserva h2{
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 50px;
+    margin-top: 50px;
+}
+.detallesreserva p{
+    text-transform: uppercase;
+    margin-bottom: 40px;
+}
+.detallesreserva button{
+    display: block;
+    margin: 0 auto;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.detallesreserva button:hover {
+    background-color: #0056b3;
+}
+/* Historial de prestamos */
+.tabla {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    /* border: 1px solid #ddd; */
+    padding: 8px;
+    text-align: left;
+}
+th {
+    width: 250px;
+    background-color: #f2f2f2;
+}
+.titulos th{
+    text-align: center;
+}
+/* Registro de Libros */
+.form-libros{
+    margin-left: 15rem !important;
+    margin-right: 15rem !important;
+    width: 80rem !important;
+}
+.media-hover{padding: 7px; border-radius: 4px;}
+.media-hover:hover{ background-color: #F5F5F5; }
+.all-tittles{ 
+    font-family: "Titulos" !important; 
+    margin-top: 0;
+    color: white;
+}
+.tiletitle{
+    color: grey;
+}
+.center-box{ margin: 0 auto; }
+.full-reset{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+.material-input-disabled{ pointer-events: none;}
+ul.nav-tabs li a:focus{ outline: none; }
+.btn:focus, .btn:active{ outline: none !important; }
+span.label-mhover{
+    margin-right: 7px;
+    margin-top: 12px;
+    padding: 5px 12px;
+}
+.text-help{
+    font-size: 19px;
+}
+.full-cover-background{
+    background-attachment: fixed;
+    background-color: #fff;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+.navbar-icons{
+    max-width: 25rem;
+}
+/*********==========Tablas con divs*/
+.div-table{
+    display: table !important;
+    width: 100%;
+    margin: 20px 0;
+    padding: 0;
+    background-color: #fff;
+    height: auto !important;
+}
+.div-table-row{
+    display: table-row !important;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+    height: 40px;
+    line-height: 40px;
+}
+.div-table-row:hover{ background-color: #F5F5F5; }
+.div-table-row .div-table-cell:first-child{ border-left: 1px solid #E1E1E1; }
+.div-table-cell{
+    display: table-cell !important;
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 1px solid #E1E1E1;
+    border-right: 1px solid #E1E1E1;
+    border-top: 1px solid transparent;
+    border-left: 1px solid transparent;
+    text-align: center;
+}
+.div-table-head,
+.div-table-head:hover{
+    background-color: #DFF0D8;
+    font-size: 17px;
+    font-weight: bolder;
+}
+.div-table-head .div-table-cell{ border-top: 1px solid #E1E1E1 !important; }
+.div-table-row-list .div-table-cell{ border: none; }
+.div-table-row-list{ border: none; }
+.div-table-row-list .div-table-cell:first-child{ border-left: none; }
+/*********==========Navs*/
+.cerrar{
+    display: none;
+}
+
+.university-text{
+    font-size: 18px;
+}
+
+.navbar-user-top{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #33414E;
+    height: 56px;
+    position: relative;
+    top: 0;
+    left: 0;
+    z-index: 7;
+}
+.navbar-user-top > ul{
+    /* height: 55px; */
+    padding: 0 15px;
+    margin: 0;
+}
+.navbar-user-top > ul > li{
+    display: inline-block;
+    float: right;
+    color: rgba(255,255,255,.4);
+    height: 55px;
+    margin: 0 12px;
+    text-align: center;
+    cursor: pointer;
+    line-height: 55px;
+}
+.navbar-user-top > ul > li:hover{
+  color: #FFD559;  
+}
+.navbar-user-top > ul > li:hover span.badge{
+    background-color: #E34724;
+}
+.navbar-user-top > ul > li > i{
+    font-size: 27px;
+    line-height: 55px;
+}
+.navbar-user-top > ul > figure > img{
+    width: 30px;
+    float: right;
+    height: 30px;
+    border: 2px solid #728890;
+    margin-top: 5px;
+}
+.navbar-lateral {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 20%; /* Ajusta el ancho según sea necesario */
+    background-color: #33414E;
+    z-index: 1000; /* Asegúrate de que tenga un índice z alto para estar encima del contenido principal */
+    overflow-y: auto; /* Para agregar scroll si el contenido es más largo que el área visible */
+    overflow-x: hidden; /* Para agregar scroll si el contenido es más largo que el área visible */
+}
+.nav-lateral-list-menu ul {
+    padding-left: 0;
+    margin-left: 0;
+    list-style-type: none;
+}
+.nav-lateral-list-menu ul li {
+    padding: 10px;
+    border-bottom: 1px solid #fff; /* Línea divisoria entre elementos */
+}
+.nav-lateral-list-menu ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+.nav-lateral-list-menu ul li a:hover {
+    background-color: #435366;
+}
+.container-menu-movile {
+    height: 100%;
+    background-color: #2D3945;
+    height: 100% !important;
+}
+.logo {
+    height: 70px;
+    line-height: 55px;
+    background-color: #E34724;
+    color: #fff;
+    text-align: center;
+    font-size: 21px;
+}
+.logo-img{
+    background-image: url('../public/assets/imgs/Logo.png');
+    background-size: cover;
+    background-position: center;
+    width: 150px;
+    height: 150px;
+}
+.img{
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center;
+}
+.img-user{
+    background-size: cover;
+    background-position: center;
+    width: 15px;
+    height: 15px;
+}
+/* .logo{
+    height: 55px;
+    line-height: 55px;
+    background-color: #E34724;
+    color: #fff;
+    text-align: center;
+    font-size: 21px;
+    overflow: hidden;
+} */
+.content-page-container{
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+    width: 80%;
+    background-color: #fff;
+}
+.nav-lateral-list-menu  ul  li{
+    margin: 0;
+    padding: 0;
+    display: block;
+}
+.nav-lateral-list-menu ul li a,
+.nav-lateral-list-menu ul li div{
+    width: 100%;
+    min-height: 45px;
+    line-height: 45px;
+    display: block;
+    padding: 0;
+    padding-left: 20px;
+    font-size: 14px;
+    text-decoration: none;
+    color: #fff;
+    border-bottom: 1px solid rgba(230,233,238,.1);
+    transition: .3s all ease-in-out;
+    -moz-transition: .3s all ease-in-out;
+    -ms-transition: .3s all ease-in-out;
+    -webkit-transition: .3s all ease-in-out;
+}
+.nav-lateral-list-menu i{
+    font-size: 18px;
+    line-height: 45px;
+}
+.nav-lateral-list-menu ul li a:hover{
+    background-color: #E75A5A;
+}
+.nav-lateral-list-menu ul li a:active,
+.nav-lateral-list-menu ul li a:focus{
+    outline: none;
+}
+.nav-lateral-list-menu ul li:first-child{
+   border-top: 1px solid rgba(230,233,238,.1); 
+}
+.nav-lateral-list-menu ul li a span{
+    transition: .3s all ease-in-out;
+}
+.nav-lateral-list-menu ul li a:hover span,
+.mobile-menu-container ul li a:hover span{
+    background-color: #333;
+    color: #fff;
+}
+.nav-lateral-list-menu ul li ul{
+    background-color: rgb(43,61,81);
+}
+.nav-lateral-list-menu ul li div{
+    cursor: pointer;
+}
+.nav-lateral-list-menu ul li ul li a{
+    padding-left: 30px;
+}
+/*Pie de pagina================*/
+  /* Estilo para el pie de página fijo */
+  .footer {
+    /* width: 80%; */
+    /* position: absolute;
+    bottom: 0;
+    left: 20%;
+    right: 0; */
+    background-color: #33414E;
+    color: white;
+    padding: 20px;
+    z-index: 10; /* Asegura que esté por encima de otros elementos */
+}
+.footer-fixed {
+    position: fixed;
+    bottom: 0;
+    /* left: 20%; */
+    width: 80%;
+    background-color: #33414E;
+    color: white;
+    z-index: 10; /* Asegúrate de que el footer esté sobre otros elementos */
+}
+.footer-relative {
+    position: relative;
+    width: 100%;
+    background-color: #33414E;
+    color: white;
+  }
+  
+.container-fluid {
+    display: flex;
+    /* justify-content: space-between; */
+    align-items: center;
+}
+
+.footer-left {
+    margin-right: 10%;
+    max-width: 70%;
+}
+
+.all-tittles {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.footer p {
+    font-size: 1em;
+    margin: 0;
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+    margin: 0;
+    padding: 0;
+}
+
+.footer-social {
+    color: #fff;
+    transition: all .3s ease-in-out;
+    list-style: none;
+}
+
+.footer-social:hover {
+    color: #FFD054;
+    transform: scale(1.2);
+}
+
+/*Contenedores de formularios ================*/
+.container-flat-form{
+    width: 98%;
+    margin: 25px auto;
+    box-shadow: 0 0 3px rgba(0,0,0,.2);
+    border-radius: 5px;
+    position: relative;
+    padding-bottom: 25px;
+}
+.title-flat-form{
+    background-color: #E34724;
+    height: 50px;
+    color: #fff;
+    text-align: center;
+    font-size: 25px;
+    line-height: 50px;
+    border-radius: 5px 5px 0 0;
+    margin-bottom: 50px;
+}
+.title-flat-green{
+    background-color: #16a085;
+}
+.title-flat-blue{
+    background-color: #3598D9;
+}
+/*Controles de formularios material desing ================*/
+.group-material{ 
+    position:relative; 
+    margin-bottom:45px; 
+}
+input.material-control,
+select.material-control{
+    font-size:16px;
+    padding:10px 10px 10px 5px;
+    display:block;
+    width:100%;
+    border:none;
+    border-bottom:1px solid #5264AE;
+    background-color: rgba(50,64,77,0);
+}
+select.material-control,
+select.no-style{
+    -ms-appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    /* background: #fff url(../assets/icons/SelectMaterialIndicator.png) no-repeat scroll right 0.75rem center / 9px 13px; */
+}
+select.material-control:hover,
+select.no-style{
+    cursor: pointer;
+}
+/*Estado activo*/
+input.material-control:focus,
+select.material-control{ 
+    outline:none;
+    border-bottom:1px solid #5264AE;
+}
+/*Label de formularios material desing ================*/
+.group-material label{
+    color:#999; 
+    font-size:18px;
+    font-weight:normal;
+    position:absolute;
+    pointer-events:none;
+    left:5px;
+    top:10px;
+    transition: all 0.2s ease; 
+    -moz-transition: all 0.2s ease; 
+    -webkit-transition: all 0.2s ease;
+}
+/* Estado activo */
+input.material-control:focus ~ label, 
+input.material-control:valid ~ label{
+    top:-20px;
+    font-size:17px;
+    font-weight: 700;
+    color:rgb(25, 255, 25);
+    font-weight: normal;
+}
+input.material-control:valid ~ label:before{
+    content: "✓   "
+}
+input.material-control:focus:invalid ~ label,
+input.material-control:invalid ~ label{
+  top:-20px;
+  font-size:17px;
+  color: white;
+  font-weight: normal;
+}
+input.material-control:focus:invalid ~ label:after{
+    content: "Formato no válido o campo vacío";
+    margin: 0 5px;
+    padding: 0 5px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #E34724;
+    border-radius: 4px;
+    font-weight: normal;
+}
+input.material-control:focus:invalid:required,
+input.material-control:invalid:required{
+  outline: none;
+  box-shadow: none;
+}
+/*Barra de formularios material desing ================*/
+.bar{ position:relative; display:block; width:100%; }
+.bar:before, .bar:after     {
+  content:'';
+  height:2px; 
+  width:0;
+  bottom:1px; 
+  position:absolute;
+  background:#5264AE; 
+  transition: all 0.2s ease; 
+  -moz-transition: all 0.2s ease; 
+  -webkit-transition: all 0.2s ease;
+}
+.bar:before { left:50%; }
+.bar:after { right:50%; }
+input.material-control:focus ~ .bar:before, input.material-control:focus ~ .bar:after {
+  width:50%;
+}
+/* HIGHLIGHTER ================================== */
+.highlight {
+  position:absolute;
+  height:60%; 
+  width:100px; 
+  top:25%; 
+  left:0;
+  pointer-events:none;
+  opacity:0.5;
+}
+/* estado activo*/
+input.material-control:focus ~ .highlight {
+  -webkit-animation:inputHighlighter 0.3s ease;
+  -moz-animation:inputHighlighter 0.3s ease;
+  animation:inputHighlighter 0.3s ease;
+}
+/* Animaciones ================ */
+@-webkit-keyframes inputHighlighter {
+    from { background:#5264AE; }
+  to    { width:0; background:transparent; }
+}
+@-moz-keyframes inputHighlighter {
+    from { background:#5264AE; }
+  to    { width:0; background:transparent; }
+}
+@keyframes inputHighlighter {
+    from { background:#5264AE; }
+  to    { width:0; background:transparent; }
+}
+/* ============= Estilos home ============= */
+.tile{
+    display: inline-block;
+    width: 220px;
+    height: auto;
+    border: 1px solid #E1E1E1;
+    position: relative;
+    cursor: pointer;
+    margin: 10px;
+}
+.tile-icon,.tile-num{
+    height: 110px;
+    line-height: 110px;
+    position: relative;
+}
+.tile-icon{
+    color: #B71C1C;
+    border-bottom: 1px solid #E1E1E1;
+    font-size: 50px;
+}
+.tile-icon i{
+    transition: all .3s ease-in-out;
+}
+.tile-num{
+    background-color: #F5F5F5;
+    font-size: 40px;
+}
+.tile-name{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 7;
+    padding: 0 10px;
+    border-radius: 15px;
+    background-color: #fff;
+    border: 1px solid #E1E1E1;
+    max-width: 95%;
+    min-width: 60%;
+    width: auto;
+}
+.tile:hover .tile-icon i{
+    transform: scale(1.5);
+    color: #303F9F;
+}
+/* ============= Estilos report ============= */
+.report-content{
+    padding: 30px 0;
+    color: #0288D1;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    position: relative;
+}
+.report-content,.report-content p i{ transition: all .4s ease-in-out; } 
+.report-content p i:hover{
+    color:#F57C00;
+    cursor: pointer;
+}
+.report-content:hover{
+    color: #B71C1C;
+    border: 1px solid rgba(183,28,28,.2);
+}
+.report-content:hover p i{
+    transform: scale(1.3);
+}
+/* ============= Estilos catalog ============= */
+.list-catalog{
+    font-size: 20px;
+    margin: 0 7px;
+    display: inline-block;
+    transition: .2s all ease-in-out;
+    padding: 2px 7px;
+    color: #6686A2;
+}
+.list-catalog:hover{
+    cursor: pointer;
+    color: rgb(0,0,150);
+    transform: scale(1.2);
+    -moz-transform: scale(1.2);
+    -ms-transform: scale(1.2);
+    -webkit-transform: scale(1.2);
+    background-color: #fff;
+}
+.list-catalog.active{
+    color: rgba(0,0,150,.9);
+    cursor: text;
+    border-bottom: 1px solid rgba(0,0,150,.4);
+    transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    -webkit-transform: scale(1);
+}
+/*=======================================================================================================
+=                                        Other styles                                                  =
+========================================================================================================*/
+.modal-body {
+    max-height: 400px;
+    overflow-y: scroll;
+}
+#tbl{
+    margin-bottom: 40px;
+}
+
+#tbl td{
+    text-align: center;
+}
+/*=======================================================================================================
+=                                        Media queries                                                  =
+========================================================================================================*/
+/* col-xs */
+
+/*TENGO QUE PROGRAMAR ESTO PARA HACERLO RESPONSIVO EN TELEFONOS*/
+@media (max-width: 767px) {
+    /*.navbar-lateral{
+        position: fixed;
+        width: 100%;
+        z-index: 9999;
+        background-color: transparent;
+        display: none;
+    }*/
+
+    .navbar-lateral{
+        position: fixed;
+        width: 25%;
+        z-index: 10000;
+        background-color: transparent;
+        display: none;
+    }
+    .logo.full-reset.all-tittles{
+        font-size: 1rem;
+        display: flex;
+        margin: auto;
+        justify-content: center;
+        position: relative;
+    }
+
+    .container-menu-movile{
+        width: 100%;
+        position: relative;
+        z-index: 7;
+    }
+    .font-movile-menu{
+        position: fixed;
+        background-color: rgba(0,0,0,.5);
+        z-index: 2;
+        height: 100%;
+        width: 100%;
+    }
+    .form-container{ width: 97%; max-width: 370px;}  
+    .content-page-container{ width: 100%; }
+    .navbar-user-top > ul > li{ margin: 0 10px; }
+    form.form_SRCB{ padding: 7px;}
+    .table-responsive {
+        margin-bottom: 0 !important;
+        border: none !important;
+    }
+    .modal-body {
+        max-height: 300px;
+    }
+
+    .content-page-container.full-reset.custom-scroll-containers{
+        width: 100%;
+        height: auto;
+    }
+
+
+
+    .tile{
+        display: inline-block;
+        width: 40%;
+        height: auto;
+        border: 1px solid #E1E1E1;
+        position: relative;
+        cursor: pointer;
+        margin: 10px;
+    }
+
+    .tile-name.tiletitle{
+        font-size: 14px;
+    }
+
+    .footer{
+        font-size: .8em;
+        width: 100%;
+    }
+
+
+    .navbar-user-top.full-reset{
+        height: 8%;
+    }
+
+    .page-header{
+        margin: auto;
+        margin-left: 4px;
+    }
+
+    .all-tittles{
+        font-size: 14px;
+        margin: 0;
+    }
+
+    #Nombre{
+        font-size: 12px;
+    }
+
+    .container.linea{
+        margin-left: -4%;
+        margin: auto;
+        
+    }
+
+    .superior{
+        text-align: center;
+        position: relative;
+        top: -10px;
+    }
+
+    .superior h1 {
+        font-size: 1.5em;
+        margin: auto;
+    }
+
+    .search-bar{
+        text-align: center;
+    }
+
+    
+
+    #searchInput{
+        width: 60%;
+        margin-left: -4%;
+        display: flex;
+        align-items: center;
+    }
+
+    .container-fluid{
+        width: auto;
+    }
+
+    .list-unstyled.full-reset.navbar-icons{
+        font-size: .4em;
+        margin: 0;
+        position: relative;
+        width: 130%;
+        
+    }
+    .tooltips-general.exit-system-button{
+        margin: 0;
+    }
+
+    .zmdi.zmdi-power{
+        font-size: clamp(6px, 8vw, 20px);
+        position: relative;
+        top: 5px;
+    }
+
+    .zmdi.zmdi-search{
+        font-size: clamp(6px, 8vw, 20px);
+        position: relative;
+        top: 5px;
+    }
+
+    .recomendaciones-libros{
+        font-size: clamp(6px, 4vw, 20px);
+    }
+
+    .libro-nombre{
+        height: auto;
+    }
+
+
+    .cerrar{
+        display: flex;
+        margin: 0;
+        height: 20px;
+        width: 20px;
+        border: none;
+        background-color:transparent;
+        font-size: 20px;
+        margin: 0;
+        position: absolute;
+        top: -22px;
+        right: 0;
+    }
+
+    .university-text{
+        font-size: 15px;
+    }
+
+    .generos-libros{
+        margin-left: -35px;
+    }
+
+    .imagenes-libros{
+        margin-left: 22%;
+    }
+
+    .libro{
+        width: 100%;
+    }
+
+    .libro-nombre{
+        text-align: center;
+        margin-bottom: 12%;
+    }
+
+    .book-advertisement{
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Centrar horizontalmente */
+    }
+
+    .book-advertisement img{
+        width: 150px;
+        height:250px;
+        position: relative;
+        bottom: -60px;
+        margin: auto;
+        display: flex;
+        justify-content: center;
+    }
+
+
+    #Autor,
+    #Genero,
+    #anio,
+    #resumen{
+        font-size: small;
+        margin-top: -5px;
+    }
+
+    #titulo{
+        position: relative;
+        bottom: 270px;
+        font-size: 18px;
+    }
+
+
+    #resumen{
+        text-align: justify;
+    }
+
+    .margen.container{
+        display: flex;
+    }
+
+
+    .mobile-menu-button.visible-xs{
+        position: relative;
+        color: grey;
+        border: solid gray 2px;
+        width:120px;
+        left: 0;
+        text-align: center;
+
+    }
+
+    .page-header{
+        position: relative;
+        margin-left: 1%;
+    }
+    .zmdi.zmdi-menu{
+        font-size: 3em;
+        
+    }
+
+    .img-responsive.img-circle.center-box{
+        width: 2.5rem;
+        height: 2.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: -6%;
+    }
+    
+
+
+
+    .swal2-popup.swal2-modal.swal2-show{
+        position: relative;
+        top: -30%;
+    }
+
+    .col-xs-12.col-sm-6.text-right{
+        margin-top: -2%;
+    }
+
+    .reserva{
+        width: 80%;
+        display: flex;
+        justify-content: center; /* Centrar horizontalmente */
+        align-items: center; 
+        margin-top: 10%;
+    }
+
+    .imgreserva{
+        width: 150px;
+        height: 260px;
+        
+    }
+    
+    
+    .detallesreserva p {
+        font-size: small;
+        margin: 10px;
+    }
+
+    .detallesreserva h2{
+        font-size: 16px;
+        margin: 0;
+    }
+
+    .detallesreserva button{
+        position: relative;
+        margin-top: 30px;
+    }
+
+    .center{
+        width: 90%;
+        display: flex;
+        justify-content: center;
+        margin: auto;
+        margin-top: 10%;
+    }
+
+    #tbl{
+        width: 90%;
+        margin-top: 10%;
+        margin-bottom: 40px;
+        font-size: clamp(6px, 3vw, 14px);
+    }
+
+    td{
+        text-align: center;
+        border: solid grey 2px;
+    }
+
+    table#tabla{
+        margin: auto;
+        width: 90%;
+        font-size: clamp(6px, 2vw, 14px);
+    }
+
+    /*administrar usuarios*/
+    #tablaUsuarios{
+        font-size: clamp(6px, 2vw, 14px);
+        margin-bottom: 10%;
+        margin-top: 20px;
+        width: 100% ;
+        
+    }
+
+    .prestabla thead tr th:nth-child(3) {
+        display: none;
+    }
+    /* Ocultar la sexta columna en el tbody */
+    .prestabla tbody tr td:nth-child(3) {
+        display: none;
+    }
+
+    .formulario{
+        position: relative;
+        top: -20px;
+    }
+
+    /* administrar libros*/
+    .formulario.form-libros{
+        margin-left: 0 !important;
+        margin-right: 0 !important;        
+    }
+
+    #contenido{
+        margin-bottom: 10px;
+    }
+
+    .zmdi-help-outline{
+        display: none;
+    }
+
+    #listado{
+        display: flex;
+        font-size: small !important;
+        margin: auto;
+        justify-content: center;
+    }
+
+}
+
+/* col-sm */
+@media (min-width: 768px) and (max-width: 991px) {
+    .form-container{ width: 370px; }
+    .navbar-lateral{ width: 25%; display: inherit !important; }
+    app-header{left: 25% !important; width: 96% !important;}
+    .content{left: 25% !important;}
+    .content-page-container{ width: 70%; }
+
+    .all-tittles{
+        font-size: 24px;
+    }
+
+    #Nombre{
+        font-size: 20px;
+    }
+
+    .list-unstyled.full-reset.navbar-icons{
+        margin: 0;
+    }
+
+    .tooltips-general.exit-system-button{
+        position: relative;
+        top: 5px;
+
+    }
+
+    .tooltips-general.search-book-button{
+        position: relative;
+        top: 5px;
+    }
+
+    .col-xs-12.col-sm-6{
+        position: relative;
+        top: -15px;
+        width: 100%;
+        font-size: small;
+    }
+
+    .col-xs-12.col-sm-6.text-right{
+        position: relative;
+        top: -15px;
+    }
+
+    .content-page-container.full-reset.custom-scroll-containers{
+        height: 100%;
+    }
+
+    .recomendaciones-container{
+        margin: auto;
+    }
+
+    #Titulo{
+        margin: auto;
+        display: flex;
+        align-items: center;
+        
+    }
+
+    .university-text{
+        font-size: 60%;
+    }
+
+    .footer{
+        left: 25%;
+        width: 71%;
+    }
+
+
+    /* Catalago*/
+
+    .generos-libros{
+        margin-left: -30px;
+    }
+
+    .imagenes-libros{
+        margin-left: 20%;
+    }
+
+    .libro{
+        width: 100%;
+    }
+
+    .libro-nombre{
+        text-align: center;
+        margin-bottom: 12%;
+    }
+
+    /*Informacion*/
+    .book-advertisement img{
+        width: 220px;
+        height:320px;
+        display: flex;
+        align-items: center;
+        margin-right: 20px;
+        margin-top: 20px;
+    }
+
+
+    #Autor,
+    #Genero,
+    #anio,
+    #resumen{
+        font-size: 15px;
+        margin-top: -5px;
+    }
+
+    #titulo{
+        font-size: 20px;
+    }
+
+
+    #resumen{
+        text-align: justify;
+    }
+    
+    /*Reserva*/
+    .reserva.center{
+        width: 80%;
+        display: flex;
+        justify-content: center; /* Centrar horizontalmente */
+        align-items: center; 
+        margin-top: 6%;
+        margin-bottom: 10%;
+    }
+
+    .imgreserva{
+        width: 200px;
+        height: 300px;
+    }
+    
+    
+    .detallesreserva p {
+        font-size: 17px;
+        margin: 20px;
+    }
+
+    .detallesreserva h2{
+        font-size: 24px;
+        margin: 0;
+    }
+
+    .detallesreserva button{
+        margin-top: 30px;
+
+    }
+    /*Historial*/
+    .center{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin: auto;
+        margin-top: 10%;
+    }
+
+    #tbl{
+        width: 90%;
+        margin-top: -10%;
+        margin-bottom: 40px;
+    }
+
+    td{
+        text-align: center;
+        border: solid grey 2px;
+    }
+
+    table#tabla{
+        margin: auto;
+        width: 90%;
+        font-size: .8rem;
+        margin-top: 10px;
+        margin-bottom: 40px;
+    }
+
+    /*Administrar usuarios*/
+    #tablaUsuarios{
+        font-size: small;
+        margin-bottom: 10%;
+        width: 100%;
+        margin-top: -20px;
+    }
+
+    .prestabla thead tr th:nth-child(3) {
+        display: none;
+    }
+    /* Ocultar la sexta columna en el tbody */
+    .prestabla tbody tr td:nth-child(3) {
+        display: none;
+    }
+    
+
+    /*Administrar libros*/
+    .formulario.form-libros{
+        margin-left: 0 !important;
+        margin-right: 0 !important;   
+        margin-top: 20%;     
+    }
+    
+    /*Generar reporte*/
+    .formulario{
+        margin-bottom: 20%;
+    }
+}
+/* .catalogo{
+    right: 1rem; 
+} */
+.content {
+    flex: 1; /* Esto hace que el contenido ocupe todo el espacio disponible entre el header y el footer */
+    margin-top: 4rem;
+    position: absolute;
+    left: 20%;
+    /* right: 1rem; */
+    /* padding: 20px; */
+    width: 80%;
+    overflow-y: auto; /* Permite que el contenido sea desplazable si es necesario */
+    
+  }
+/* col-md */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .form-container{ width: 370px; }
+    .navbar-lateral{ width: 25%;  display: inherit !important; }
+    .footer{left: 25%;}
+    .footer-fixed{width: 72%;}
+    app-header{left: 25% !important; width: 96% !important;}
+    .content{left: 25%;}
+    .content-page-container{ 
+        width: 75%;  
+        
+    }
+
+    .all-tittles{
+        font-size: 26px;
+    }
+
+    #Nombre{
+        font-size: 20px;
+    }
+
+    .list-unstyled.full-reset.navbar-icons{
+        margin: 0;
+        
+    }
+
+    .tooltips-general.exit-system-button{
+        position: relative;
+        top: 5px;
+
+    }
+
+    .tooltips-general.search-book-button{
+        position: relative;
+        top: 5px;
+    }
+
+    .col-xs-12.col-sm-6{
+        position: relative;
+        top: -15px;
+        width: 100%;
+        font-size: small;
+    }
+
+    .col-xs-12.col-sm-6.text-right{
+        position: relative;
+        top: -15px;
+    }
+
+    .content-page-container.full-reset.custom-scroll-containers{
+        height:100%;
+    }
+
+    .recomendaciones-container{
+        margin: auto;
+    }
+
+    #Titulo{
+        margin: auto;
+        display: flex;
+        align-items: center;
+        
+    }
+
+    .university-text{
+        font-size: 68%;
+    }
+    .footer{
+        width: 72%;
+    }
+
+    /* Catalago*/
+
+    .generos-libros{
+        margin-left: -30px;
+    }
+
+    .imagenes-libros{
+        margin-left: 20%;
+    }
+
+    .libro{
+        width: 50%;
+    }
+
+    .libro-nombre{
+        text-align: center;
+        margin-bottom: 12%;
+        height: 60px;
+    }
+
+    /*Informacion*/
+    .book-advertisement img{
+        width: 350px;
+        height:450px;
+        margin: auto;
+        margin-right: 20px;
+    }
+
+
+    #Autor,
+    #Genero,
+    #anio,
+    #resumen{
+        font-size:20px;
+        margin-top: -5px;
+    }
+
+    #titulo{
+        font-size: 24px;
+    }
+
+
+    #resumen{
+        text-align: justify;
+    }
+
+    
+    
+    /*Reserva*/
+    .reserva.center{
+        width: 80%;
+        display: flex;
+        justify-content: center; /* Centrar horizontalmente */
+        align-items: center; 
+        margin-top: 6%;
+        margin-bottom: 10%;
+    }
+
+    .imgreserva{
+        width: 250px;
+        height: 350px;
+    }
+    
+    
+    .detallesreserva p {
+        font-size: 20px;
+        margin: 20px;
+    }
+
+    .detallesreserva h2{
+        font-size: 24px;
+        margin: 0;
+    }
+
+    .detallesreserva button{
+        margin-top: 30px;
+
+    }
+    /*Historial*/
+    .center{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin: auto;
+    }
+
+    #tbl{
+        width: 90%;
+        margin-bottom: 40px;
+    }
+
+    td{
+        text-align: center;
+        border: solid grey 2px;
+    }
+
+    table#tabla{
+        margin: auto;
+        width: 90%;
+        font-size: 1rem;
+        margin-bottom: 40px;
+        margin-top: 10px;
+    }
+
+    /*Administrar usuarios*/
+    #tablaUsuarios{
+        font-size: small;
+        margin-bottom: 10%;
+        width: 100%;
+
+    }
+
+
+
+    
+    /*Administrar libros*/
+    .formulario.form-libros{
+        margin-left: 0 !important;
+        margin-right: 0 !important;        
+    }
+    
+    /*Generar reporte*/
+    .formulario{
+        margin-bottom: 10%;
+    }    
+}
+    
+    
+
+/* col-lg */
+@media (min-width: 1200px) {
+    .form-container{ width: 370px; }
+    .navbar-lateral{ display: inherit !important; }
+}
+
+.tooltips-general a i {
+    font-size: 25px;
+}
+
+.active{
+    color: #FFD559;
+}
+.admin.ocultar{
+    display: none;
+}
+.prestamos.ocultar{
+    display: none;
+}
+.cliente.ocultar{
+    display: none;
+}
+.inventario.ocultar{
+    display: none;
+}
+
+/* Paginación */
+.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    gap: 15px;
+  }
+  
+  .pagination-info {
+    color: #666;
+    font-size: 0.9rem;
+  }
+  
+  .pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .pagination-button {
+    padding: 8px 15px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .pagination-button:hover:not(:disabled) {
+    background: #f0f0f0;
+    border-color: #999;
+  }
+  
+  .pagination-button:disabled {
+    background: #f5f5f5;
+    color: #999;
+    cursor: not-allowed;
+  }
+  
+  .pagination-pages {
+    display: flex;
+    gap: 5px;
+  }
+  
+  .pagination-number {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .pagination-number:hover {
+    background: #f0f0f0;
+  }
+  
+  .pagination-number.active {
+    background: #3498db;
+    color: white;
+    border-color: #3498db;
+  }
+  
+  .pagination-size {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .pagination-size select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+  }
+  
+  .pagination-size label {
+    color: #666;
+    font-size: 0.9rem;
+  }

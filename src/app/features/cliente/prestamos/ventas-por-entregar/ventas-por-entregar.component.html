@@ -1,0 +1,45 @@
+<div class="content-container">
+  <!-- Barra de búsqueda -->
+  <div class="search-bar">
+    <input
+      type="text"
+      placeholder="ID, nombre completo, nombre de usuario..."
+      [(ngModel)]="searchTerm"
+      (input)="filterVentas()"
+      autocomplete="off"
+    />
+  </div>
+
+  <!-- Tabla de resultados -->
+  <div *ngIf="ventasFiltradas.length > 0; else noRecords">
+    <table class="sales-history-table">
+      <thead>
+        <tr>
+          <th>NOMBRE CLIENTE</th>
+          <th>CANTIDAD DE LIBROS</th>
+          <th>FECHA DE COMPRA</th>
+          <th>ENTREGADO</th>
+          <th>RECIBO</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let venta of ventasFiltradas">
+          <td>{{ venta.nombreCliente }}</td>
+          <td>{{ venta.cantidadLibros }}</td>
+          <td>{{ venta.fechaCompra | date:'yyyy-MM-dd' }}</td>
+          <td>
+            <span class="badge-entregado">{{ venta.entregado ? 'SI' : 'NO' }}</span>
+          </td>
+          <td>
+            <button class="btn-generar" (click)="generarRecibo(venta.id)">GENERAR</button>
+          </td>
+        </tr>
+      </tbody>      
+    </table>
+  </div>
+
+  <!-- Mensaje cuando no hay registros -->
+  <ng-template #noRecords>
+    <p>No se encontraron ventas pendientes por entregar.</p>
+  </ng-template>
+</div>
