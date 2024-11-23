@@ -1,0 +1,73 @@
+<div class="carrito-container">
+  <div class="header-carrito">
+    <button class="btn-volver" (click)="continuarComprando()">
+      Continuar comprando
+    </button>
+  </div>
+
+  <div class="contenido-carrito">
+    <div class="lista-productos">
+      <h2>Carrito de compras</h2>
+      <p class="subtitulo">Tiene {{ librosCarrito.length }} artículos en el carrito</p>
+
+      <div class="productos">
+        <div class="producto-item" *ngFor="let libro of librosCarrito">
+          <img [src]="libro.Imagen" [alt]="libro.Titulo" class="producto-imagen">
+          <div class="producto-info">
+            <h3>{{ libro.Titulo }}</h3>
+            <p class="autor">{{ libro.Autor }}</p>
+          </div>
+          <div class="cantidad-control">
+            <div class="cantidad-wrapper">
+              <span>{{ libro.Cantidad }}</span>
+              <div class="cantidad-arrows">
+                <i class="zmdi zmdi-chevron-up" 
+                   (click)="actualizarCantidad(libro, true)"
+                   [class.disabled]="libro.Cantidad >= libro.Stock"></i>
+                <i class="zmdi zmdi-chevron-down" 
+                   (click)="actualizarCantidad(libro, false)"
+                   [class.disabled]="libro.Cantidad <= 1"></i>
+              </div>
+            </div>
+          </div>
+          <div class="precio">${{ (libro.Precio * libro.Cantidad).toFixed(2) }}</div>
+          <div class="trash-icon" (click)="eliminarLibro(libro.ID)">
+            <i class="zmdi zmdi-delete"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="resumen-compra">
+      <h3>Método de Pago</h3>
+      <div class="metodos-pago">
+        <button class="btn-paypal" (click)="pagarConPaypal()">
+          Pagar con PayPal
+        </button>
+        <button class="btn-tarjeta" (click)="pagarConTarjeta()">
+          Pagar con Tarjeta Debito/Crédito
+        </button>
+      </div>
+
+      <div class="desglose">
+        <div class="linea">
+          <span>Subtotal</span>
+          <span>${{ subtotal.toFixed(2) }}</span>
+        </div>
+        <div class="linea">
+          <span>Shipping</span>
+          <span>${{ shipping.toFixed(2) }}</span>
+        </div>
+        <div class="linea total">
+          <span>Total (Tax incl.)</span>
+          <span>${{ (subtotal + shipping).toFixed(2) }}</span>
+        </div>
+      </div>
+
+      <button class="btn-pagar">
+        ${{ (subtotal + shipping).toFixed(2) }}
+        <span>Pagar <i class="zmdi zmdi-arrow-right"></i></span>
+      </button>
+    </div>
+  </div>
+</div>

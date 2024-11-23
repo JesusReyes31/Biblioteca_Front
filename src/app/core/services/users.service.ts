@@ -1,12 +1,14 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, Observable, Subject, throwError, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsersService {
   private apiUrl = 'http://localhost:9500/';
+  private carritoActualizadoSource = new Subject<void>();
+  carritoActualizado = this.carritoActualizadoSource.asObservable();
   constructor(private http:HttpClient) { }
 
   //Verificar el Token para autorizacion de una acción
@@ -122,6 +124,11 @@ export class UsersService {
     );
   }
 
+  //Traer libros por busqueda
+  getBooksByName(clave: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}others/search`,{clave:clave});
+  }
+
   //Historial de Compras
   getPurchaseHistory(): Observable<any[]> {
     const headers = new HttpHeaders({authorization: `${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json'});
@@ -136,7 +143,22 @@ export class UsersService {
       })
     );
   }
-  
+  //Carrito de compras
+  getCarrito(): Observable<any>{
+    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
+    const id = sessionStorage.getItem('ID_Uss');
+    return this.http.get(`${this.apiUrl}cart/${id}`,{ headers });
+  }
+  agregarAlCarrito(ID_Libro: string, Cantidad: number) {
+    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
+    const ID_Usuario = sessionStorage.getItem('ID_Uss');
+    return this.http.post<any>(`${this.apiUrl}cart`, {ID_Libro,ID_Usuario,Cantidad},{ headers }).pipe(
+      tap(() => {
+        this.notificarActualizacionCarrito();
+      })
+    );
+  }
+
 
   //Credencial
   getCredencial(): Observable<Blob> {
@@ -229,5 +251,9 @@ export class UsersService {
   getVentasPorEntregar(): Observable<any>{
     const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
     return this.http.get(`${this.apiUrl}sales/pending`, { headers });
+  }
+
+  notificarActualizacionCarrito() {
+    this.carritoActualizadoSource.next();
   }
 }

@@ -182,4 +182,42 @@
     border-bottom: 1px solid #E0E0E0;
 }
 
+.search-book-button {
+  position: relative;
+}
+
+.cart-counter {
+  position: absolute;
+  top: 2px;
+  right: -8px;
+  background-color: #ff0000;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  font-family: Arial, sans-serif;
+  /* Eliminar bordes y sombras para un look más limpio */
+  border: none;
+  box-shadow: none;
+}
+
+/* Animación simple de entrada */
+@keyframes popIn {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.cart-counter {
+  animation: popIn 0.2s ease-out;
+}
+
   

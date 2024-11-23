@@ -26,14 +26,18 @@ export class CatalogoComponent {
           data.forEach((gen: any) => {
             this.generos.push(gen.Genero);
           });
-          // Seleccionar automáticamente el primer género
-          setTimeout(() => {
-            const primerGenero = document.querySelector('.generos-libros ul li');
-            if (primerGenero) {
-              primerGenero.classList.add('selected');
-              this.traerLibros(this.generos[0]);
-            }
-          });
+          if(sessionStorage.getItem('busqueda')){
+            this.traerLibrosBusqueda(sessionStorage.getItem('busqueda')||'');
+          }else{
+            // Seleccionar automáticamente el primer género
+            setTimeout(() => {
+              const primerGenero = document.querySelector('.generos-libros ul li');
+              if (primerGenero) {
+                primerGenero.classList.add('selected');
+                this.traerLibros(this.generos[0]);
+                }
+            }, 100);
+          }
         }
       },
       (error) => {
@@ -51,6 +55,28 @@ export class CatalogoComponent {
     // Llamar al método traerLibros con el género seleccionado
     this.traerLibros(genero);
   }
+
+  //Traer libros por busqueda
+  traerLibrosBusqueda(busqueda: string): void {
+    this.userService.getBooksByName(busqueda).subscribe({
+      next: (data) => {
+        if (data.message) {
+          this.sweetalert.showNoReload(data.message);
+          this.borrarlibros();
+        } else {
+          this.libros = data;
+          this.footerService.adjustFooterPosition();
+        }
+        sessionStorage.removeItem('busqueda');
+      },
+      error: (error) => {
+        console.error(`Error al obtener libros por busqueda:`, error);
+        this.borrarlibros();
+        this.sweetalert.showNoReload('Error al buscar libros');
+      }
+    });
+  }
+  //Traer libros por genero 
   traerLibros(genero: string): void {
     this.borrarlibros();
     console.log(`Género seleccionado: ${genero}`);

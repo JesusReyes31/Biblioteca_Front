@@ -16,11 +16,18 @@
       </li>
     }
     @if(tipou==='Cliente' || tipou==='Prestamos' || tipou==='Inventario'){
-      <li class="tooltips-general search-book-button">
-        <a (click)="openSearchModal()" title="Carrito de Compras">
-          <i class="zmdi zmdi-shopping-cart"></i>
-        </a>
-      </li>
+      @if(mostrarCarrito){
+        <li class="tooltips-general search-book-button">
+          <a (click)="irAlCarrito()" title="Carrito de Compras">
+            <i class="zmdi zmdi-shopping-cart"></i>
+            @if(cantidadCarrito > 0){
+              <span class="cart-counter">
+                {{ cantidadCarrito > 9 ? '9+' : cantidadCarrito }}
+              </span>
+            }
+          </a>
+        </li>
+      }
       <li class="tooltips-general search-book-button">
         <a (click)="openNotifications()" title="Notificaciones">
           <i class="zmdi zmdi-notifications"></i>
@@ -34,7 +41,7 @@
           }
           <figure>
             @if(Imagen!=='null'){
-              <img [src]="Imagen" alt="User" class="img-user img-responsive img-circle center-box" />
+              <img [src]="Imagen" alt="User-log" class="img-user img-responsive img-circle center-box" />
             }@else{
               <img src="../../../../../assets/imgs/user.png" alt="User" class="img-user img-responsive img-circle center-box" />
             }

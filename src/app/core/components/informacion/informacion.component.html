@@ -10,7 +10,7 @@
       @if(USS !== 'Anonimo'){
         <div class="button-container">
           <button id="reservar" (click)="reservarLibro(libro?.ID)">Reservar</button>
-          <button id="carrito" (click)="carrito()">Añadir al carrito</button>
+          <button id="carrito" (click)="agregarcarrito()">Añadir al carrito</button>
         </div>
       }
     </div>
@@ -84,7 +84,7 @@
       <div *ngFor="let resena of resenas" class="resena" [ngClass]="{'resena-propia': resena.ID_Usuario === getCurrentUserId()}">
         <div class="resena-header">
           <div class="usuario-info">
-            <p class="nombre-usuario">{{ resena.Nombre_Usuario }} {{ resena.ID_Usuario }}</p>
+            <p class="nombre-usuario">{{ resena.Nombre_Usuario }}</p>
             <span class="stars">
               <span *ngFor="let star of getStarArray(resena.Calificacion)">
                 <i class="fa" [ngClass]="{

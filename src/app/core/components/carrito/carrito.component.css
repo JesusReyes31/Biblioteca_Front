@@ -1,0 +1,267 @@
+.carrito-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header-carrito {
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.header-carrito::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+
+.btn-volver {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-volver::before {
+  content: '←';
+  font-size: 20px;
+  margin-right: 8px;
+  transition: transform 0.3s ease;
+  position: relative;
+  top: -1px;
+}
+
+.btn-volver:hover {
+  background: #f8fafc;
+  color: #1e293b;
+  transform: translateX(-6px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+}
+
+.btn-volver:hover::before {
+  transform: translateX(-4px);
+}
+
+.btn-volver:active {
+  transform: translateX(-6px) scale(0.98);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Efecto de ripple al hacer click */
+.btn-volver::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+}
+
+.btn-volver:active::after {
+  width: 200px;
+  height: 200px;
+}
+
+.contenido-carrito {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+}
+
+.lista-productos {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.lista-productos h2 {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+}
+
+.subtitulo {
+  color: #666;
+  margin-top: 5px;
+}
+
+.producto-item {
+  display: grid;
+  grid-template-columns: auto 2fr 1fr 1fr auto;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid #eee;
+  gap: 20px;
+}
+
+.producto-imagen {
+  width: 80px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.producto-info h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.autor {
+  color: #666;
+  margin: 5px 0;
+}
+
+.cantidad-control select {
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 60px;
+}
+
+.precio {
+  font-weight: bold;
+  color: #333;
+}
+
+.btn-eliminar {
+  background: none;
+  border: none;
+  color: #ff4444;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.resumen-compra {
+  background: #6366F1;
+  padding: 20px;
+  border-radius: 10px;
+  color: white;
+}
+
+.metodos-pago {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.btn-paypal, .btn-tarjeta {
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-paypal {
+  background: #ffc439;
+  color: #003087;
+}
+
+.btn-tarjeta {
+  background: #fff;
+  color: #333;
+}
+
+.desglose {
+  margin: 20px 0;
+}
+
+.linea {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+.total {
+  font-weight: bold;
+  font-size: 18px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+.btn-pagar {
+  width: 100%;
+  padding: 15px;
+  background: #38bdf8;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-pagar:hover {
+  background: #0284c7;
+}
+
+.cantidad-wrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 4px 8px;
+  width: fit-content;
+}
+
+.cantidad-wrapper span {
+  margin-right: 8px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.cantidad-arrows {
+  display: flex;
+  flex-direction: column;
+}
+
+.cantidad-arrows i {
+  font-size: 18px;
+  cursor: pointer;
+  color: #666;
+  line-height: 12px;
+}
+
+.cantidad-arrows i:hover {
+  color: #333;
+}
+
+.trash-icon {
+  cursor: pointer;
+  color: #666;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.trash-icon i {
+  font-size: 20px;
+}
+
+.trash-icon:hover {
+  background-color: rgba(255, 0, 0, 0.1);
+  color: #ff4444;
+}

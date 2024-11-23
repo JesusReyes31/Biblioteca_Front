@@ -403,7 +403,66 @@ export class InformacionComponent {
     }, 100);
   }
 
-  carrito():void{
-    
+  async agregarcarrito(): Promise<void> {
+    if (!this.libro || !this.libro.Cantidad) {
+      this.sweetalert.showNoReload('Error al obtener la información del libro');
+      return;
+    }
+
+    const cantidadDisponible = this.libro.Cantidad;
+
+    const { value: cantidad } = await Swal.fire({
+      title: 'Agregar al carrito',
+      html: `
+        <p>Cantidad disponible: ${cantidadDisponible}</p>
+        <p>¿Cuántos ejemplares deseas agregar?</p>
+      `,
+      input: 'number',
+      inputAttributes: {
+        min: '1',
+        max: cantidadDisponible.toString(),
+        step: '1',
+        pattern: '[0-9]*',
+        onkeypress: 'return event.charCode >= 48 && event.charCode <= 57'
+      },
+      inputValue: 1,
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Agregar',
+      inputValidator: (value) => {
+        const num = parseInt(value);
+        if (!value || !Number.isInteger(num)) {
+          return 'Debes ingresar un número entero';
+        }
+        if (num < 1) {
+          return 'La cantidad mínima es 1';
+        }
+        if (num > cantidadDisponible) {
+          return `La cantidad máxima disponible es ${cantidadDisponible}`;
+        }
+        return null;
+      },
+      preConfirm: (value) => {
+        return Math.floor(Number(value));
+      }
+    });
+
+    if (cantidad) {
+      this.userService.agregarAlCarrito(this.libro.ID, cantidad).subscribe({
+        next: (response) => {
+          Swal.fire({
+            title: '¡Agregado!',
+            text: `Se agregaron ${cantidad} ejemplares al carrito`,
+            icon: 'success',
+            timer: 1500,
+            showConfirmButton: false
+          });
+        },
+        error: (error) => {
+          console.error('Error al agregar al carrito:', error);
+          this.sweetalert.showNoReload('Error al agregar al carrito');
+        }
+      });
+    }
   }
 }

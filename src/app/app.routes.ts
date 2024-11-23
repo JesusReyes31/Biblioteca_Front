@@ -18,6 +18,7 @@ import { DevolverLibrosComponent } from './features/cliente/prestamos/devolver-l
 import { VentasPorEntregarComponent } from './features/cliente/prestamos/ventas-por-entregar/ventas-por-entregar.component';
 import { PrestamosGeneralesComponent } from './features/cliente/AdminSuc/prestamos-generales/prestamos-generales.component';
 import { CambiarInformacionComponent } from './core/components/cambiar-informacion/cambiar-informacion.component';
+import { CarritoComponent } from './core/components/carrito/carrito.component';
 
 export const routes: Routes = [
     {
@@ -36,6 +37,7 @@ export const routes: Routes = [
             {path:"ventas-por-entregar",component:VentasPorEntregarComponent},
             {path:"prestamos-generales",component:PrestamosGeneralesComponent},
             {path:"perfil",component:CambiarInformacionComponent},
+            {path:"carrito",component:CarritoComponent},
         ]
     },
     {path:"login",component:LoginComponent},
