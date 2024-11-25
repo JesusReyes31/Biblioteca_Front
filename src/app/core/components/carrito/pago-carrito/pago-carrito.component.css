@@ -1,0 +1,223 @@
+.seccion-metodos {
+  margin-bottom: 20px;
+}
+
+.metodo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.metodo-item:hover {
+  border-color: #6366F1;
+  background: #f8fafc;
+}
+
+.radio-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.metodo-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.metodo-info img {
+  height: 24px;
+  width: auto;
+}
+
+.descripcion {
+  color: #64748b;
+  font-size: 14px;
+}
+
+.metodos-pago{
+    margin-left: 1rem;
+    width: 70%;
+}
+
+/* Mantener los estilos del resumen de compra como estaban */
+.resumen-compra {
+    background: #6366F1;
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    position: fixed;
+    top: 5rem;
+    right: 5px;
+    width: 280px;
+    height: fit-content;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+.item-desglose {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+  font-size: 1rem;
+}
+
+.total {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+.btn-pagar {
+  width: 100%;
+  padding: 15px;
+  background: #0EA5E9;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.btn-pagar:hover {
+  background: #0284C7;
+}
+
+/* Estilos para el SweetAlert2 */
+::ng-deep .swal2-popup {
+  padding: 2rem;
+  width: 500px;
+  border-radius: 15px;
+}
+
+::ng-deep .swal2-title {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #eee;
+}
+
+::ng-deep .form-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+::ng-deep .form-group label {
+  display: block;
+  color: #4a5568;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+::ng-deep .swal2-input,
+::ng-deep .swal2-select {
+  height: 45px !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0.5rem 1rem !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  font-size: 1rem !important;
+  color: #2d3748 !important;
+  background-color: #fff !important;
+  transition: all 0.3s ease !important;
+}
+
+::ng-deep .swal2-input:focus,
+::ng-deep .swal2-select:focus {
+  border-color: #667eea !important;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2) !important;
+  outline: none !important;
+}
+
+::ng-deep .swal2-actions {
+  margin-top: 2rem;
+  gap: 1rem;
+}
+
+::ng-deep .swal2-confirm {
+  background: #667eea !important;
+  padding: 0.75rem 2rem !important;
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+}
+
+::ng-deep .swal2-confirm:hover {
+  background: #5a67d8 !important;
+  transform: translateY(-1px);
+}
+
+::ng-deep .swal2-cancel {
+  background: #718096 !important;
+  padding: 0.75rem 2rem !important;
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+}
+
+::ng-deep .swal2-cancel:hover {
+  background: #4a5568 !important;
+  transform: translateY(-1px);
+}
+
+/* Estilos específicos para el select */
+::ng-deep select.swal2-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%234a5568' viewBox='0 0 16 16'%3E%3Cpath d='M8 10.5l-4-4h8l-4 4z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem !important;
+}
+
+/* Estilos para el input de tipo month */
+::ng-deep input[type="month"] {
+  padding: 10px !important;
+  background-color: white !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  font-size: 1rem !important;
+  color: #2d3748 !important;
+  cursor: pointer !important;
+  width: 100% !important;
+}
+
+::ng-deep input[type="month"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  padding: 5px;
+  filter: invert(0.5);
+}
+
+/* Animación suave al abrir */
+::ng-deep .swal2-show {
+  animation: fadeInUp 0.3s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

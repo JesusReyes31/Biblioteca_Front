@@ -284,39 +284,50 @@ export class InformacionComponent {
       this.sweetalert.showNoReload('ID de usuario o libro inválido.');
       return;
     }
-  
-    // Verificar si el usuario ya tiene libros apartados
-    this.userService.getReservas().subscribe(
-      (data) => {
-        if (data.length >= 3) {
+
+    // Primero verificamos si ya tiene este libro reservado
+    this.userService.getReservas().subscribe({
+      next: (reservas) => {
+        // Verificar si ya existe una reserva para este libro
+        const reservaExistente = reservas.find(
+          (reserva: any) => reserva.ID_Libro === idLibro
+        );
+
+        if (reservaExistente) {
+          this.sweetalert.showNoReload('Ya tienes este libro reservado.');
+          return;
+        }
+
+        // Si no tiene más de 3 libros reservados, continuamos con la verificación del carrito
+        if (reservas.length >= 3) {
           this.sweetalert.showNoReload('Ya tienes la cantidad máxima de libros reservados.');
           return;
         }
-  
-        // Si todo está bien, procedemos a realizar la reserva
-        this.userService.reservarLibro(idUsuario, idLibro).subscribe(
-          (data) => {
-            if (data.message == "exito") {
-              if (data.reserva) {
-                this.sweetalert.showNoReload(`Reserva realizada con éxito 😊
-                  <span style="font-size: 16px;">Fecha límite para recoger libro:</span>
-                  <span style="font-size: 16px;">${data.reserva.Fecha_recoger}.</span>
-                  <span style="font-size: 16px;">Para más información, vaya al apartado de libros reservados.</span>
-                `);
-              }
-            }
+        this.userService.reservarLibro(idUsuario, idLibro).subscribe({
+          next: (data) => {
+            // console.log(data)
+            Swal.fire({
+              title: '¡Reserva realizada con éxito! 😊',
+              html: `
+                <span style="font-size: 16px;">Fecha límite para recoger libro:</span><br>
+                <span style="font-size: 16px;">${data.reserva.Fecha_recoger}.</span><br>
+                <span style="font-size: 16px;">Para más información, vaya al apartado de libros reservados.</span>
+              `,
+              icon: 'success',
+              showConfirmButton: true
+            });
           },
-          (error) => {
+          error: (error) => {
             console.error('Error al realizar la reserva', error);
             this.sweetalert.showNoReload('Error al enviar la solicitud al servidor');
           }
-        );
+        });
       },
-      (error) => {
-        console.error('Error al verificar los libros apartados', error);
-        this.sweetalert.showNoReload('Error al verificar los libros apartados');
+      error: (error) => {
+        console.error('Error al verificar las reservas:', error);
+        this.sweetalert.showNoReload('Error al verificar las reservas existentes');
       }
-    );
+    });
   }
   getStarArray(calificacion: number): number[] {
     const fullStars = Math.floor(calificacion); // Número de estrellas completas
@@ -409,60 +420,112 @@ export class InformacionComponent {
       return;
     }
 
-    const cantidadDisponible = this.libro.Cantidad;
+    // Primero verificamos si el libro ya está en el carrito
+    this.userService.getCarrito().subscribe({
+      next: async (carrito) => {
+        const libroEnCarrito = carrito.find((item: any) => item.ID_Libro === this.libro.ID);
+        const cantidadDisponible = this.libro.Cantidad;
+        let mensajeHTML = `<p>Cantidad disponible: ${cantidadDisponible}</p>`;
+        
+        // Solo mostramos la cantidad en carrito si ya existe
+        if (libroEnCarrito) {
+          mensajeHTML += `<p>Cantidad actual en carrito: ${libroEnCarrito.Cantidad}</p>`;
+        }
+        mensajeHTML += `<p>¿Cuántos ejemplares deseas agregar?</p>`;
 
-    const { value: cantidad } = await Swal.fire({
-      title: 'Agregar al carrito',
-      html: `
-        <p>Cantidad disponible: ${cantidadDisponible}</p>
-        <p>¿Cuántos ejemplares deseas agregar?</p>
-      `,
-      input: 'number',
-      inputAttributes: {
-        min: '1',
-        max: cantidadDisponible.toString(),
-        step: '1',
-        pattern: '[0-9]*',
-        onkeypress: 'return event.charCode >= 48 && event.charCode <= 57'
+        const { value: cantidadAgregar } = await Swal.fire({
+          title: 'Agregar al carrito',
+          html: mensajeHTML,
+          input: 'number',
+          inputAttributes: {
+            min: '1',
+            max: cantidadDisponible.toString(),
+            step: '1'
+          },
+          inputValue: 1,
+          showCancelButton: true,
+          cancelButtonText: 'Cancelar',
+          confirmButtonText: 'Agregar',
+          inputValidator: (value) => {
+            const num = parseInt(value);
+            if (!value || !Number.isInteger(num)) {
+              return 'Debes ingresar un número entero';
+            }
+            if (num < 1) {
+              return 'La cantidad mínima es 1';
+            }
+            if (num > cantidadDisponible) {
+              return `Solo hay ${cantidadDisponible} ejemplares disponibles`;
+            }
+            return null;
+          }
+        });
+
+        if (cantidadAgregar) {
+          if (libroEnCarrito) {
+            // Si ya existe en el carrito, actualizamos la cantidad total
+            const nuevaCantidad = libroEnCarrito.Cantidad + parseInt(cantidadAgregar);
+            
+            // Verificar que no exceda el máximo disponible
+            if (nuevaCantidad > cantidadDisponible) {
+              this.userService.actualizarCantidadCarrito(libroEnCarrito.ID, cantidadDisponible).subscribe({
+                next: () => {
+                  Swal.fire({
+                    title: '¡Actualizado!',
+                    text: `Se estableció la cantidad máxima disponible (${cantidadDisponible})`,
+                    icon: 'success',
+                    timer: 1500,
+                    showConfirmButton: false,
+                  }).then(() => {
+                    window.location.reload();
+                  });
+                },
+                error: (error) => {
+                  console.error('Error al actualizar carrito:', error);
+                  this.sweetalert.showNoReload('Error al actualizar el carrito');
+                }
+              });
+            } else {
+              this.userService.actualizarCantidadCarrito(libroEnCarrito.ID, nuevaCantidad).subscribe({
+                next: () => {
+                  Swal.fire({
+                    title: '¡Actualizado!',
+                    text: `Se agregaron ${cantidadAgregar} ejemplares al carrito`,
+                    icon: 'success',
+                    timer: 1500,
+                    showConfirmButton: false
+                  });
+                },
+                error: (error) => {
+                  console.error('Error al actualizar carrito:', error);
+                  this.sweetalert.showNoReload('Error al actualizar el carrito');
+                }
+              });
+            }
+          } else {
+            // Si es nuevo en el carrito, lo agregamos
+            this.userService.agregarAlCarrito(this.libro.ID, parseInt(cantidadAgregar)).subscribe({
+              next: () => {
+                Swal.fire({
+                  title: '¡Agregado!',
+                  text: `Se agregaron ${cantidadAgregar} ejemplares al carrito`,
+                  icon: 'success',
+                  timer: 1500,
+                  showConfirmButton: false
+                });
+              },
+              error: (error) => {
+                console.error('Error al agregar al carrito:', error);
+                this.sweetalert.showNoReload('Error al agregar al carrito');
+              }
+            });
+          }
+        }
       },
-      inputValue: 1,
-      showCancelButton: true,
-      cancelButtonText: 'Cancelar',
-      confirmButtonText: 'Agregar',
-      inputValidator: (value) => {
-        const num = parseInt(value);
-        if (!value || !Number.isInteger(num)) {
-          return 'Debes ingresar un número entero';
-        }
-        if (num < 1) {
-          return 'La cantidad mínima es 1';
-        }
-        if (num > cantidadDisponible) {
-          return `La cantidad máxima disponible es ${cantidadDisponible}`;
-        }
-        return null;
-      },
-      preConfirm: (value) => {
-        return Math.floor(Number(value));
+      error: (error) => {
+        console.error('Error al obtener el carrito:', error);
+        this.sweetalert.showNoReload('Error al verificar el carrito');
       }
     });
-
-    if (cantidad) {
-      this.userService.agregarAlCarrito(this.libro.ID, cantidad).subscribe({
-        next: (response) => {
-          Swal.fire({
-            title: '¡Agregado!',
-            text: `Se agregaron ${cantidad} ejemplares al carrito`,
-            icon: 'success',
-            timer: 1500,
-            showConfirmButton: false
-          });
-        },
-        error: (error) => {
-          console.error('Error al agregar al carrito:', error);
-          this.sweetalert.showNoReload('Error al agregar al carrito');
-        }
-      });
-    }
   }
 }

@@ -2,7 +2,125 @@
   <app-sidebar></app-sidebar>
   <app-header></app-header>
   <div class="content" id="contenido">
-    <router-outlet></router-outlet>
+    <!-- Inicios no dejan que se recargue lo demás  -->
+    <!-- <section class="contenido" *ngIf="url === '/' && (tipoUss === 'Cliente' || tipoUss === 'Anonimo' || tipoUss === 'Prestamos' || tipoUss === 'Inventario')">
+      <div class="horarios-container">
+        <h2 class="titulo">HORARIOS</h2>
+        <div class="horarios-dias">
+          <div class="horario-dia">
+            <span class="dia-titulo">Lunes - Viernes</span>
+            <span class="horario">8:00 a.m. - 1:00 p.m.</span>
+            <span class="horario">3:00 p.m. - 8:00 p.m.</span>
+          </div>
+          <div class="horario-dia">
+            <span class="dia-titulo">Sábados</span>
+            <span class="horario">10:00 a.m. - 5:00 p.m.</span>
+          </div>
+          <div class="horario-dia">
+            <span class="dia-titulo">Domingo</span>
+            <span class="horario cerrado">Cerrado</span>
+          </div>
+        </div>
+      </div>
+    
+      <div class="recomendaciones-container">
+        <h2 class="titulo">RECOMENDACIONES</h2>
+        <div class="recomendaciones-libros">
+          <div class="recomendacion-libro" *ngFor="let libro of librosRecomendados">
+            <img [src]="libro.Imagen" [alt]="libro.Titulo">
+            <span class="libro-nombre">{{libro.Titulo}}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="estadisticas-container" *ngIf="url === '/' && tipoUss === 'Admin Sucursal'">
+      <div class="estadisticas-grid">
+        <div class="estadistica-item">
+          <div class="icono-container">
+            <i class="fas fa-users"></i>
+          </div>
+          <span class="etiqueta">CLIENTES</span>
+          <span class="cantidad">{{estadisticas.clientes}}</span>
+        </div>
+    
+        <div class="estadistica-item">
+          <div class="icono-container">
+            <i class="fas fa-user"></i>
+          </div>
+          <span class="etiqueta">PERSONAL INVENTARIO</span>
+          <span class="cantidad">{{estadisticas.inventario}}</span>
+        </div>
+    
+        <div class="estadistica-item">
+          <div class="icono-container">
+            <i class="fas fa-users"></i>
+          </div>
+          <span class="etiqueta">PERSONAL PRÉSTAMOS</span>
+          <span class="cantidad">{{estadisticas.prestamos}}</span>
+        </div>
+    
+        <div class="estadistica-item">
+          <div class="icono-container">
+            <i class="fas fa-book"></i>
+          </div>
+          <span class="etiqueta">LIBROS</span>
+          <span class="cantidad">{{estadisticas.totalLibros}}</span>
+        </div>
+    
+        
+        <div class="estadistica-item">
+          <div class="icono-container">
+            <i class="fas fa-bookmark"></i>
+          </div>
+          <span class="etiqueta">GÉNEROS</span>
+          <span class="cantidad">{{estadisticas.generos}}</span>
+        </div>
+    
+        <div class="estadistica-item">
+          <div class="icono-container">
+            <i class="fas fa-clock"></i>
+          </div>
+          <span class="etiqueta">RESERVAS</span>
+          <span class="cantidad">{{estadisticas.reservas}}</span>
+        </div>
+    
+        <div class="estadistica-item">
+          <div class="icono-container">
+            <i class="fas fa-calendar"></i>
+          </div>
+          <span class="etiqueta">PRÉSTAMOS</span>
+          <span class="cantidad">{{estadisticas.prestamosTotal}}</span>
+        </div>
+    
+        <div class="estadistica-item">
+          <div class="icono-container">
+            <i class="fas fa-history"></i>
+          </div>
+          <span class="etiqueta">DEVOLUCIONES PENDIENTES</span>
+          <span class="cantidad">{{estadisticas.prestamosPendientes}}</span>
+        </div>
+        <br>
+
+        <div class="estadistica-item">
+          <div class="icono-container">
+            <i class="fas fa-clock"></i>
+          </div>
+          <span class="etiqueta">VENTAS PENDIENTES DE ENTREGA</span>
+          <span class="cantidad">{{estadisticas.ventasNoEntregadas}}</span>
+        </div>
+    
+        <div class="estadistica-item">
+          <div class="icono-container">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <span class="etiqueta">VENTAS REALIZADAS</span>
+          <span class="cantidad">{{estadisticas.totalVentas}}</span>
+        </div>
+      </div>
+    </section> -->
+
+    <router-outlet *ngIf="url !== '/' || (tipoUss !== 'Cliente' && tipoUss !== 'Anonimo' && tipoUss !== 'Prestamos' && tipoUss !== 'Inventario' && tipoUss !== 'Admin Sucursal')"></router-outlet>
     <footer class="footer" id="footer"></footer>
   </div>
 </div>

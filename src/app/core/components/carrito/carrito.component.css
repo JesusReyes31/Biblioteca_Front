@@ -83,8 +83,8 @@
 
 .contenido-carrito {
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 30px;
+  grid-template-columns: 1fr auto;
+  gap: 320px;
 }
 
 .lista-productos {
@@ -155,46 +155,30 @@
   padding: 20px;
   border-radius: 10px;
   color: white;
+  position: fixed;
+  top: 5rem;
+  right: 5px;
+  width: 280px;
+  height: fit-content;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
 }
 
-.metodos-pago {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin: 20px 0;
+.resumen-compra h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
-.btn-paypal, .btn-tarjeta {
-  padding: 12px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: 500;
-}
-
-.btn-paypal {
-  background: #ffc439;
-  color: #003087;
-}
-
-.btn-tarjeta {
-  background: #fff;
-  color: #333;
-}
-
-.desglose {
-  margin: 20px 0;
-}
-
-.linea {
+.item-desglose {
   display: flex;
   justify-content: space-between;
   margin: 10px 0;
+  font-size: 1rem;
 }
 
 .total {
   font-weight: bold;
-  font-size: 18px;
+  font-size: 1.2rem;
   margin-top: 20px;
   padding-top: 20px;
   border-top: 1px solid rgba(255,255,255,0.2);
@@ -203,19 +187,27 @@
 .btn-pagar {
   width: 100%;
   padding: 15px;
-  background: #38bdf8;
+  background: #0EA5E9;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   color: white;
-  font-size: 16px;
+  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 1.5rem;
+  transition: background-color 0.3s ease;
 }
 
 .btn-pagar:hover {
-  background: #0284c7;
+  background: #0284C7;
+}
+
+/* Eliminar estilos de subrayado */
+.subtotal, .shipping, .total {
+  text-decoration: none;
 }
 
 .cantidad-wrapper {

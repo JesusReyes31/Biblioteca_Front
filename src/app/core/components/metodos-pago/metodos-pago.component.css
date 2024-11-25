@@ -1,0 +1,421 @@
+.tarjetas-container {
+  padding: 2rem;
+}
+
+h2 {
+  color: #333;
+  margin-bottom: 2rem;
+}
+
+.tarjetas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.tarjeta {
+  position: relative;
+  height: 180px;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #434343 0%, #000000 100%);
+  color: white;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.tarjeta:hover {
+  transform: translateY(-5px);
+}
+
+.chip {
+  width: 50px;
+  height: 40px;
+  background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.numero {
+  font-size: 1.4rem;
+  letter-spacing: 4px;
+  margin-bottom: 2rem;
+}
+
+.detalles {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.titular {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+.vencimiento {
+  font-size: 0.9rem;
+}
+
+.tipo-tarjeta {
+  position: absolute;
+  top: 11rem;
+  bottom: 1.5rem;
+  right: 1.5rem;
+}
+
+.tipo-tarjeta img {
+  height: 40px;
+}
+
+.btn-eliminar {
+  /* position: absolute;
+  top: 1rem;
+  right: 1rem; */
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.tarjeta:hover .btn-eliminar {
+  opacity: 1;
+}
+
+.tarjeta-nueva {
+  background: linear-gradient(135deg, #e0e0e0 0%, #c0c0c0 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.contenido-nueva {
+  text-align: center;
+  color: #666;
+}
+
+.contenido-nueva i {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Media queries para responsividad */
+@media (max-width: 768px) {
+  .tarjetas-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Estilos para el SweetAlert2 */
+::ng-deep .swal2-popup {
+  padding: 2rem;
+  width: 500px;
+  border-radius: 15px;
+}
+
+::ng-deep .swal2-title {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #eee;
+}
+
+::ng-deep .form-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+::ng-deep .form-group label {
+  display: block;
+  color: #4a5568;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+::ng-deep .swal2-input,
+::ng-deep .swal2-select {
+  height: 45px !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0.5rem 1rem !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  font-size: 1rem !important;
+  color: #2d3748 !important;
+  background-color: #fff !important;
+  transition: all 0.3s ease !important;
+}
+
+::ng-deep .swal2-input:focus,
+::ng-deep .swal2-select:focus {
+  border-color: #667eea !important;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2) !important;
+  outline: none !important;
+}
+
+::ng-deep .swal2-actions {
+  margin-top: 2rem;
+  gap: 1rem;
+}
+
+::ng-deep .swal2-confirm {
+  background: #667eea !important;
+  padding: 0.75rem 2rem !important;
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+}
+
+::ng-deep .swal2-confirm:hover {
+  background: #5a67d8 !important;
+  transform: translateY(-1px);
+}
+
+::ng-deep .swal2-cancel {
+  background: #718096 !important;
+  padding: 0.75rem 2rem !important;
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+}
+
+::ng-deep .swal2-cancel:hover {
+  background: #4a5568 !important;
+  transform: translateY(-1px);
+}
+
+::ng-deep .swal2-validation-message {
+  background: #fff5f5 !important;
+  color: #e53e3e !important;
+  padding: 0.75rem !important;
+  border-radius: 8px !important;
+  margin-top: 1rem !important;
+}
+
+/* Estilos específicos para el select */
+::ng-deep select.swal2-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%234a5568' viewBox='0 0 16 16'%3E%3Cpath d='M8 10.5l-4-4h8l-4 4z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem !important;
+}
+
+/* Estilos para inputs deshabilitados */
+::ng-deep .swal2-input:disabled,
+::ng-deep .swal2-select:disabled {
+  background-color: #f7fafc !important;
+  cursor: not-allowed;
+}
+
+/* Animación suave al abrir */
+::ng-deep .swal2-show {
+  animation: fadeInUp 0.3s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+input[type="month"] {
+  cursor: pointer;
+}
+
+input[type="month"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}
+
+/* Estilos para el input de tipo month */
+::ng-deep input[type="month"] {
+  padding: 10px !important;
+  background-color: white !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  font-size: 1rem !important;
+  color: #2d3748 !important;
+  cursor: pointer !important;
+  width: 100% !important;
+}
+
+::ng-deep input[type="month"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  padding: 5px;
+  filter: invert(0.5);
+}
+
+::ng-deep input[type="month"]:focus {
+  border-color: #667eea !important;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2) !important;
+  outline: none !important;
+}
+
+.selector-fecha {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.selector-contenedor {
+  position: relative;
+  width: 100%;
+}
+
+.selector-año {
+  padding: 10px;
+  background: #f7fafc;
+  text-align: center;
+  cursor: pointer;
+  font-weight: bold;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.selector-año:hover {
+  background: #edf2f7;
+}
+
+.lista-meses {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: white;
+}
+
+.mes-opcion {
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.mes-opcion:hover:not(.disabled) {
+  background: #edf2f7;
+}
+
+.mes-opcion.disabled {
+  color: #cbd5e0;
+  cursor: not-allowed;
+}
+
+.lista-años {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: white;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  border-top: 1px solid #e2e8f0;
+  z-index: 1000;
+}
+
+.año-opcion {
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.año-opcion:hover {
+  background: #edf2f7;
+}
+
+/* Estilos para los botones de la tarjeta */
+.botones-tarjeta {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+.tarjeta:hover .botones-tarjeta {
+  opacity: 1;
+}
+
+.btn-inactivar,
+.btn-activar,
+.btn-eliminar {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.btn-inactivar{
+    top: 1rem;
+    right: 1rem;
+}
+
+.btn-inactivar:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-activar {
+  color: #4CAF50;
+}
+
+.btn-activar:hover {
+  background-color: rgba(76, 175, 80, 0.2);
+}
+
+.btn-eliminar {
+  color: #ff4444;
+}
+
+.btn-eliminar:hover {
+  background-color: rgba(244, 67, 54, 0.2);
+}
+
+/* Estilos para tarjetas inactivas */
+.titulo-inactivas {
+  margin-top: 3rem;
+  color: #666;
+}
+
+.tarjetas-inactivas .tarjeta {
+  opacity: 0.7;
+  background: linear-gradient(135deg, #808080 0%, #404040 100%);
+}
+
+.tarjeta-inactiva {
+  position: relative;
+}
+
+.tarjeta-inactiva::before {
+  content: "INACTIVA";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  font-size: 2rem;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.2);
+  pointer-events: none;
+}

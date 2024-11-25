@@ -1,0 +1,166 @@
+.confirmacion-container {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.detalles-compra {
+  background: white;
+  padding: 1rem;
+  width: 70%;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.productos-lista {
+  margin: 2rem 0;
+}
+
+.producto-item {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.producto-item img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.producto-info {
+  flex: 1;
+}
+
+.producto-info h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #2d3748;
+}
+
+.precio {
+  color: #6366F1;
+  font-weight: 600;
+}
+
+.metodo-pago-info {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: #f7fafc;
+  border-radius: 8px;
+}
+
+.metodo-detalles {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.metodo-detalles img {
+  height: 24px;
+}
+
+.btn-confirmar {
+  width: 100%;
+  padding: 1rem;
+  margin-top: 2rem;
+  background: #6366F1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-confirmar:hover {
+  background: #4F46E5;
+}
+
+/* Mantener los estilos del resumen de compra como estaban */
+.resumen-compra {
+    background: #6366F1;
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    position: fixed;
+    top: 5rem;
+    right: 5px;
+    width: 280px;
+    height: fit-content;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+.item-desglose {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+  font-size: 1rem;
+}
+
+.total {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+.btn-pagar {
+  width: 100%;
+  padding: 15px;
+  background: #0EA5E9;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.btn-pagar:hover {
+  background: #0284C7;
+}
+
+
+/* Estilos para los modales de CVV y plazo */
+::ng-deep .cvv-form {
+  text-align: center;
+}
+
+::ng-deep .plazo-info {
+  text-align: center;
+}
+
+::ng-deep .codigo-pago {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #6366F1;
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #f7fafc;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .confirmacion-container {
+    grid-template-columns: 1fr;
+  }
+
+  .resumen-compra {
+    position: static;
+    width: 100%;
+    margin-top: 2rem;
+  }
+}

@@ -39,34 +39,26 @@
     </div>
 
     <div class="resumen-compra">
-      <h3>Método de Pago</h3>
-      <div class="metodos-pago">
-        <button class="btn-paypal" (click)="pagarConPaypal()">
-          Pagar con PayPal
-        </button>
-        <button class="btn-tarjeta" (click)="pagarConTarjeta()">
-          Pagar con Tarjeta Debito/Crédito
-        </button>
-      </div>
-
+      <h2>Método de Pago</h2>
+      
       <div class="desglose">
-        <div class="linea">
+        <div class="item-desglose">
           <span>Subtotal</span>
-          <span>${{ subtotal.toFixed(2) }}</span>
+          <span>${{subtotal.toFixed(2)}}</span>
         </div>
-        <div class="linea">
+        <div class="item-desglose">
           <span>Shipping</span>
-          <span>${{ shipping.toFixed(2) }}</span>
+          <span>${{shipping.toFixed(2)}}</span>
         </div>
-        <div class="linea total">
-          <span>Total (Tax incl.)</span>
-          <span>${{ (subtotal + shipping).toFixed(2) }}</span>
+        <div class="item-desglose total">
+          <span>Total </span>
+          <span>${{total.toFixed(2)}}</span>
         </div>
       </div>
 
-      <button class="btn-pagar">
-        ${{ (subtotal + shipping).toFixed(2) }}
-        <span>Pagar <i class="zmdi zmdi-arrow-right"></i></span>
+      <button class="btn-pagar" (click)="pagar()">
+        <span>${{total.toFixed(2)}}</span>
+        <span>Pagar →</span>
       </button>
     </div>
   </div>

@@ -16,6 +16,19 @@ export class UsersService {
     return this.http.get(`${this.apiUrl}auth/verify-token/${Token}`);
   }
 
+  //Paginas principales de usuarios
+  //Principal de cliente, inventario, prestamos
+  getLibrosRecomendados(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}others/pringen`);
+  }
+  //Principal Administrador de Sucursal 
+  getEstadisticasAdminSucursal(): Observable<any> {
+    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
+    return this.http.get<any>(`${this.apiUrl}others/prinadminsuc`,{ headers });
+  }
+
+
+
   //Obtener datos del usuario
   getUserInfo(): Observable<any> {
     const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
@@ -158,6 +171,11 @@ export class UsersService {
       })
     );
   }
+  actualizarCantidadCarrito(id: string, Cantidad: number) {
+    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
+    // const ID_Usuario = sessionStorage.getItem('ID_Uss');
+    return this.http.put<any>(`${this.apiUrl}cart/${id}`, {cantidad:Cantidad},{ headers });
+  }
 
 
   //Credencial
@@ -255,5 +273,34 @@ export class UsersService {
 
   notificarActualizacionCarrito() {
     this.carritoActualizadoSource.next();
+  }
+
+  //Métodos de pago
+  getTarjetas(): Observable<any>{
+    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
+    return this.http.get(`${this.apiUrl}pagos/${sessionStorage.getItem('ID_Uss')}`, { headers });
+  }
+  agregarTarjeta(tarjeta: any): Observable<any> {
+    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
+    const body = {
+      ID_Usuario: parseInt(sessionStorage.getItem('ID_Uss') || '0'),
+      Nombre_Titular: tarjeta.Nombre_Titular,
+      Numero_Tarjeta: tarjeta.Numero_Tarjeta,
+      Fecha_Vencimiento: tarjeta.Fecha_Vencimiento,
+      Tipo_Tarjeta: tarjeta.Tipo_Tarjeta
+    };
+    return this.http.post(`${this.apiUrl}pagos/`, body, { headers });
+  }
+
+  // Actualizar tarjeta
+  actualizarTarjeta(tarjeta: any): Observable<any> {
+    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' })
+    return this.http.put(`${this.apiUrl}pagos/`, tarjeta, { headers });
+  }
+
+  // Eliminar tarjeta
+  eliminarTarjeta(id: number): Observable<any> {
+    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
+    return this.http.delete(`${this.apiUrl}pagos/${id}`, { headers });
   }
 }

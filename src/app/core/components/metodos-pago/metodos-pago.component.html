@@ -1,0 +1,60 @@
+<div class="tarjetas-container">
+  <h2>Mis Tarjetas Activas</h2>
+  
+  <div class="tarjetas-grid">
+    <div class="tarjeta" *ngFor="let tarjeta of tarjetasactivas">
+      <div class="tarjeta-contenido" (click)="editarTarjeta(tarjeta)">
+        <div class="chip"></div>
+        <div class="numero">{{tarjeta.numeroMask}}</div>
+        <div class="detalles">
+          <div class="titular">{{tarjeta.Nombre_Titular}}</div>
+          <div class="vencimiento">{{tarjeta.Fecha_Vencimiento}}</div>
+        </div>
+        <div class="tipo-tarjeta">
+          <img [src]="'../../../../../../assets/imgs/'+tarjeta.Tipo_Tarjeta+'.png'" [alt]="tarjeta.Tipo_Tarjeta">
+        </div>
+      </div>
+      <div class="botones-tarjeta">
+        <button class="btn-inactivar" title="Inactivar" (click)="$event.stopPropagation(); toggleEstadoTarjeta(tarjeta)">
+          <i class="fas fa-power-off"></i>
+        </button>
+        <button class="btn-eliminar" title="Eliminar" (click)="$event.stopPropagation(); eliminarTarjeta(tarjeta.ID_Tarjeta)">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="tarjeta tarjeta-nueva" (click)="agregarTarjeta()">
+      <div class="contenido-nueva">
+        <i class="fas fa-plus"></i>
+        <span>Agregar nueva tarjeta</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección de tarjetas inactivas -->
+  <h2 *ngIf="tarjetasinactivas.length > 0"   class="titulo-inactivas">Tarjetas Inactivas</h2>
+  <div class="tarjetas-grid tarjetas-inactivas">
+    <div class="tarjeta tarjeta-inactiva" *ngFor="let tarjeta of tarjetasinactivas">
+      <div class="tarjeta-contenido">
+        <div class="chip"></div>
+        <div class="numero">{{tarjeta.numeroMask}}</div>
+        <div class="detalles">
+          <div class="titular">{{tarjeta.Nombre_Titular}}</div>
+          <div class="vencimiento">{{tarjeta.Fecha_Vencimiento}}</div>
+        </div>
+        <div class="tipo-tarjeta">
+          <img [src]="'../../../../../../assets/imgs/'+tarjeta.Tipo_Tarjeta+'.png'" [alt]="tarjeta.Tipo_Tarjeta">
+        </div>
+      </div>
+      <div class="botones-tarjeta">
+        <button class="btn-activar" title="Activar" (click)="$event.stopPropagation(); toggleEstadoTarjeta(tarjeta)">
+          <i class="fas fa-power-off"></i>
+        </button>
+        <button class="btn-eliminar" title="Eliminar" (click)="$event.stopPropagation(); eliminarTarjeta(tarjeta.ID_Tarjeta)">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

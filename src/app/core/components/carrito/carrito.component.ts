@@ -14,6 +14,7 @@ export class CarritoComponent {
   librosCarrito: any[] = [];
   subtotal: number = 0;
   shipping: number = 4;
+  total: number = 0;
 
   constructor(private router: Router, private userService: UsersService) {}
 
@@ -38,16 +39,18 @@ export class CarritoComponent {
     this.subtotal = this.librosCarrito.reduce((total, libro) => {
       return total + (libro.Precio * libro.Cantidad);
     }, 0);
+    this.total = this.subtotal + this.shipping;
   }
 
   actualizarCantidad(libro: any, incrementar: boolean) {
+    console.log(libro);
     let nuevaCantidad = libro.Cantidad + (incrementar ? 1 : -1);
     // Validar límites de cantidad
     if (nuevaCantidad < 1 || nuevaCantidad > libro.Cantidad_disponible) {
       return;
     }
-
-    this.userService.agregarAlCarrito(libro.ID_Libro, (incrementar ? 1 : -1)).subscribe({
+    console.log(libro.ID_Libro, nuevaCantidad);
+    this.userService.actualizarCantidadCarrito(libro.ID, nuevaCantidad).subscribe({
       next: (response) => {
         libro.Cantidad = nuevaCantidad;
         this.calcularSubtotal();
@@ -74,6 +77,18 @@ export class CarritoComponent {
 
   continuarComprando() {
     this.router.navigate(['/catalogo']);
+  }
+
+  pagar() {
+    // Enviamos la información del carrito a través del router state
+    this.router.navigate(['/pago-carrito'], {
+      state: {
+        librosCarrito: this.librosCarrito,
+        subtotal: this.subtotal,
+        shipping: this.shipping,
+        total: this.total
+      }
+    });
   }
 
   pagarConPaypal() {

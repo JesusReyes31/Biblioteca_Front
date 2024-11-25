@@ -1,0 +1,73 @@
+<div class="pago-container">
+  <div class="metodos-pago">
+    <h2>Selecciona un método de pago</h2>
+    
+    <!-- Tarjetas guardadas -->
+    <div class="seccion-metodos">
+      <h3>Tarjetas guardadas</h3>
+      <div class="lista-metodos">
+        <div *ngFor="let tarjeta of tarjetasGuardadas" 
+             class="metodo-item" 
+             (click)="seleccionarMetodoPago('tarjeta', tarjeta.ID_Tarjeta)">
+          <div class="radio-container">
+            <input type="radio" name="metodoPago" [id]="'tarjeta-' + tarjeta.numeroMask">
+            <div class="metodo-info">
+              <img [src]="'../../../../../../assets/imgs/'+tarjeta.Tipo_Tarjeta+'.png'" [alt]="tarjeta.Tipo_Tarjeta">
+              <span>{{ tarjeta.numeroMask }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nueva tarjeta débito -->
+    <div class="seccion-metodos">
+      <div class="metodo-item" (click)="seleccionarMetodoPago('nueva-debito'); agregarTarjeta()">
+        <div class="radio-container">
+          <input type="radio" name="metodoPago" id="nueva-debito">
+          <div class="metodo-info">
+            <i class="fas fa-credit-card"></i>
+            <span>Nueva tarjeta de débito</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Efectivo -->
+    <div class="seccion-metodos">
+      <div class="metodo-item" (click)="seleccionarMetodoPago('efectivo')">
+        <div class="radio-container">
+          <input type="radio" name="metodoPago" id="efectivo">
+          <div class="metodo-info">
+            <i class="fas fa-money-bill"></i>
+            <span>Efectivo en Sucursal</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resumen de compra -->
+  <div class="resumen-compra">
+    <h2>Resumen de Compra</h2>
+    <div class="desglose">
+      <div class="item-desglose">
+        <span>Subtotal</span>
+        <span>${{subtotal.toFixed(2)}}</span>
+      </div>
+      <div class="item-desglose">
+        <span>Shipping</span>
+        <span>${{shipping.toFixed(2)}}</span>
+      </div>
+      <div class="item-desglose total">
+        <span>Total</span>
+        <span>${{total.toFixed(2)}}</span>
+      </div>
+    </div>
+
+    <button class="btn-pagar" (click)="confirmarPago()">
+      <span>${{total.toFixed(2)}}</span>
+      <span>Continuar  →</span>
+    </button>
+  </div>
+</div>

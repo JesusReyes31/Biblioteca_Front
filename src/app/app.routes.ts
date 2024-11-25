@@ -19,6 +19,9 @@ import { VentasPorEntregarComponent } from './features/cliente/prestamos/ventas-
 import { PrestamosGeneralesComponent } from './features/cliente/AdminSuc/prestamos-generales/prestamos-generales.component';
 import { CambiarInformacionComponent } from './core/components/cambiar-informacion/cambiar-informacion.component';
 import { CarritoComponent } from './core/components/carrito/carrito.component';
+import { MetodosPagoComponent } from './core/components/metodos-pago/metodos-pago.component';
+import { PagoCarritoComponent } from './core/components/carrito/pago-carrito/pago-carrito.component';
+import { ConfirmacionPagoComponent } from './core/components/carrito/confirmacion-pago/confirmacion-pago.component';
 
 export const routes: Routes = [
     {
@@ -38,6 +41,9 @@ export const routes: Routes = [
             {path:"prestamos-generales",component:PrestamosGeneralesComponent},
             {path:"perfil",component:CambiarInformacionComponent},
             {path:"carrito",component:CarritoComponent},
+            {path:"metodos-pago",component:MetodosPagoComponent},
+            {path:"pago-carrito",component:PagoCarritoComponent},
+            {path:"confirmacion-pago",component:ConfirmacionPagoComponent},
         ]
     },
     {path:"login",component:LoginComponent},
