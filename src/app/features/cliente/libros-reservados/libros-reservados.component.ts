@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FooterService } from '../../../core/services/footer.service';
 import { SweetalertService } from '../../../core/services/sweetalert.service';
+import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
 
 @Component({
   selector: 'app-libros-reservados',
   standalone: true,
-  imports: [FormsModule,CommonModule],
+  imports: [FormsModule,CommonModule,ImageLoadingDirective],
   templateUrl: './libros-reservados.component.html',
   styleUrl: './libros-reservados.component.css'
 })

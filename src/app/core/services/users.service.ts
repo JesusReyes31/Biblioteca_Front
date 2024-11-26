@@ -146,7 +146,7 @@ export class UsersService {
   getPurchaseHistory(): Observable<any[]> {
     const headers = new HttpHeaders({authorization: `${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json'});
     const id = sessionStorage.getItem('ID_Uss');
-    return this.http.get<any[]>(`${this.apiUrl}compras/${id}`, { headers }).pipe(
+    return this.http.get<any[]>(`${this.apiUrl}sales/sale/${id}`, { headers }).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 404) {
           // Rechazar con un mensaje personalizado si no hay ventas
@@ -175,6 +175,11 @@ export class UsersService {
     const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
     // const ID_Usuario = sessionStorage.getItem('ID_Uss');
     return this.http.put<any>(`${this.apiUrl}cart/${id}`, {cantidad:Cantidad},{ headers });
+  }
+  deleteCarrito(): Observable<any>{
+    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
+    const id = sessionStorage.getItem('ID_Uss');
+    return this.http.delete(`${this.apiUrl}cart/${id}`,{ headers });
   }
 
 
@@ -302,5 +307,9 @@ export class UsersService {
   eliminarTarjeta(id: number): Observable<any> {
     const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
     return this.http.delete(`${this.apiUrl}pagos/${id}`, { headers });
+  }
+
+  activateAccount(token: string) {
+    return this.http.get(`${this.apiUrl}auth/activate/${token}`);
   }
 }

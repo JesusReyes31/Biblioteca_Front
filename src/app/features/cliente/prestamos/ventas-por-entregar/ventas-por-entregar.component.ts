@@ -4,14 +4,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SweetalertService } from '../../../../core/services/sweetalert.service';
 
-interface Venta {
-  id: number;
-  nombreCliente: string;
-  cantidadLibros: number;
-  fechaCompra: Date;
-  entregado: boolean;
-}
-
 @Component({
   selector: 'app-ventas-por-entregar',
   standalone: true,
@@ -20,8 +12,8 @@ interface Venta {
   styleUrl: './ventas-por-entregar.component.css'
 })
 export class VentasPorEntregarComponent {
-  ventas: Venta[] = [];
-  ventasFiltradas: Venta[] = [];
+  ventas: any[] = [];
+  ventasFiltradas: any[] = [];
   searchTerm: string = '';
   constructor(private userService: UsersService,private sweetalert:SweetalertService){}
   ngOnInit(): void {

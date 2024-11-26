@@ -5,11 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FooterService } from '../../services/footer.service';
+import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
 
 @Component({
   selector: 'app-catalogo',
   standalone: true,
-  imports: [FormsModule,CommonModule,RouterLink],
+  imports: [FormsModule,CommonModule,RouterLink,ImageLoadingDirective],
   templateUrl: './catalogo.component.html',
   styleUrl: './catalogo.component.css'
 })
@@ -86,6 +87,7 @@ export class CatalogoComponent {
           this.sweetalert.showNoReload(data.message);
         } else {
           this.libros = data;
+          console.log(data);
           console.log("Adjusting footer position");
           this.footerService.adjustFooterPosition();
         }

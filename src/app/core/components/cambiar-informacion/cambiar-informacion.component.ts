@@ -3,12 +3,13 @@ import { UsersService } from '../../services/users.service';
 import { FormBuilder, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SweetalertService } from '../../services/sweetalert.service';
+import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
 
 
 @Component({
   selector: 'app-cambiar-informacion',
   standalone: true,
-  imports: [FormsModule,CommonModule],
+  imports: [FormsModule,CommonModule,ImageLoadingDirective],
   templateUrl: './cambiar-informacion.component.html',
   styleUrl: './cambiar-informacion.component.css'
 })

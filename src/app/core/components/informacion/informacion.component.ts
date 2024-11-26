@@ -5,11 +5,12 @@ import { SweetalertService } from '../../services/sweetalert.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
 
 @Component({
   selector: 'app-informacion',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule,FormsModule,ImageLoadingDirective],
   templateUrl: './informacion.component.html',
   styleUrl: './informacion.component.css'
 })

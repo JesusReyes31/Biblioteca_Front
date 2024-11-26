@@ -14,21 +14,23 @@
         <tr>
           <th>CANTIDAD DE LIBROS</th>
           <th>FECHA DE COMPRA</th>
+          <th>TOTAL</th>
           <th>RECIBO</th>
           <th>FACTURA</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let record of filteredRecords">
-          <td>{{ record.CantidadLibros }}</td>
-          <td>{{ record.FechaCompra }}</td>
+          <td>{{ record.Cantidad }}</td>
+          <td>{{ record.Fecha_Venta }}</td>
+          <td>{{ record.Total.toFixed(2) }}</td>
           <td>
-            <button (click)="generateReceipt(record.ID)">
+            <button (click)="generateReceipt(record.ID_Venta)">
               Generar Recibo
             </button>
           </td>
           <td>
-            <button (click)="generateInvoice(record.ID)">
+            <button (click)="generateInvoice(record.ID_Venta)">
               Generar Factura
             </button>
           </td>

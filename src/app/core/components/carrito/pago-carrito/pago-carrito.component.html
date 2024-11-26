@@ -12,7 +12,7 @@
           <div class="radio-container">
             <input type="radio" name="metodoPago" [id]="'tarjeta-' + tarjeta.numeroMask">
             <div class="metodo-info">
-              <img [src]="'../../../../../../assets/imgs/'+tarjeta.Tipo_Tarjeta+'.png'" [alt]="tarjeta.Tipo_Tarjeta">
+              <img appImageLoading [src]="'../../../../../../assets/imgs/'+tarjeta.Tipo_Tarjeta+'.png'" [alt]="tarjeta.Tipo_Tarjeta">
               <span>{{ tarjeta.numeroMask }}</span>
             </div>
           </div>

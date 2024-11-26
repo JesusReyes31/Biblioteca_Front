@@ -23,4 +23,10 @@ export class VentasService {
     const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
     return this.http.post(`${this.url}detailsales/${id}`, {Detalles:detalleVenta}, { headers });
   }
+
+  registrarPagoPendiente(PagoPendiente: any): Observable<any> {
+    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
+    PagoPendiente.ID_Usuario = parseInt(sessionStorage.getItem('ID_Uss') || '0');
+    return this.http.post(`${this.url}pagos-pendientes`, PagoPendiente, { headers });
+  }
 }

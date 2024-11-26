@@ -3,7 +3,7 @@
   
   <div class="profile-section">
     <div class="profile-image">
-      <img [src]="userData.Imagen || 'assets/imgs/user.png'" alt="Foto de perfil">
+      <img appImageLoading [src]="userData.Imagen || 'assets/imgs/user.png'" alt="Foto de perfil">
     </div>
     
     <div class="image-buttons">

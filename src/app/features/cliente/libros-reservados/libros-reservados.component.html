@@ -1,7 +1,7 @@
 <section id="contenido">
   <h1>Libros Reservados</h1>
   <div *ngFor="let reserva of reservas" class="reserva center">
-    <img [src]="reserva.Imagen" alt="Portada del Libro" class="imgreserva">
+    <img appImageLoading [src]="reserva.Imagen" alt="Portada del Libro" class="imgreserva">
     <div class="detallesreserva">
       <h2>{{ reserva.Titulo }}</h2>
       <p>Fecha de reservación: <br><strong>{{ reserva.fecha1 }}</strong></p>

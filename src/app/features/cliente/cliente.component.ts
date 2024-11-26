@@ -8,11 +8,12 @@ import { FooterService } from '../../core/services/footer.service';
 import { UsersService } from '../../core/services/users.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ImageLoadingDirective } from '../../shared/directives/image-loading.directive';
 
 @Component({
   selector: 'app-cliente',
   standalone: true,
-  imports: [SidebarComponent,HeaderComponent,FooterComponent,RouterOutlet,CommonModule,FormsModule],
+  imports: [SidebarComponent,HeaderComponent,FooterComponent,RouterOutlet,CommonModule,FormsModule,ImageLoadingDirective],
   templateUrl: './cliente.component.html',
   styleUrls: ['cliente.component.css']
 })

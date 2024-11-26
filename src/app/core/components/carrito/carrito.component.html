@@ -12,7 +12,7 @@
 
       <div class="productos">
         <div class="producto-item" *ngFor="let libro of librosCarrito">
-          <img [src]="libro.Imagen" [alt]="libro.Titulo" class="producto-imagen">
+          <img appImageLoading [src]="libro.Imagen" [alt]="libro.Titulo" class="producto-imagen">
           <div class="producto-info">
             <h3>{{ libro.Titulo }}</h3>
             <p class="autor">{{ libro.Autor }}</p>

@@ -25,16 +25,24 @@ export class PrestamosComponent {
   startIndex = 0;
   endIndex = 0;
   paginatedRecords: any[] = [];
+  isEditMode: boolean = false;
+  mostrarSelectSucursal: boolean = false;
+  sucursales: any[] = [];
+  tiposUsuarioConSucursal: string[] = ['Prestamos', 'Inventario', 'Admin Sucursal','Admin'];
+
   constructor(private fb: FormBuilder, private userService:UsersService,private sweetalert:SweetalertService){
     this.userForm = this.fb.group({
-      ID: [''],
-      Nombre_completo: ['',Validators.required],
-      Contra: ['',Validators.required],
-      Correo: ['',Validators.required],
-      CURP: ['',Validators.required],
-      Nombre_Usuario: ['',Validators.required],
-      Tipo_Usuario: ['',Validators.required],
+      ID: [{value: '', disabled: false}],
+      Nombre_completo: ['', Validators.required],
+      Contra: ['', Validators.required],
+      Correo: ['', [Validators.required, Validators.email]],
+      CURP: ['', Validators.required],
+      Nombre_Usuario: ['', Validators.required],
+      Tipo_Usuario: ['', Validators.required],
+      Sucursal: ['']
     });
+
+    this.cargarSucursales();
   }
   ngOnInit(): void {
     this.userService.getTipoUsuarios().subscribe(
@@ -42,6 +50,7 @@ export class PrestamosComponent {
         if (data.message) {
           this.sweetalert.showNoReload(data.message);
         } else {
+          this.typeusers = [];
           data.forEach((user: any) => {
             this.typeusers.push(user.Tipo_Usuario);
           });
@@ -120,6 +129,7 @@ export class PrestamosComponent {
 
   //Método para seleccionar un registro
   selectRow(record: any): void {
+    this.isEditMode = true;
     this.selectedUser = record;
     this.userForm.patchValue({
       ID: record.ID,
@@ -132,8 +142,18 @@ export class PrestamosComponent {
   }
 
   addUser(){
-    if (this.userForm.valid) {
-      this.userService.addUser(this.userForm.value).subscribe(
+    if (this.isFormValidForRegister()) {
+      const userData = {
+        Nombre_completo: this.userForm.get('Nombre_completo')?.value,
+        Contra: this.userForm.get('Contra')?.value,
+        Correo: this.userForm.get('Correo')?.value,
+        CURP: this.userForm.get('CURP')?.value,
+        Nombre_Usuario: this.userForm.get('Nombre_Usuario')?.value,
+        Tipo_Usuario: this.userForm.get('Tipo_Usuario')?.value,
+        Sucursal: this.mostrarSelectSucursal ? this.userForm.get('Sucursal')?.value : null
+      };
+
+      this.userService.addUser(userData).subscribe(
         (response) => {
           this.sweetalert.showNoReload('Usuario agregado correctamente');
           this.loadUsers()
@@ -146,7 +166,7 @@ export class PrestamosComponent {
         }
       );
     } else {
-      this.sweetalert.showNoReload('Por favor completa todos los campos');
+      this.sweetalert.showNoReload('Por favor completa todos los campos requeridos');
     }
   }
   deleteUser(){
@@ -158,9 +178,10 @@ export class PrestamosComponent {
           this.users = this.users.filter(user => user.ID !== id);
           this.filteredRecords = [...this.users];
           this.clearForm();
+          this.isEditMode = false;
         },
         (error) => {
-          this.sweetalert.showNoReload('Error al eliminar usuario');
+          this.sweetalert.showNoReload(error.error.message);
         }
       );
     } else {
@@ -179,6 +200,7 @@ export class PrestamosComponent {
           }
           this.filteredRecords = [...this.users];
           this.clearForm();
+          this.isEditMode = false;
         },
         (error) => {
           this.sweetalert.showNoReload('Error al actualizar usuario');
@@ -188,9 +210,54 @@ export class PrestamosComponent {
       this.sweetalert.showNoReload('Por favor completa todos los campos');
     }
   }
-  clearForm(){
+  clearForm() {
     this.userForm.reset();
     this.userForm.get('Tipo_Usuario')?.setValue('');
+    this.userForm.get('Sucursal')?.setValue('');
     this.selectedUser = {};
+    this.isEditMode = false;
+    this.mostrarSelectSucursal = false;
+  }
+
+  // Nuevo método para validar el formulario para registro
+  isFormValidForRegister(): boolean {
+    const basicFieldsValid = this.userForm.get('Nombre_completo')?.valid &&
+           this.userForm.get('Contra')?.valid &&
+           this.userForm.get('Correo')?.valid &&
+           this.userForm.get('CURP')?.valid &&
+           this.userForm.get('Nombre_Usuario')?.valid &&
+           this.userForm.get('Tipo_Usuario')?.valid;
+
+    if (!basicFieldsValid) return false;
+
+    if (this.mostrarSelectSucursal) {
+      return this.userForm.get('Sucursal')?.valid || false;
+    }
+
+    return true;
+  }
+
+  onTipoUsuarioChange() {
+    const tipoUsuario = this.userForm.get('Tipo_Usuario')?.value;
+    this.mostrarSelectSucursal = this.tiposUsuarioConSucursal.includes(tipoUsuario);
+    
+    if (this.mostrarSelectSucursal) {
+      this.userForm.get('Sucursal')?.setValidators([Validators.required]);
+    } else {
+      this.userForm.get('Sucursal')?.clearValidators();
+      this.userForm.get('Sucursal')?.setValue('');
+    }
+    this.userForm.get('Sucursal')?.updateValueAndValidity();
+  }
+
+  cargarSucursales() {
+    this.userService.getSucursales().subscribe(
+      (data) => {
+        this.sucursales = data;
+      },
+      (error) => {
+        this.sweetalert.showNoReload('Error al cargar las sucursales');
+      }
+    );
   }
 }

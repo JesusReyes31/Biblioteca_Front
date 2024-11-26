@@ -1934,3 +1934,90 @@ input.material-control:focus ~ .highlight {
     color: #666;
     font-size: 0.9rem;
   }
+
+img.loading {
+  position: relative;
+  min-height: 100px;
+  background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s linear infinite;
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+img.loaded {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes shimmer {
+  to {
+    background-position-x: -200%;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.image-loading-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.image-skeleton {
+  background: #eee;
+  background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+  border-radius: 5px;
+  background-size: 200% 100%;
+  animation: 1.5s shine linear infinite;
+  min-height: 200px;
+  min-width: 200px;
+  display: block;
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes shine {
+  to {
+    background-position-x: -200%;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.image-skeleton {
+  &.small {
+    min-height: 100px;
+    min-width: 100px;
+  }
+  
+  &.medium {
+    min-height: 200px;
+    min-width: 200px;
+  }
+  
+  &.large {
+    min-height: 300px;
+    min-width: 300px;
+  }
+}

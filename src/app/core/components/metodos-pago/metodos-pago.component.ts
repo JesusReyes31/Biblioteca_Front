@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { UsersService } from '../../services/users.service';
+import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
 
 @Component({
   selector: 'app-metodos-pago',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,ImageLoadingDirective],
   templateUrl: './metodos-pago.component.html',
   styleUrl: './metodos-pago.component.css'
 })

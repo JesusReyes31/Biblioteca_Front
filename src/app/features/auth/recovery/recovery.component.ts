@@ -18,10 +18,11 @@ export class RecoveryComponent {
 
   constructor(private router: Router,private sweetalert: SweetalertService,private authService:AuthService) {}
   recuperar(activo: string) {
+    this.sweetalert.showReload('Si los datos fueron correctos, recibirá un correo para cambiar la contraseña')
     if (activo === 'Correo') {
       this.authService.recovery(this.Correo, activo).subscribe(
         (response) => {
-          console.log('Respuesta recibida:', response);
+          // console.log('Respuesta recibida:', response);
         },
         (error) => {
           console.error('Error en la recuperación:', error);
@@ -30,8 +31,7 @@ export class RecoveryComponent {
     } else {
       this.authService.recovery(this.Nombre_Usuario, activo).subscribe(
         (response) => {
-          this.sweetalert.showReload('Si los datos fueron correctos, recibirá un correo para cambiar la contraseña')
-          console.log('Respuesta recibida:', response);
+          // console.log('Respuesta recibida:', response);
         }
       );
     }

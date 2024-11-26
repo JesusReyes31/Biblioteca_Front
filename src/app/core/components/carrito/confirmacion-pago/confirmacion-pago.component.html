@@ -5,7 +5,7 @@
     <!-- Lista de productos -->
     <div class="productos-lista">
       <div *ngFor="let libro of librosCarrito" class="producto-item">
-        <img [src]="libro.Imagen" [alt]="libro.Titulo">
+        <img appImageLoading [src]="libro.Imagen" [alt]="libro.Titulo">
         <div class="producto-info">
           <h3>{{libro.Titulo}}</h3>
           <p>Cantidad: {{libro.Cantidad}}</p>
@@ -18,7 +18,7 @@
     <div class="metodo-pago-info">
       <h3>Método de Pago</h3>
       <div class="metodo-detalles" *ngIf="metodoPago.tipo !== 'efectivo'">
-        <img [src]="'assets/imgs/' + metodoPago.Tipo_Tarjeta + '.png'" [alt]="metodoPago.Tipo_Tarjeta">
+        <img appImageLoading [src]="'assets/imgs/' + metodoPago.Tipo_Tarjeta + '.png'" [alt]="metodoPago.Tipo_Tarjeta">
         <span>**** **** **** {{metodoPago.numeroMask.slice(-4)}}</span>
       </div>
       <div class="metodo-detalles" *ngIf="metodoPago.tipo === 'efectivo'">

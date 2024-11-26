@@ -78,6 +78,7 @@ h1 {
   letter-spacing: 0.5px;
   transition: all 0.3s ease;
   color: black;
+  transition: opacity 0.3s ease;
 }
 
 .botones button:first-child {
@@ -99,6 +100,11 @@ h1 {
 .botones button:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.botones button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Estilos para la tabla */

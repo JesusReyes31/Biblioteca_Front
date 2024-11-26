@@ -4,11 +4,12 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { CommonModule } from '@angular/common';
 import { SweetalertService } from '../../../core/services/sweetalert.service';
 import { PageEvent } from '@angular/material/paginator';
+import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
 
 @Component({
   selector: 'app-inventario',
   standalone: true,
-  imports: [FormsModule, CommonModule,ReactiveFormsModule],
+  imports: [FormsModule, CommonModule,ReactiveFormsModule,ImageLoadingDirective],
   templateUrl: './inventario.component.html',
   styleUrls: ['./inventario.component.css']
 })

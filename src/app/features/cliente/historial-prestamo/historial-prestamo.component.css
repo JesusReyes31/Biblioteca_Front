@@ -36,27 +36,65 @@
   
   .loan-history-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    text-align: center;
   }
   
   .loan-history-table th {
-    padding: 12px;
-    text-align: center; /* Centra los encabezados */
-    background-color: #f4f4f4;
-    border-bottom: 1px solid #ccc;
+    padding: 16px;
+    text-align: center;
+    background-color: #002952;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.5px;
   }
   
   .loan-history-table td {
-    padding: 12px;
-    text-align: left; /* Mantiene los datos alineados a la izquierda */
-    border-bottom: 1px solid #ccc;
-  }
-  
-  
-  .loan-history-table th {
-    background-color: #f4f4f4;
+    padding: 14px 16px;
+    border-bottom: 1px solid #eaeaea;
+    color: #333;
+    font-size: 14px;
+    text-align: center;
+    vertical-align: middle;
   }
   
   .loan-history-table tbody tr:hover {
-    background-color: #f9f9f9;
+    background-color: #f8f9ff;
+    transition: background-color 0.2s ease;
+  }
+  
+  /* Estilos adicionales para estados específicos si los necesitas */
+  .estado-prestado {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    background-color: #e6f3ff;
+    color: #004080;
+  }
+  
+  .estado-devuelto {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    background-color: #e6ffe6;
+    color: #008000;
+  }
+  
+  /* Si necesitas ajustar el mensaje de no registros */
+  .no-records {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-size: 16px;
   }

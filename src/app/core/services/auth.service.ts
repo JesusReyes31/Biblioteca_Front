@@ -78,11 +78,13 @@ export class AuthService {
   }
 
 
-  recovery(Dato: string, Tipo: string): Observable<any> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    const body = Tipo === 'Nombre' ? { Nombre_Usuario: Dato } : { Correo: Dato };
-    console.log(Dato, Tipo, `${this.apiUrl}others/mail`, body);
-    return this.http.post<any>(`${this.apiUrl}others/mail`, body, { headers });
+  recovery(value: string, type: string) {
+    const headers = new HttpHeaders().set('Skip-Interceptor', 'true');
+    
+    return this.http.post(`${this.apiUrl}/recovery`, {
+      value: value,
+      type: type
+    }, { headers });
   }
   resetPassword(token: string, newPassword: string): Observable<any> {
     const headers = new HttpHeaders().set('Authorization', `${token}`);

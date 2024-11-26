@@ -1,0 +1,146 @@
+.activate-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+              url('../../../../../public/assets/imgs/Login.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.activate-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(0, 32, 64, 0.1),
+    rgba(0, 32, 64, 0.1) 10px,
+    rgba(0, 32, 64, 0.2) 10px,
+    rgba(0, 32, 64, 0.2) 20px
+  );
+}
+
+.activate-card {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  position: relative;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.activate-content h2 {
+  color: #004080;
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  padding-bottom: 15px;
+}
+
+.activate-content h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background-color: #004080;
+}
+
+.success-message, .error-message {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.success-message i {
+  color: #28a745;
+  font-size: 3.5rem;
+  margin-bottom: 1.5rem;
+  display: block;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.error-message i {
+  color: #dc3545;
+  font-size: 3.5rem;
+  margin-bottom: 1.5rem;
+  display: block;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.login-button {
+  background-color: #01264b;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  margin-top: 1.5rem;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(0, 64, 128, 0.2);
+}
+
+.login-button:hover {
+  background-color: #003366;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 64, 128, 0.3);
+}
+
+.login-button:active {
+  transform: translateY(0);
+}
+
+p {
+  color: #333;
+  margin: 1.2rem 0;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.activate-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, 
+    rgba(0, 0, 0, 0.1) 0%, 
+    transparent 10%, 
+    transparent 90%, 
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  pointer-events: none;
+  border-radius: 12px;
+}

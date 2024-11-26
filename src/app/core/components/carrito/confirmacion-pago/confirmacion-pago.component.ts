@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { UsersService } from '../../../services/users.service';
 import Swal from 'sweetalert2';
 import { VentasService } from '../../../services/ventas.service';
-
+import html2canvas from 'html2canvas';
+import { ImageLoadingDirective } from '../../../../shared/directives/image-loading.directive';
 @Component({
   selector: 'app-confirmacion-pago',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,ImageLoadingDirective],
   templateUrl: './confirmacion-pago.component.html',
   styleUrl: './confirmacion-pago.component.css'
 })
@@ -18,11 +19,11 @@ export class ConfirmacionPagoComponent {
   shipping: number = 0;
   total: number = 0;
   metodoPago: any;
-
+  codigoPago: string = '';
   constructor(
     private router: Router,
     private userService: UsersService,
-    private ventasService: VentasService
+    private ventasService: VentasService,
   ) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras.state) {
@@ -31,8 +32,16 @@ export class ConfirmacionPagoComponent {
       this.shipping = navigation.extras.state['shipping'];
       this.total = navigation.extras.state['total'];
       this.metodoPago = navigation.extras.state['metodoPago'];
+    }else{
+      Swal.fire({
+        title: 'Error',
+        text: 'No se encontraron datos del carrito',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      }).then(() => {
+        this.router.navigate(['/carrito']);
+      });
     }
-    console.log(this.librosCarrito);
   }
 
   confirmarPago() {
@@ -46,6 +55,7 @@ export class ConfirmacionPagoComponent {
   mostrarPlazoSucursal() {
     const fechaLimite = new Date();
     fechaLimite.setDate(fechaLimite.getDate() + 4);
+    this.codigoPago = Math.random().toString(36).substr(2, 9).toUpperCase();
 
     Swal.fire({
       title: 'Plazo de Pago en Sucursal',
@@ -53,11 +63,19 @@ export class ConfirmacionPagoComponent {
         <div class="plazo-info">
           <p>Tienes hasta el <strong>${fechaLimite.toLocaleDateString()}</strong> para realizar tu pago en sucursal.</p>
           <p>Presenta este código en caja:</p>
-          <div class="codigo-pago">${Math.random().toString(36).substr(2, 9).toUpperCase()}</div>
+          <div id="codigo-container" class="codigo-pago">${this.codigoPago}</div>
+          <div class="botones-descarga" style="margin-top: 20px;">
+            <button onclick="window.descargarImagen()" class="swal2-confirm swal2-styled">Descargar Imagen</button>
+          </div>
         </div>
       `,
       icon: 'info',
-      confirmButtonText: 'Entendido'
+      confirmButtonText: 'Entendido',
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      didOpen: () => {
+        (window as any).descargarImagen = () => this.descargarImagen();
+      }
     }).then(() => {
       this.registrarVenta('pendiente');
     });
@@ -107,19 +125,46 @@ export class ConfirmacionPagoComponent {
 
     this.ventasService.registrarVenta(venta).subscribe({
       next: (response) => {
-        //registrar detalles de venta
+        if (this.metodoPago.tipo === 'efectivo') {
+          const pagoPendiente = {
+            Codigo: this.codigoPago,
+            ID_Venta: response.ID_Venta
+          };
+          
+          this.ventasService.registrarPagoPendiente(pagoPendiente).subscribe({
+            error: (error:any) => console.error('Error al registrar pago pendiente:', error)
+          });
+        }
+
         this.ventasService.registrarDetalleVenta(response.ID_Venta, this.librosCarrito).subscribe({
           next: () => {
             console.log('Detalle registrado');
-            Swal.fire({
-              title: '¡Compra Realizada!',
-              text: this.metodoPago.tipo ? 
-                    'Recuerda que tienes 4 días para realizar tu pago en sucursal' : 
-                    'Tu compra se ha procesado correctamente, pasa con el recibo para recoger tus libros',
-              icon: 'success',
-              confirmButtonText: 'Aceptar'
-            }).then(() => {
-              this.router.navigate(['/catalogo']); //para que siga buscando y comprando libros
+            this.userService.deleteCarrito().subscribe({
+              next: () => {
+                Swal.fire({
+                  title: '¡Compra Realizada!',
+                  text: this.metodoPago.tipo ? 
+                        'Recuerda que tienes 4 días para realizar tu pago en sucursal' : 
+                        'Tu compra se ha procesado correctamente, pasa con el recibo para recoger tus libros',
+                  icon: 'success',
+                  confirmButtonText: 'Aceptar'
+                }).then(() => {
+                  this.router.navigate(['/catalogo']);
+                });
+              },
+              error: (error) => {
+                console.error('Error al eliminar el carrito:', error);
+                Swal.fire({
+                  title: '¡Compra Realizada!',
+                  text: this.metodoPago.tipo ? 
+                        'Recuerda que tienes 4 días para realizar tu pago en sucursal' : 
+                        'Tu compra se ha procesado correctamente, pasa con el recibo para recoger tus libros',
+                  icon: 'success',
+                  confirmButtonText: 'Aceptar'
+                }).then(() => {
+                  this.router.navigate(['/catalogo']);
+                });
+              }
             });
           },
           error: (error) => {
@@ -146,6 +191,49 @@ export class ConfirmacionPagoComponent {
           this.router.navigate(['/carrito']);
         });
       }
+    });
+  }
+
+  descargarImagen() {
+    // Crear un contenedor temporal
+    const contenedorTemp = document.createElement('div');
+    contenedorTemp.style.padding = '20px';
+    contenedorTemp.style.backgroundColor = 'white';
+    contenedorTemp.style.width = '400px';
+    contenedorTemp.style.textAlign = 'center';
+    
+    // Agregar el mensaje
+    const mensaje = document.createElement('p');
+    mensaje.style.marginBottom = '15px';
+    mensaje.style.fontSize = '14px';
+    mensaje.style.color = '#333';
+    mensaje.innerText = 'Presente este código en caja para realizar el pago y recoger sus libros';
+    contenedorTemp.appendChild(mensaje);
+    
+    // Agregar el código
+    const codigoElement = document.createElement('div');
+    codigoElement.style.fontSize = '28px';
+    codigoElement.style.fontWeight = 'bold';
+    codigoElement.style.padding = '15px';
+    codigoElement.style.backgroundColor = '#f8f9fa';
+    codigoElement.style.border = '2px solid #dee2e6';
+    codigoElement.style.borderRadius = '8px';
+    codigoElement.style.marginTop = '10px';
+    codigoElement.innerText = this.codigoPago;
+    contenedorTemp.appendChild(codigoElement);
+    
+    // Agregar temporalmente al DOM
+    document.body.appendChild(contenedorTemp);
+    
+    // Convertir a imagen y descargar
+    html2canvas(contenedorTemp).then(canvas => {
+      const link = document.createElement('a');
+      link.download = 'codigo-pago.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      
+      // Eliminar el contenedor temporal
+      document.body.removeChild(contenedorTemp);
     });
   }
 }

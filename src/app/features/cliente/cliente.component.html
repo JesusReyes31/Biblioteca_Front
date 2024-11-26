@@ -27,7 +27,7 @@
         <h2 class="titulo">RECOMENDACIONES</h2>
         <div class="recomendaciones-libros">
           <div class="recomendacion-libro" *ngFor="let libro of librosRecomendados">
-            <img [src]="libro.Imagen" [alt]="libro.Titulo">
+            <img appImageLoading [src]="libro.Imagen" [alt]="libro.Titulo">
             <span class="libro-nombre">{{libro.Titulo}}</span>
           </div>
         </div>

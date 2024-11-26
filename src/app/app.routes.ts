@@ -22,6 +22,7 @@ import { CarritoComponent } from './core/components/carrito/carrito.component';
 import { MetodosPagoComponent } from './core/components/metodos-pago/metodos-pago.component';
 import { PagoCarritoComponent } from './core/components/carrito/pago-carrito/pago-carrito.component';
 import { ConfirmacionPagoComponent } from './core/components/carrito/confirmacion-pago/confirmacion-pago.component';
+import { ActivateComponent } from './core/components/activate/activate.component';
 
 export const routes: Routes = [
     {
@@ -48,6 +49,7 @@ export const routes: Routes = [
     },
     {path:"login",component:LoginComponent},
     {path:"recover",component:RecoveryComponent},
+    {path:"activate/:token",component:ActivateComponent},
     {path:"reset-password/:token",component:ResetPassComponent,canActivate:[resetPassGuard]},
     {path:"**",redirectTo:""}
 ];

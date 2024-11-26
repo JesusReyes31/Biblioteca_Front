@@ -2,21 +2,23 @@ import { Component, ViewChild } from '@angular/core';
 import { SearchService } from '../../services/search.service';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { UsersService } from '../../services/users.service';
+import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink,ImageLoadingDirective],
   templateUrl: './header.component.html',
   styleUrls: ['../../../../styles.css','../../../../normalize.css','../../../../icon-zmdi.css','header.component.css']
 })
 export class HeaderComponent {
   tipou:string|null='';
   Nombre:string|null='';
-  Imagen:string|null='';
+  Imagen:any='';
   isDropdownOpen = false;
   cantidadCarrito: number = 0;
   mostrarCarrito: boolean = true;
+  url:string=''
   constructor(private router:Router,private SearchService: SearchService, private userService: UsersService) {
     document.addEventListener('click', (event) => {
       const dropdown = document.querySelector('.user-dropdown');
@@ -35,6 +37,8 @@ export class HeaderComponent {
     });
   }
   ngOnInit(){
+    this.url = this.router.url;
+    console.log(this.url)
     this.tipou = sessionStorage.getItem('tipoUss')||null;
     this.Nombre = sessionStorage.getItem('Nombre')||null;
     this.Imagen = sessionStorage.getItem('Imagen')||'null';

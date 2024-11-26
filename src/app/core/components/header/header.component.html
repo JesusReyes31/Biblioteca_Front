@@ -8,7 +8,7 @@
     </h1>
   </div>
   <ul class="list-unstyled navbar-icons">
-    @if(tipou !== 'Admin' && tipou !== 'Admin Sucursal'){
+    @if(tipou !== 'Admin' && tipou !== 'Admin Sucursal' && url !== '/catalogo'){
       <li class="tooltips-general search-book-button">
         <a (click)="openSearchModal()" title="Busqueda de Libros">
             <i class="zmdi zmdi-search"></i>
@@ -41,9 +41,9 @@
           }
           <figure>
             @if(Imagen!=='null'){
-              <img [src]="Imagen" alt="User-log" class="img-user img-responsive img-circle center-box" />
+              <img appImageLoading [src]="Imagen" alt="User-log" class="img-user img-responsive img-circle center-box" />
             }@else{
-              <img src="../../../../../assets/imgs/user.png" alt="User" class="img-user img-responsive img-circle center-box" />
+              <img appImageLoading src="../../../../../assets/imgs/user.png" alt="User" class="img-user img-responsive img-circle center-box" />
             }
           </figure>
       </div>

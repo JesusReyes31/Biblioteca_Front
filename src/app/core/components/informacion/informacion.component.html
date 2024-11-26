@@ -1,6 +1,6 @@
 <section class="margen container cont-inf" id="contenido">
   <div class="book-advertisement info">
-    <img [src]="libro?.Imagen" class="libro-imagen" alt="Portada del Libro">
+    <img appImageLoading [src]="libro?.Imagen" class="libro-imagen" alt="Portada del Libro">
     <div class="book-details">
       <h2>{{ libro?.Titulo }}</h2>
       <p><strong>Autor:</strong> {{ libro?.Autor }}</p>

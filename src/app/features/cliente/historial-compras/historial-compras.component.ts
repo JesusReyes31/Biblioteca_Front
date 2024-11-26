@@ -3,12 +3,13 @@ import { UsersService } from '../../../core/services/users.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
+import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
 
 
 @Component({
   selector: 'app-historial-compras',
   standalone: true,
-  imports: [FormsModule,CommonModule],
+  imports: [FormsModule,CommonModule,ImageLoadingDirective],
   templateUrl: './historial-compras.component.html',
   styleUrl: './historial-compras.component.css'
 })
@@ -24,6 +25,7 @@ export class HistorialComprasComponent {
       next: (data) => {
         this.records = data;
         this.filteredRecords = data;
+        console.log(data);
       },
       error: (error) => {
         if (error.message === 'No se encontraron ventas para este usuario.') {

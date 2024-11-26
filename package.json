@@ -22,6 +22,8 @@
     "@angular/router": "^18.2.0",
     "@microsoft/signalr": "^8.0.7",
     "git": "^0.1.5",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.2",
     "ngx-socket-io": "^4.7.0",
     "ngx-toastr": "^19.0.0",
     "rxjs": "~7.8.0",

@@ -3,11 +3,12 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UsersService } from '../../../services/users.service';
 import Swal from 'sweetalert2';
+import { ImageLoadingDirective } from '../../../../shared/directives/image-loading.directive';
 
 @Component({
   selector: 'app-pago-carrito',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,ImageLoadingDirective],
   templateUrl: './pago-carrito.component.html',
   styleUrl: './pago-carrito.component.css'
 })
@@ -31,6 +32,15 @@ export class PagoCarritoComponent {
       this.subtotal = navigation.extras.state['subtotal'];
       this.shipping = navigation.extras.state['shipping'];
       this.total = navigation.extras.state['total'];
+    }else{
+      Swal.fire({
+        title: 'Error',
+        text: 'No se encontraron datos del carrito',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      }).then(() => {
+        this.router.navigate(['/carrito']);
+      });
     }
   }
 
