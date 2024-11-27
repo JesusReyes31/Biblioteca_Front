@@ -20,6 +20,7 @@
           <th>FECHA DE COMPRA</th>
           <th>ENTREGADO</th>
           <th>RECIBO</th>
+          <th>PAGAR</th>
         </tr>
       </thead>
       <tbody>
@@ -32,6 +33,14 @@
           </td>
           <td>
             <button class="btn-generar" (click)="generarRecibo(venta.ID_Venta)">GENERAR</button>
+          </td>
+          <td>
+            <button class="btn-generar" (click)="procesarPago(venta.ID_Venta)" *ngIf="venta.Pendiente !== 'NO'">
+              PAGAR
+            </button>
+            <button class="btn-generar" disabled *ngIf="venta.Pendiente === 'NO'">
+              PAGADO
+            </button>
           </td>
         </tr>
       </tbody>      

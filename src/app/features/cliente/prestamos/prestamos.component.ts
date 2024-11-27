@@ -3,6 +3,7 @@ import { UsersService } from '../../../core/services/users/users.service';
 import { SweetalertService } from '../../../core/services/sweetalert/sweetalert.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-prestamos',
@@ -128,9 +129,38 @@ export class PrestamosComponent {
   }
 
   //Método para seleccionar un registro
-  selectRow(record: any): void {
+  async selectRow(record: any): Promise<void> {
     this.isEditMode = true;
     this.selectedUser = record;
+    
+    // Primero establecemos el tipo de usuario
+    this.userForm.patchValue({
+      Tipo_Usuario: record.Tipo_Usuario
+    });
+    
+    // Activamos el select de sucursal
+    this.onTipoUsuarioChange();
+    
+    // Buscar primero en sucursales locales
+    let Sucursal = this.sucursales.find(sucursal => 
+      sucursal.ID_Usuario === record.ID
+    )?.ID;
+
+    // Si no se encuentra en sucursales locales, buscar en personal
+    if (!Sucursal) {
+      try {
+        // Convertir el Observable a Promise
+        const data = await firstValueFrom(this.userService.getIDSucursalPersonal(record.ID));
+        if (data && data[0]) {
+          Sucursal = data[0].ID_Sucursal;
+        }
+      } catch (error) {
+        console.error('Error al obtener la sucursal:', error);
+        this.sweetalert.showNoReload('Error al obtener la sucursal del usuario');
+      }
+    }
+
+    // Una vez que tenemos todos los datos, actualizamos el formulario
     this.userForm.patchValue({
       ID: record.ID,
       Nombre_completo: record.Nombre_completo,
@@ -138,7 +168,7 @@ export class PrestamosComponent {
       CURP: record.CURP,
       Nombre_Usuario: record.Nombre_Usuario,
       Tipo_Usuario: record.Tipo_Usuario,
-      Sucursal: record.ID_Sucursal
+      Sucursal: Sucursal
     });
     
     // Deshabilitar el campo de contraseña en modo edición

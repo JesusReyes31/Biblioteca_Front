@@ -3,6 +3,7 @@ import { UsersService } from '../../../../core/services/users/users.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SweetalertService } from '../../../../core/services/sweetalert/sweetalert.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ventas-por-entregar',
@@ -15,7 +16,7 @@ export class VentasPorEntregarComponent {
   ventas: any[] = [];
   ventasFiltradas: any[] = [];
   searchTerm: string = '';
-  constructor(private userService: UsersService,private sweetalert:SweetalertService){}
+  constructor(private userService: UsersService,private sweetalert:SweetalertService,private router:Router){}
   ngOnInit(): void {
     this.cargarVentas();
   }
@@ -39,10 +40,16 @@ export class VentasPorEntregarComponent {
   filterVentas(): void {
     const term = this.searchTerm.toLowerCase();
     this.ventasFiltradas = this.ventas.filter(venta => 
-      venta.nombreCliente.toLowerCase().includes(term)
+      venta.Nombre_Usuario.toLowerCase().includes(term) ||
+      venta.Pendiente.toLowerCase().includes(term) || 
+      venta.Fecha_Venta.toLowerCase().includes(term) ||
+      venta.Cantidad.toString().includes(term)
     );
   }
-  generarRecibo(ventaId: number): void {
-    console.log(ventaId)
+  generarRecibo(id: number): void {
+    this.router.navigate(['/recibo', id])
+  }
+  procesarPago(id: number): void {
+    this.router.navigate(['/pago-sucursal', id]);
   }
 }

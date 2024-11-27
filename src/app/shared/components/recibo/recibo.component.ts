@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
-import { UsersService } from '../../../../core/services/users/users.service';
+import { UsersService } from '../../../core/services/users/users.service';
 import Swal from 'sweetalert2';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-recibo',
@@ -16,15 +17,23 @@ export class ReciboComponent implements OnInit {
   pdfUrl: SafeResourceUrl | null = null;
   pdfBlob: Blob | null = null;
   idVenta: number | null = null;
+  returnUrl: string = '';
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private userService: UsersService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private location: Location
   ) {}
 
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (params['returnUrl']) {
+        this.returnUrl = params['returnUrl'];
+      }
+    });
+
     this.idVenta = Number(this.route.snapshot.paramMap.get('id'));
     if (this.idVenta) {
       this.cargarPDF();
@@ -67,6 +76,6 @@ export class ReciboComponent implements OnInit {
   }
 
   volver() {
-    this.router.navigate(['/compras']);
+    this.location.back();
   }
 }

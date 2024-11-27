@@ -1,0 +1,241 @@
+.pago-container {
+  max-width: 1200px;
+  /* margin: 20px auto; */
+  padding: 10px 30px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.header h2 {
+  color: #0c2a46;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.btn-volver {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: #e6f3ff;
+  color: #004080;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-volver:hover {
+  background-color: #004080;
+  color: white;
+  transform: translateY(-1px);
+}
+
+/* Información del cliente */
+.info-cliente {
+  background-color: #f8f9ff;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.info-cliente h3 {
+  color: #0c2a46;
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.info-cliente p {
+  margin: 10px 0;
+  color: #444;
+  font-size: 15px;
+}
+
+.info-cliente strong {
+  color: #0c2a46;
+  font-weight: 600;
+}
+
+/* Tabla de libros */
+.libros-lista {
+  margin-bottom: 30px;
+}
+
+.libros-lista h3 {
+  color: #0c2a46;
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.libros-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.libros-table th {
+  background-color: #0c2a46;
+  color: white;
+  padding: 15px;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.libros-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #eaeaea;
+  color: #444;
+  font-size: 14px;
+  text-align: center;
+}
+
+.libros-table tr:last-child td {
+  border-bottom: none;
+}
+
+.libros-table tr:hover td {
+  background-color: #f8f9ff;
+}
+
+/* Formulario de pago */
+.pago-form {
+  background-color: #f8f9ff;
+  padding: 25px;
+  border-radius: 12px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 10px;
+  color: #0c2a46;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #e6e6e6;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  background-color: white;
+}
+
+.form-group input:focus {
+  border-color: #004080;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 64, 128, 0.1);
+}
+
+/* Resumen del pago */
+.resumen-pago {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 25px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.resumen-pago p {
+  display: flex;
+  justify-content: space-between;
+  margin: 12px 0;
+  font-size: 16px;
+  color: #444;
+}
+
+.resumen-pago strong {
+  color: #0c2a46;
+}
+
+/* Botón de procesar pago */
+.btn-procesar {
+  width: 100%;
+  padding: 15px;
+  background-color: #004080;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-procesar:hover:not(:disabled) {
+  background-color: #003366;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-procesar:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .pago-container {
+    margin: 10px;
+    padding: 20px;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .libros-table {
+    font-size: 13px;
+  }
+
+  .libros-table th,
+  .libros-table td {
+    padding: 10px;
+  }
+
+  .form-group input {
+    font-size: 14px;
+  }
+
+  .resumen-pago p {
+    font-size: 14px;
+  }
+
+  .btn-procesar {
+    font-size: 14px;
+    padding: 12px;
+  }
+}

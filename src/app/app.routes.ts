@@ -24,7 +24,8 @@ import { PagoCarritoComponent } from './core/components/carrito/pago-carrito/pag
 import { ConfirmacionPagoComponent } from './core/components/carrito/confirmacion-pago/confirmacion-pago.component';
 import { ActivateComponent } from './core/components/activate/activate.component';
 import { AdminComponent } from './features/cliente/admin/admin.component';
-import { ReciboComponent } from './features/cliente/historial-compras/recibo/recibo.component';
+import { ReciboComponent } from './shared/components/recibo/recibo.component';
+import { PagoSucursalComponent } from './features/cliente/prestamos/pago-sucursal/pago-sucursal.component';
 
 export const routes: Routes = [
     {
@@ -49,6 +50,7 @@ export const routes: Routes = [
             {path:"pago-carrito",component:PagoCarritoComponent},
             {path:"confirmacion-pago",component:ConfirmacionPagoComponent},
             {path:"sucursales",component:AdminComponent},
+            {path: 'pago-sucursal/:id', component: PagoSucursalComponent}
         ]
     },
     {path:"login",component:LoginComponent},

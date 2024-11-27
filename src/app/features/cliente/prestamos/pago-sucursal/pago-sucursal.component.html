@@ -1,0 +1,78 @@
+<div class="pago-container">
+    <div class="header">
+      <h2>Pago en Sucursal</h2>
+      <button class="btn-volver" (click)="volver()">
+        <i class="fas fa-arrow-left"></i> Volver
+      </button>
+    </div>
+    <div class="detalle-venta" *ngIf="detalleVenta">
+      <div class="info-cliente">
+        <h3>Información de la Venta</h3>
+        <p><strong>Cliente:</strong> {{ venta.Nombre_Usuario }}</p>
+        <p><strong>Fecha:</strong> {{ venta.Fecha_Venta | date:'yyyy-MM-dd' }}</p>
+        <p><strong>Total a Pagar:</strong> ${{ venta.Total.toFixed(2) }}</p>
+      </div>
+  
+      <div class="libros-lista">
+        <h3>Libros en la Venta</h3>
+        <table class="libros-table">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Cantidad</th>
+              <th>Precio Unitario</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let libro of detalleVenta">
+              <td>{{ libro.Titulo }}</td>
+              <td>{{ libro.Cantidad }}</td>
+              <td>${{ libro.Precio.toFixed(2) }}</td>
+              <td>${{ (libro.Cantidad * libro.Precio).toFixed(2) }}</td>
+            </tr>
+            <tr>
+                <td>Cargos por Servicios</td>
+                <td>--</td>
+                <td>--</td>
+                <td>$ 4.00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Formulario de pago -->
+      <form [formGroup]="pagoForm" class="pago-form">
+        <div class="form-group">
+            <label>Código de Pago:</label>
+            <input type="text" id="codigoPago" formControlName="codigoPago" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label for="cantidadRecibida">Cantidad Recibida:</label>
+          <input 
+            type="number" 
+            id="cantidadRecibida" 
+            formControlName="cantidadRecibida"
+            (input)="calcularCambio()"
+            min="0"
+            step="0.01"
+            autocomplete="off"
+          >
+        </div>
+
+        <div class="resumen-pago">
+          <p><strong>Total a Pagar:</strong> ${{ venta.Total.toFixed(2) }}</p>
+          <p><strong>Cambio a Devolver:</strong> ${{ calcularCambio() >= 0 ? calcularCambio().toFixed(2) : '0.00' }}</p>
+        </div>
+
+        <div class="acciones">
+          <button 
+            class="btn-procesar" 
+            (click)="procesarPago()"
+            [disabled]="!pagoForm.valid || calcularCambio() < 0">
+            Procesar Pago
+          </button>
+        </div>
+      </form>
+    </div>
+</div>

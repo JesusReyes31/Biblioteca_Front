@@ -394,9 +394,42 @@ export class UsersService {
       );
   }
 
+  //ID_Sucursal de Personal
+  getIDSucursalPersonal(id: number): Observable<any>{
+    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
+    return this.http.get(`${this.apiUrl}personal/${id}`, { headers });
+  }
+
+  // Obtener detalle de una venta específica con sus libros
+  getDetalleVenta(idVenta: number): Observable<any> {
+    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
+    return this.http.get<any>(`${this.apiUrl}detailsales/${idVenta}`, { headers });
+  }
+  getVentasByID(id: number): Observable<any> {
+    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
+    return this.http.get<any>(`${this.apiUrl}sales/${id}`, { headers });
+  }
+  // Procesar el pago en sucursal
+  // procesarPagoSucursal(id: number): Observable<any> {
+  //   const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
+  //   return this.http.post<any>(`${this.apiUrl}pagos-pendientes/${id}`, { headers });
+  // }
+  //Eliminar Pago Pendiente
+  eliminarPagoPendiente(id: number,codigo: string): Observable<any> {
+    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
+    return this.http.delete(`${this.apiUrl}pagos-pendientes/${id}/${codigo}`, { headers });
+  }
+
+
   //Recibo de compra
   getReciboCompra(id: number): Observable<any> {
     const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
     return this.http.get(`${this.apiUrl}doctos/recibo/${id}`, { headers,responseType: 'blob' });
+  }
+
+  //Exportar a PDF
+  exportToPDF(data: any): Observable<any> {
+    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
+    return this.http.get(`${this.apiUrl}doctos/prestamos`,{ headers,responseType: 'blob' });
   }
 }

@@ -96,4 +96,14 @@ export class PrestamosGeneralesComponent {
     this.currentPage = 0;
     this.updatePaginatedRecords();
   }
+  exportToPDF(){
+    this.usersService.exportToPDF(this.filteredPrestamos).subscribe(
+      (data)=>{
+        const blob = new Blob([data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, '_blank');
+      }
+    )
+  }
+  
 }
