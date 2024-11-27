@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { UsersService } from '../../../core/services/users.service';
+import { UsersService } from '../../../core/services/users/users.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { SweetalertService } from '../../../core/services/sweetalert.service';
+import { SweetalertService } from '../../../core/services/sweetalert/sweetalert.service';
 import { PageEvent } from '@angular/material/paginator';
 import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
 

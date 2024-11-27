@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { UsersService } from '../../services/users.service';
-import { SweetalertService } from '../../services/sweetalert.service';
+import { UsersService } from '../../services/users/users.service';
+import { SweetalertService } from '../../services/sweetalert/sweetalert.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import { FooterService } from '../../services/footer.service';
+import { FooterService } from '../../services/footer/footer.service';
 import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
 
 @Component({

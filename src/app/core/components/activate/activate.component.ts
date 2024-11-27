@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { UsersService } from '../../../core/services/users.service';
-import { SweetalertService } from '../../../core/services/sweetalert.service';
+import { UsersService } from '../../services/users/users.service';
+import { SweetalertService } from '../../services/sweetalert/sweetalert.service';
 import { CommonModule } from '@angular/common';
 
 @Component({

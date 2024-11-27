@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { UsersService } from '../../services/users.service';
+import { UsersService } from '../../services/users/users.service';
 import { CommonModule } from '@angular/common';
 import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
 import Swal from 'sweetalert2';

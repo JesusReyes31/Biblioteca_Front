@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { UsersService } from '../../../core/services/users.service';
+import { UsersService } from '../../../core/services/users/users.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { FooterService } from '../../../core/services/footer.service';
-import { SweetalertService } from '../../../core/services/sweetalert.service';
+import { FooterService } from '../../../core/services/footer/footer.service';
+import { SweetalertService } from '../../../core/services/sweetalert/sweetalert.service';
 import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
 
 @Component({

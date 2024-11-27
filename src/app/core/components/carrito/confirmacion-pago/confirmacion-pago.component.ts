@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { UsersService } from '../../../services/users.service';
+import { UsersService } from '../../../services/users/users.service';
 import Swal from 'sweetalert2';
-import { VentasService } from '../../../services/ventas.service';
+import { VentasService } from '../../../services/ventas/ventas.service';
 import html2canvas from 'html2canvas';
 import { ImageLoadingDirective } from '../../../../shared/directives/image-loading.directive';
 @Component({

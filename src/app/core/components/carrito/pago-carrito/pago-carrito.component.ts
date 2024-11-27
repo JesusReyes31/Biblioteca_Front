@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { UsersService } from '../../../services/users.service';
+import { UsersService } from '../../../services/users/users.service';
 import Swal from 'sweetalert2';
 import { ImageLoadingDirective } from '../../../../shared/directives/image-loading.directive';
-import { FooterService } from '../../../services/footer.service';
+import { FooterService } from '../../../services/footer/footer.service';
 
 @Component({
   selector: 'app-pago-carrito',

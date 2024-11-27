@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { FooterService } from '../../services/footer.service';
-import { UsersService } from '../../services/users.service';
-import { SweetalertService } from '../../services/sweetalert.service';
+import { FooterService } from '../../services/footer/footer.service';
+import { UsersService } from '../../services/users/users.service';
+import { SweetalertService } from '../../services/sweetalert/sweetalert.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';

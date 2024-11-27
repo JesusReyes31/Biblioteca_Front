@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { UsersService } from '../../../core/services/users.service';
+import { UsersService } from '../../../core/services/users/users.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
-import { FooterService } from '../../../core/services/footer.service';
+import { FooterService } from '../../../core/services/footer/footer.service';
 
 @Component({
   selector: 'app-historial-prestamo',

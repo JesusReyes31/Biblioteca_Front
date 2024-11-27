@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
-import { UsersService } from '../../../../core/services/users.service';
+import { UsersService } from '../../../../core/services/users/users.service';
 import Swal from 'sweetalert2';
 
 @Component({

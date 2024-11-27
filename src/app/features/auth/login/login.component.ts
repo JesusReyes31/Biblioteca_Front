@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService } from '../../../core/services/auth/auth.service';
 import { Router, RouterLink } from '@angular/router';
-import { SweetalertService } from '../../../core/services/sweetalert.service';
+import { SweetalertService } from '../../../core/services/sweetalert/sweetalert.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 

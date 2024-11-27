@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { UsersService } from '../../services/users.service';
+import { UsersService } from '../../services/users/users.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { FooterService } from '../../services/footer.service';
+import { FooterService } from '../../services/footer/footer.service';
 
 @Component({
   selector: 'app-credencial',

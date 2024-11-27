@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { SearchService } from '../../services/search.service';
+import { SearchService } from '../../services/search/search.service';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
-import { UsersService } from '../../services/users.service';
+import { UsersService } from '../../services/users/users.service';
 import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
 
 @Component({

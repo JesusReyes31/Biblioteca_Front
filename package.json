@@ -20,6 +20,7 @@
     "@angular/platform-browser": "^18.2.0",
     "@angular/platform-browser-dynamic": "^18.2.0",
     "@angular/router": "^18.2.0",
+    "@google/generative-ai": "^0.21.0",
     "@microsoft/signalr": "^8.0.7",
     "git": "^0.1.5",
     "html2canvas": "^1.4.1",

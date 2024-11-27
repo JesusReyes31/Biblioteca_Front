@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { UsersService } from '../../../../core/services/users.service';
+import { UsersService } from '../../../../core/services/users/users.service';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
