@@ -18,6 +18,7 @@ export class HeaderComponent {
   isDropdownOpen = false;
   cantidadCarrito: number = 0;
   mostrarCarrito: boolean = true;
+  mostrarBusqueda: boolean = true;
   url:string=''
   constructor(private router:Router,private SearchService: SearchService, private userService: UsersService) {
     document.addEventListener('click', (event) => {
@@ -33,6 +34,11 @@ export class HeaderComponent {
         this.mostrarCarrito = !event.url.includes('/carrito');
         // Actualizar cantidad del carrito al cambiar de ruta
         this.actualizarCantidadCarrito();
+      }
+    });
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.mostrarBusqueda = !event.url.includes('/catalogo');
       }
     });
   }

@@ -91,10 +91,9 @@ form {
 
 /* Botones */
 .botones {
-  margin-top: 2rem;
   display: flex;
-  gap: 15px;
-  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
 }
 
 .botones button {
@@ -105,12 +104,15 @@ form {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   transition: all 0.3s ease;
+  color: black;
   cursor: pointer;
-  color: white;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .botones button:first-child {
-  background: #2ecc71;
+  background: #2dc86e;
 }
 
 .botones button:nth-child(2) {
@@ -125,15 +127,15 @@ form {
   background: #95a5a6;
 }
 
-.botones button:hover {
+.botones button:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .botones button:disabled {
-  background: #bdc3c7;
+  opacity: 0.5;
   cursor: not-allowed;
-  transform: none;
+  pointer-events: none;
 }
 
 /* Contenedor de la tabla */

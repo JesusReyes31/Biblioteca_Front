@@ -176,10 +176,15 @@ export class UsersService {
     // const ID_Usuario = sessionStorage.getItem('ID_Uss');
     return this.http.put<any>(`${this.apiUrl}cart/${id}`, {cantidad:Cantidad},{ headers });
   }
-  deleteCarrito(): Observable<any>{
+  deleteCarrito(libro: string): Observable<any>{
     const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
     const id = sessionStorage.getItem('ID_Uss');
-    return this.http.delete(`${this.apiUrl}cart/${id}`,{ headers });
+    return this.http.delete(`${this.apiUrl}cart/one/${id}/${libro}`,{ headers });
+  }
+  deleteAllCarrito(): Observable<any>{
+    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
+    const id = sessionStorage.getItem('ID_Uss');
+    return this.http.delete(`${this.apiUrl}cart/all/${id}`,{ headers });
   }
 
 
@@ -237,13 +242,6 @@ export class UsersService {
     return this.http.delete(`${this.apiUrl}books/${id}`, { headers });
   }
 
-  //Sucursales 
-  getSucursales(): Observable<any>{
-    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
-    return this.http.get(`${this.apiUrl}sucursales`, { headers });
-  }
-
-
   //Usuarios 
   //Tipo de usuarios
   getTipoUsuarios(): Observable<any>{
@@ -255,9 +253,22 @@ export class UsersService {
     const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
     return this.http.get(`${this.apiUrl}users`, { headers });
   }
-  addUser(body:any):Observable<any>{
-    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
-    return this.http.post(`${this.apiUrl}auth/register`,body, { headers });
+  addUser(body: any): Observable<any> {
+    const headers = new HttpHeaders({ 
+      'authorization': `${sessionStorage.getItem('authToken')}`,
+      'Content-Type': 'application/json' 
+    });
+    return this.http.post(`${this.apiUrl}auth/register`, body, { headers }).pipe(
+      catchError(error => {
+        if (error.error && typeof error.error === 'string') {
+          return throwError(() => error.error);
+        }
+        if (error.error?.message) {
+          return throwError(() => error.error.message);
+        }
+        return throwError(() => 'Error al registrar usuario');
+      })
+    );
   }
   updateUser(id:number,body:any):Observable<any>{
     const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
@@ -311,5 +322,81 @@ export class UsersService {
 
   activateAccount(token: string) {
     return this.http.get(`${this.apiUrl}auth/activate/${token}`);
+  }
+
+
+  //Sucursales
+  getSucursales(): Observable<any> {
+    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
+    return this.http.get(`${this.apiUrl}sucursales`, { headers })
+    .pipe(
+      catchError(error => {
+      console.error('Error al obtener sucursales:', error);
+      return throwError(() => error);
+    })
+  );
+}
+
+  getOneSucursal(id: number): Observable<any> {
+    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
+    return this.http.get(`${this.apiUrl}sucursales/${id}`, { headers })
+    .pipe(
+      catchError(error => {
+        console.error('Error al obtener sucursal:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  addSucursal(sucursalData: any): Observable<any> {
+    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
+    return this.http.post(`${this.apiUrl}sucursales`, sucursalData, { headers })
+      .pipe(
+      catchError(error => {
+        if (error.error?.message) {
+          return throwError(() => error.error.message);
+        }
+        console.error('Error al agregar sucursal:', error);
+        return throwError(() => 'Error al agregar sucursal');
+      })
+    );
+  }
+
+  updateSucursal(id: number, sucursalData: any): Observable<any> {
+    const headers = new HttpHeaders({ 
+      'authorization': `${sessionStorage.getItem('authToken')}`,
+      'Content-Type': 'application/json' 
+    });
+    return this.http.put(`${this.apiUrl}sucursales/${id}`, sucursalData, { headers }).pipe(
+      catchError(error => {
+        if (error.error && typeof error.error === 'string') {
+          return throwError(() => error.error);
+        }
+        if (error.error?.message) {
+          return throwError(() => error.error.message);
+        }
+        return throwError(() => 'Error al actualizar sucursal');
+      })
+    );
+  }
+
+  deleteSucursal(id: number): Observable<any> {
+    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
+    return this.http.delete(`${this.apiUrl}sucursales/${id}`, { headers })
+    .pipe(
+      catchError(error => {
+        if (error.error?.message) {
+          return throwError(() => error.error.message);
+        }
+        console.error('Error al eliminar sucursal:', error);
+        return throwError(() => 'Error al eliminar sucursal');
+      })
+      );
+  }
+
+  //Recibo de compra
+  getReciboCompra(id: number): Observable<any> {
+    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
+    return this.http.get(`${this.apiUrl}doctos/recibo/${id}`, { headers,responseType: 'blob' });
   }
 }

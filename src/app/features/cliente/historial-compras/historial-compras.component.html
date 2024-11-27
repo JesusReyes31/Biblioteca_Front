@@ -23,9 +23,9 @@
         <tr *ngFor="let record of filteredRecords">
           <td>{{ record.Cantidad }}</td>
           <td>{{ record.Fecha_Venta }}</td>
-          <td>{{ record.Total.toFixed(2) }}</td>
+          <td>${{ record.Total.toFixed(2) }}</td>
           <td>
-            <button (click)="generateReceipt(record.ID_Venta)">
+            <button (click)="generarRecibo(record.ID_Venta)">
               Generar Recibo
             </button>
           </td>
@@ -40,7 +40,7 @@
   </div>
   
   <ng-template #noRecords>
-    <p>No se encontraron registros de compras.</p>
+    <p class="no-records">No se encontraron registros de compras.</p>
   </ng-template>
 </div>
   

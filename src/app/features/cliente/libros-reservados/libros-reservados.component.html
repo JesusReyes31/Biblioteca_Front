@@ -1,13 +1,29 @@
 <section id="contenido">
   <h1>Libros Reservados</h1>
-  <div *ngFor="let reserva of reservas" class="reserva center">
+  
+  <div *ngIf="reservas.length === 0" class="no-reservas">
+    No tienes libros reservados en este momento.
+  </div>
+
+  <div *ngFor="let reserva of reservas" class="reserva">
     <img appImageLoading [src]="reserva.Imagen" alt="Portada del Libro" class="imgreserva">
     <div class="detallesreserva">
       <h2>{{ reserva.Titulo }}</h2>
-      <p>Fecha de reservación: <br><strong>{{ reserva.fecha1 }}</strong></p>
-      <p>Fecha límite: <br><strong>{{ reserva.fecha2 }}</strong></p>
-      <!-- <p>Fecha límite: <br><strong>{{ reserva.ID_Reserva }}</strong></p> -->
-      <button (click)="deshacerReserva(reserva.ID_Reserva)">Deshacer reservación</button>
+      
+      <div class="fecha-container">
+        <div class="fecha-item">
+          <p>Fecha de reservación:</p>
+          <strong>{{ reserva.fecha1 }}</strong>
+        </div>
+        <div class="fecha-item">
+          <p>Fecha límite:</p>
+          <strong>{{ reserva.fecha2 }}</strong>
+        </div>
+      </div>
+
+      <button (click)="deshacerReserva(reserva.ID_Reserva)">
+        <i class="fas fa-times-circle"></i> Cancelar reservación
+      </button>
     </div>
   </div>
 </section>

@@ -3,11 +3,12 @@ import { Router } from '@angular/router';
 import { UsersService } from '../../services/users.service';
 import { CommonModule } from '@angular/common';
 import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-carrito',
   standalone: true,
-  imports: [CommonModule,ImageLoadingDirective  ],
+  imports: [CommonModule, ImageLoadingDirective],
   templateUrl: './carrito.component.html',
   styleUrl: './carrito.component.css'
 })
@@ -43,37 +44,86 @@ export class CarritoComponent {
     this.total = this.subtotal + this.shipping;
   }
 
-  actualizarCantidad(libro: any, incrementar: boolean) {
-    console.log(libro);
-    let nuevaCantidad = libro.Cantidad + (incrementar ? 1 : -1);
-    // Validar límites de cantidad
-    if (nuevaCantidad < 1 || nuevaCantidad > libro.Cantidad_disponible) {
-      return;
+  actualizarCantidadDirecta(event: any, libro: any) {
+    let nuevaCantidad = parseInt(event.target.value);
+    
+    // Validar que sea un número válido
+    if (isNaN(nuevaCantidad)) {
+      nuevaCantidad = 1;
+      event.target.value = 1;
     }
-    console.log(libro.ID_Libro, nuevaCantidad);
+
+    // Validar límites
+    if (nuevaCantidad < 1) {
+      nuevaCantidad = 1;
+      event.target.value = 1;
+    }
+    if (nuevaCantidad > libro.Cantidad_disponible) {
+      nuevaCantidad = libro.Cantidad_disponible;
+      event.target.value = libro.Cantidad_disponible;
+      Swal.fire({
+        title: 'Cantidad no disponible',
+        text: `Solo hay ${libro.Cantidad_disponible} unidades disponibles`,
+        icon: 'warning',
+        confirmButtonText: 'Entendido'
+      });
+    }
+
+    this.actualizarCantidad(libro, nuevaCantidad);
+  }
+
+  actualizarCantidad(libro: any, nuevaCantidad: number) {
     this.userService.actualizarCantidadCarrito(libro.ID, nuevaCantidad).subscribe({
-      next: (response) => {
+      next: () => {
         libro.Cantidad = nuevaCantidad;
         this.calcularSubtotal();
-        // Notificar al servicio que el carrito ha sido actualizado
-        // this.userService.notificarActualizacionCarrito();
       },
       error: (error) => {
         console.error('Error al actualizar cantidad:', error);
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudo actualizar la cantidad',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
       }
     });
   }
 
-  eliminarLibro(libroId: number) {
-    // this.userService.eliminarDelCarrito(libroId).subscribe({
-    //   next: () => {
-    //     this.librosCarrito = this.librosCarrito.filter(libro => libro.ID !== libroId);
-    //     this.calcularSubtotal();
-    //   },
-    //   error: (error) => {
-    //     console.error('Error al eliminar libro:', error);
-    //   }
-    // });
+  eliminarLibro(libroId: string) {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: "¿Deseas eliminar este libro del carrito?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#6366F1',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.userService.deleteCarrito(libroId).subscribe({
+          next: () => {
+            this.librosCarrito = this.librosCarrito.filter(libro => libro.ID_Libro !== libroId);
+            this.calcularSubtotal();
+            Swal.fire(
+              '¡Eliminado!',
+              'El libro ha sido eliminado del carrito',
+              'success'
+            );
+          },
+          error: (error) => {
+            console.error('Error al eliminar libro:', error);
+            Swal.fire({
+              title: 'Error',
+              text: 'No se pudo eliminar el libro del carrito',
+              icon: 'error',
+              confirmButtonText: 'Aceptar'
+            });
+          }
+        });
+      }
+    });
   }
 
   continuarComprando() {
@@ -98,5 +148,26 @@ export class CarritoComponent {
 
   pagarConTarjeta() {
     // Implementar lógica de pago con tarjeta
+  }
+
+  decrementarCantidad(libro: any) {
+    const nuevaCantidad = libro.Cantidad - 1;
+    if (nuevaCantidad >= 1) {
+      this.actualizarCantidad(libro, nuevaCantidad);
+    }
+  }
+
+  incrementarCantidad(libro: any) {
+    const nuevaCantidad = libro.Cantidad + 1;
+    if (nuevaCantidad <= libro.Cantidad_disponible) {
+      this.actualizarCantidad(libro, nuevaCantidad);
+    } else {
+      Swal.fire({
+        title: 'Cantidad no disponible',
+        text: `Solo hay ${libro.Cantidad_disponible} unidades disponibles`,
+        icon: 'warning',
+        confirmButtonText: 'Entendido'
+      });
+    }
   }
 }

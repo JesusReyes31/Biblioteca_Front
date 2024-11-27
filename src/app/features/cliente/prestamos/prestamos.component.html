@@ -38,8 +38,10 @@
         <label for="Sucursal">Sucursal</label>
         <select id="Sucursal" formControlName="Sucursal" required>
           <option value="">Seleccione una sucursal</option>
-          <option *ngFor="let sucursal of sucursales" [value]="sucursal.ID">
-            {{ sucursal.Nombre }}
+          <option *ngFor="let sucursal of sucursales" 
+                  [value]="sucursal.ID"
+                  [disabled]="sucursal.ID_Usuario">
+            {{ sucursal.Nombre }} {{ sucursal.ID_Usuario ? '(Ya tiene administrador)' : '' }}
           </option>
         </select>
       </div>
@@ -53,7 +55,13 @@
 
     <div class="campo">
       <label for="Contra">Contraseña</label>
-      <input id="Contra" formControlName="Contra" type="text" autocomplete="off"/>
+      <input id="Contra" 
+             formControlName="Contra" 
+             type="text" 
+             autocomplete="off"
+             [placeholder]="isEditMode ? 'No se puede modificar la contraseña' : ''"
+             [ngStyle]="{'background-color': isEditMode ? '#f5f5f5' : 'white'}"
+      />
     </div>
   
     <div class="botones">

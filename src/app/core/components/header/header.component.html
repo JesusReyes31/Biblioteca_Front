@@ -8,12 +8,14 @@
     </h1>
   </div>
   <ul class="list-unstyled navbar-icons">
-    @if(tipou !== 'Admin' && tipou !== 'Admin Sucursal' && url !== '/catalogo'){
-      <li class="tooltips-general search-book-button">
-        <a (click)="openSearchModal()" title="Busqueda de Libros">
+    @if(tipou !== 'Admin' && tipou !== 'Admin Sucursal'){
+      @if(mostrarBusqueda){
+        <li class="tooltips-general search-book-button">
+          <a (click)="openSearchModal()" title="Busqueda de Libros">
             <i class="zmdi zmdi-search"></i>
         </a>
-      </li>
+        </li>
+      }
     }
     @if(tipou==='Cliente' || tipou==='Prestamos' || tipou==='Inventario'){
       @if(mostrarCarrito){

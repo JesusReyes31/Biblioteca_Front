@@ -8,7 +8,7 @@ export class FooterService {
     const sectionContent = document.getElementById('contenido');
     const footer = document.getElementById('footer');
     if (sectionContent && footer) {
-      const contentHeight = sectionContent.offsetHeight + 80; // Ajusta la altura del contenido
+      const contentHeight = sectionContent.offsetHeight + 50; // Ajusta la altura del contenido
       const windowHeight = window.innerHeight - 100; // Altura de la ventana disponible
       // console.log(contentHeight,windowHeight)
       if (contentHeight <= windowHeight) {

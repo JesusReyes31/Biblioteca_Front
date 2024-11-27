@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -18,14 +19,13 @@ export class HistorialComprasComponent {
   filteredRecords: any[] = [];
   searchTerm: string = '';
 
-  constructor(private userService: UsersService) {}
+  constructor(private userService: UsersService,private router: Router) {}
 
   ngOnInit(): void {
     this.userService.getPurchaseHistory().subscribe({
       next: (data) => {
         this.records = data;
         this.filteredRecords = data;
-        console.log(data);
       },
       error: (error) => {
         if (error.message === 'No se encontraron ventas para este usuario.') {
@@ -56,17 +56,8 @@ export class HistorialComprasComponent {
     );
   }
 
-  generateReceipt(id: number): void {
-    // this.userService.generateReceiptPDF(id).subscribe(
-    //   (response) => {
-    //     const url = window.URL.createObjectURL(response);
-    //     const link = document.createElement('a');
-    //     link.href = url;
-    //     link.download = `Recibo_${id}.pdf`;
-    //     link.click();
-    //   },
-    //   (error) => console.error('Error al generar el recibo:', error)
-    // );
+  generarRecibo(id: number): void {
+    this.router.navigate(['/recibo', id]);
   }
 
   generateInvoice(id: number): void {

@@ -137,11 +137,15 @@ export class PrestamosComponent {
       Correo: record.Correo,
       CURP: record.CURP,
       Nombre_Usuario: record.Nombre_Usuario,
-      Tipo_Usuario: record.Tipo_Usuario
+      Tipo_Usuario: record.Tipo_Usuario,
+      Sucursal: record.ID_Sucursal
     });
+    
+    // Deshabilitar el campo de contraseña en modo edición
+    this.userForm.get('Contra')?.disable();
   }
 
-  addUser(){
+  addUser() {
     if (this.isFormValidForRegister()) {
       const userData = {
         Nombre_completo: this.userForm.get('Nombre_completo')?.value,
@@ -150,21 +154,42 @@ export class PrestamosComponent {
         CURP: this.userForm.get('CURP')?.value,
         Nombre_Usuario: this.userForm.get('Nombre_Usuario')?.value,
         Tipo_Usuario: this.userForm.get('Tipo_Usuario')?.value,
-        Sucursal: this.mostrarSelectSucursal ? this.userForm.get('Sucursal')?.value : null
       };
-
-      this.userService.addUser(userData).subscribe(
-        (response) => {
-          this.sweetalert.showNoReload('Usuario agregado correctamente');
-          this.loadUsers()
-          this.users.push(response);
-          this.filteredRecords = [...this.users];
-          this.clearForm();
+      const Sucursal = this.userForm.get('Sucursal')?.value;
+      console.log(userData,Sucursal)
+      this.userService.addUser(userData).subscribe({
+        next: (response) => {
+          console.log('RESPONSE',response.datos)
+          // Si es Admin Sucursal, actualizar la sucursal con el ID del usuario creado
+          if (userData.Tipo_Usuario === 'Admin Sucursal' && Sucursal) {
+            const sucursalData = {
+              ID_Usuario: parseInt(response.datos.ID) // ID del usuario recién creado
+            };
+            console.log('SUCURSAL DATA',sucursalData)
+            this.userService.updateSucursal(parseInt(Sucursal), sucursalData).subscribe({
+              next: () => {
+                this.sweetalert.showReload('Usuario y sucursal asociados correctamente');
+              },
+              error: (error) => {
+                // Si falla la asociación, eliminar el usuario creado
+                this.userService.deleteUser(response.datos.ID).subscribe();
+                this.sweetalert.showNoReload('Error al asociar usuario con la sucursal');
+                console.log('ERROR',error)
+              }
+            });
+          } else {
+            this.sweetalert.showNoReload('Usuario agregado correctamente');
+            this.loadUsers();
+            this.users.push(response);
+            this.filteredRecords = [...this.users];
+            this.clearForm();
+          }
         },
-        (error) => {
-          this.sweetalert.showNoReload('Error al agregar usuario');
+        error: (error) => {
+          console.log('ERROR',error.error)
+          this.sweetalert.showNoReload(error.error?.message || 'Error al agregar usuario');
         }
-      );
+      });
     } else {
       this.sweetalert.showNoReload('Por favor completa todos los campos requeridos');
     }
@@ -174,11 +199,7 @@ export class PrestamosComponent {
     if (id) {
       this.userService.deleteUser(id).subscribe(
         () => {
-          this.sweetalert.showNoReload('Usuario eliminado correctamente');
-          this.users = this.users.filter(user => user.ID !== id);
-          this.filteredRecords = [...this.users];
-          this.clearForm();
-          this.isEditMode = false;
+          this.sweetalert.showReload('Usuario eliminado correctamente')
         },
         (error) => {
           this.sweetalert.showNoReload(error.error.message);
@@ -193,14 +214,7 @@ export class PrestamosComponent {
     if (id && this.userForm.valid) {
       this.userService.updateUser(id, this.userForm.value).subscribe(
         (response) => {
-          this.sweetalert.showNoReload('Usuario actualizado correctamente');
-          const index = this.users.findIndex(user => user.ID === id);
-          if (index !== -1) {
-            this.users[index] = response;
-          }
-          this.filteredRecords = [...this.users];
-          this.clearForm();
-          this.isEditMode = false;
+          this.sweetalert.showReload('Usuario actualizado correctamente')
         },
         (error) => {
           this.sweetalert.showNoReload('Error al actualizar usuario');
@@ -217,6 +231,9 @@ export class PrestamosComponent {
     this.selectedUser = {};
     this.isEditMode = false;
     this.mostrarSelectSucursal = false;
+    
+    // Habilitar nuevamente el campo de contraseña
+    this.userForm.get('Contra')?.enable();
   }
 
   // Nuevo método para validar el formulario para registro

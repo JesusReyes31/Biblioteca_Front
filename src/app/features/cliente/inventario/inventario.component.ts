@@ -27,6 +27,7 @@ export class InventarioComponent {
   startIndex = 0;
   endIndex = 0;
   paginatedRecords: any[] = [];
+  isEditMode: boolean = false;
 
   constructor(private fb: FormBuilder, private userService: UsersService, private sweetalert: SweetalertService) {
     this.bookForm = this.fb.group({
@@ -161,6 +162,7 @@ export class InventarioComponent {
     });
   }
   selectRow(record: any): void {
+    this.isEditMode = true;
     this.selectedBook = record;
     this.bookForm.patchValue({
       ID: record.ID,
@@ -173,8 +175,7 @@ export class InventarioComponent {
       Precio: record.Precio,
       Resumen: record.Resumen,
       ImagenURL: record.Imagen,
-      ID_Sucursal: record.ID_Sucursal,
-      OtroGenero: record.Genero // Añadido para el campo de otro género
+      ID_Sucursal: record.ID_Sucursal
     });
   }
 
@@ -225,17 +226,13 @@ export class InventarioComponent {
       } else {
         this.bookForm.patchValue({ Genero: genero });
       }
-      // this.bookForm.patchValue({
-      //   Imagen: this.bookForm.get('ImagenURL')?.value
-      // });
+
       this.bookForm.removeControl('ImagenURL');
       this.bookForm.removeControl('OtroGenero');
 
       this.userService.updateBook(this.selectedBook.ID, this.bookForm.value).subscribe(
         (response) => {
-          this.sweetalert.showNoReload('Libro modificado exitosamente');
-          this.loadBooks();
-          this.clearForm();
+          this.sweetalert.showReload('Libro modificado exitosamente')
         },
         (error) => {
           this.sweetalert.showNoReload('Error al modificar libro');
@@ -249,9 +246,7 @@ export class InventarioComponent {
     if (this.selectedBook && this.selectedBook.ID) {
       this.userService.deleteBook(this.selectedBook.ID).subscribe(
         (response) => {
-          this.sweetalert.showNoReload('Libro eliminado exitosamente');
-          this.loadBooks();
-          this.clearForm();
+          this.sweetalert.showReload('Libro eliminado exitosamente')
         },
         (error) => {
           this.sweetalert.showNoReload('Error al eliminar libro');
@@ -263,5 +258,9 @@ export class InventarioComponent {
 
   clearForm(): void {
     this.bookForm.reset();
+    this.selectedBook = null;
+    this.isEditMode = false;
+    this.bookForm.get('Genero')?.setValue('');
+    this.bookForm.get('ID_Sucursal')?.setValue('');
   }
 }

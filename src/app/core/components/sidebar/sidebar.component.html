@@ -21,6 +21,13 @@
               </a>
             </li>
           }
+          @if(tipou === 'Admin'){
+            <li>
+              <a routerLink="sucursales">
+                <i class="zmdi zmdi-puzzle-piece zmdi-hc-fw"></i>&nbsp;&nbsp;Gestión de Sucursales
+              </a>
+            </li>
+          }
           @if(tipou === 'Admin Sucursal' || tipou ==='Prestamos' || tipou ==='Admin'){
             <li>
                 <a routerLink="registrar-usuarios">
@@ -75,6 +82,13 @@
               </ul>
             </li>            
           }
+          @if(tipou==='Admin'){
+            <li>
+              <a routerLink="#">
+                <i class="zmdi zmdi-assignment-o zmdi-hc-fw"></i>&nbsp;&nbsp;Reportes Globales
+              </a>
+            </li>
+          }
           @if(tipou === 'Inventario'){
             <li>
               <a routerLink="registrar-libros">
@@ -101,18 +115,6 @@
             <li>
               <a routerLink="metodos-pago">
                 <i class="zmdi zmdi-card zmdi-hc-fw"></i>&nbsp;&nbsp;Mis métodos de pago
-              </a>
-            </li>
-          }
-          @if(tipou === 'Admin'){
-            <li>
-              <a routerLink="#">
-                <i class="zmdi zmdi-puzzle-piece zmdi-hc-fw"></i>&nbsp;&nbsp;Gestión de Sucursales
-              </a>
-            </li>
-            <li>
-              <a routerLink="#">
-                <i class="zmdi zmdi-assignment-o zmdi-hc-fw"></i>&nbsp;&nbsp;Reportes Globales
               </a>
             </li>
           }

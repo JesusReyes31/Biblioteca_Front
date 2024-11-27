@@ -116,7 +116,6 @@ export class ConfirmacionPagoComponent {
   registrarVenta(estado: string) {
     let cantidad = 0;
     this.librosCarrito.map(libro => cantidad += libro.Cantidad);
-    
     const venta = {
       Cantidad: cantidad,
       Total: this.total,
@@ -139,7 +138,7 @@ export class ConfirmacionPagoComponent {
         this.ventasService.registrarDetalleVenta(response.ID_Venta, this.librosCarrito).subscribe({
           next: () => {
             console.log('Detalle registrado');
-            this.userService.deleteCarrito().subscribe({
+            this.userService.deleteAllCarrito().subscribe({
               next: () => {
                 Swal.fire({
                   title: '¡Compra Realizada!',
@@ -234,6 +233,17 @@ export class ConfirmacionPagoComponent {
       
       // Eliminar el contenedor temporal
       document.body.removeChild(contenedorTemp);
+    });
+  }
+  volver(){
+    this.router.navigate(['/pago-carrito'], {
+      state: {
+        librosCarrito: this.librosCarrito,
+        subtotal: this.subtotal,
+        shipping: this.shipping,
+        total: this.total,
+        metodoPago: this.metodoPago
+      }
     });
   }
 }

@@ -441,7 +441,10 @@ export class InformacionComponent {
           inputAttributes: {
             min: '1',
             max: cantidadDisponible.toString(),
-            step: '1'
+            step: '1',
+            onkeydown: 'return event.keyCode !== 190 && event.keyCode !== 110',
+            onkeypress: 'return event.charCode >= 48 && event.charCode <= 57',
+            pattern: '[0-9]*'
           },
           inputValue: 1,
           showCancelButton: true,

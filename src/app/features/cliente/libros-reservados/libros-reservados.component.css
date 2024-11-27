@@ -1,0 +1,168 @@
+#contenido {
+  /* padding: 2rem; */
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* h1 {
+  color: #004080;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+h1::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 3px;
+  background: linear-gradient(to right, #004080, #0066cc);
+} */
+
+.reserva {
+  display: flex;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+}
+
+.reserva:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.imgreserva {
+  width: 200px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.reserva:hover .imgreserva {
+  transform: scale(1.05);
+}
+
+.detallesreserva {
+  flex: 1;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.detallesreserva h2 {
+  color: #002850;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.detallesreserva p {
+  color: #666;
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.detallesreserva strong {
+  color: #333;
+  font-size: 1.1rem;
+  display: inline-block;
+  margin-top: 0.3rem;
+}
+
+button {
+  background-color: #002850;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  align-self: flex-start;
+  margin-top: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+button:hover {
+  background-color: #cc0000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(204, 0, 0, 0.2);
+}
+
+/* Estilos para fechas */
+.fecha-container {
+  display: flex;
+  gap: 2rem;
+  margin: 1rem 0;
+}
+
+.fecha-item {
+  background: #f8f9fa;
+  padding: 0.8rem 1.2rem;
+  border-radius: 8px;
+  border-left: 4px solid #002850;
+  border-bottom: 4px solid #002850;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .reserva {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .imgreserva {
+    width: 180px;
+    height: 270px;
+    margin: 1rem auto;
+  }
+
+  .detallesreserva {
+    text-align: center;
+    padding: 1rem;
+  }
+
+  button {
+    align-self: center;
+  }
+}
+
+/* Animación de carga */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reserva {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Estilo para cuando no hay reservas */
+.no-reservas {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+  font-size: 1.2rem;
+}

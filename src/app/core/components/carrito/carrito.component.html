@@ -6,60 +6,66 @@
   </div>
 
   <div class="contenido-carrito">
-    <div class="lista-productos">
-      <h2>Carrito de compras</h2>
-      <p class="subtitulo">Tiene {{ librosCarrito.length }} artículos en el carrito</p>
-
-      <div class="productos">
-        <div class="producto-item" *ngFor="let libro of librosCarrito">
-          <img appImageLoading [src]="libro.Imagen" [alt]="libro.Titulo" class="producto-imagen">
-          <div class="producto-info">
-            <h3>{{ libro.Titulo }}</h3>
-            <p class="autor">{{ libro.Autor }}</p>
-          </div>
-          <div class="cantidad-control">
-            <div class="cantidad-wrapper">
-              <span>{{ libro.Cantidad }}</span>
-              <div class="cantidad-arrows">
-                <i class="zmdi zmdi-chevron-up" 
-                   (click)="actualizarCantidad(libro, true)"
-                   [class.disabled]="libro.Cantidad >= libro.Stock"></i>
-                <i class="zmdi zmdi-chevron-down" 
-                   (click)="actualizarCantidad(libro, false)"
-                   [class.disabled]="libro.Cantidad <= 1"></i>
+    @if(librosCarrito.length > 0) {
+      <div class="lista-productos">
+        <h2>Carrito de compras</h2>
+        <p class="subtitulo">Tiene {{ librosCarrito.length }} artículos en el carrito</p>
+        <div class="productos">
+          <div class="producto-item" *ngFor="let libro of librosCarrito">
+            <img appImageLoading [src]="libro.Imagen" [alt]="libro.Titulo" class="producto-imagen">
+            <div class="producto-info">
+              <h3>{{ libro.Titulo }}</h3>
+              <p class="autor">{{ libro.Autor }}</p>
+            </div>
+            <div class="cantidad-control">
+              <div class="cantidad-wrapper">
+                <button class="cantidad-btn" (click)="decrementarCantidad(libro)">-</button>
+                <input 
+                  type="number" 
+                  [value]="libro.Cantidad"
+                  (change)="actualizarCantidadDirecta($event, libro)"
+                  [min]="1"
+                  [max]="libro.Cantidad_disponible"
+                  class="cantidad-input">
+                <button class="cantidad-btn" (click)="incrementarCantidad(libro)">+</button>
               </div>
             </div>
-          </div>
-          <div class="precio">${{ (libro.Precio * libro.Cantidad).toFixed(2) }}</div>
-          <div class="trash-icon" (click)="eliminarLibro(libro.ID)">
-            <i class="zmdi zmdi-delete"></i>
+            <div class="precio">${{ (libro.Precio * libro.Cantidad).toFixed(2) }}</div>
+            <div class="trash-icon" (click)="eliminarLibro(libro.ID_Libro)">
+              <i class="zmdi zmdi-delete"></i>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="resumen-compra">
-      <h2>Método de Pago</h2>
-      
-      <div class="desglose">
-        <div class="item-desglose">
-          <span>Subtotal</span>
-          <span>${{subtotal.toFixed(2)}}</span>
+      <div class="resumen-compra">
+        <h2>Método de Pago</h2>
+        
+        <div class="desglose">
+          <div class="item-desglose">
+            <span>Subtotal</span>
+            <span>${{subtotal.toFixed(2)}}</span>
+          </div>
+          <div class="item-desglose">
+            <span>Cargo por servicio</span>
+            <span>${{shipping.toFixed(2)}}</span>
+          </div>
+          <div class="item-desglose total">
+            <span>Total </span>
+            <span>${{total.toFixed(2)}}</span>
+          </div>
         </div>
-        <div class="item-desglose">
-          <span>Shipping</span>
-          <span>${{shipping.toFixed(2)}}</span>
-        </div>
-        <div class="item-desglose total">
-          <span>Total </span>
+
+        <button class="btn-pagar" (click)="pagar()">
           <span>${{total.toFixed(2)}}</span>
-        </div>
+          <span>Pagar →</span>
+        </button>
       </div>
-
-      <button class="btn-pagar" (click)="pagar()">
-        <span>${{total.toFixed(2)}}</span>
-        <span>Pagar →</span>
-      </button>
-    </div>
+    }@else{
+      <div class="lista-productos">
+        <h2>Carrito de compras</h2>
+        <p class="mensaje-carrito-vacio">No hay productos en el carrito</p>
+      </div>
+    }
   </div>
 </div>

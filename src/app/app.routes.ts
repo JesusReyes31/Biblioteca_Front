@@ -23,6 +23,8 @@ import { MetodosPagoComponent } from './core/components/metodos-pago/metodos-pag
 import { PagoCarritoComponent } from './core/components/carrito/pago-carrito/pago-carrito.component';
 import { ConfirmacionPagoComponent } from './core/components/carrito/confirmacion-pago/confirmacion-pago.component';
 import { ActivateComponent } from './core/components/activate/activate.component';
+import { AdminComponent } from './features/cliente/admin/admin.component';
+import { ReciboComponent } from './features/cliente/historial-compras/recibo/recibo.component';
 
 export const routes: Routes = [
     {
@@ -33,6 +35,7 @@ export const routes: Routes = [
             {path:"reservas",component:LibrosReservadosComponent},
             {path:"historial-prestamos",component:HistorialPrestamoComponent},
             {path:"compras",component:HistorialComprasComponent},
+            {path:"recibo/:id",component:ReciboComponent},
             {path:"credencial",component:CredencialComponent},
             {path:"registrar-libros",component:InventarioComponent},
             {path:"registrar-usuarios",component:PrestamosComponent},
@@ -45,6 +48,7 @@ export const routes: Routes = [
             {path:"metodos-pago",component:MetodosPagoComponent},
             {path:"pago-carrito",component:PagoCarritoComponent},
             {path:"confirmacion-pago",component:ConfirmacionPagoComponent},
+            {path:"sucursales",component:AdminComponent},
         ]
     },
     {path:"login",component:LoginComponent},

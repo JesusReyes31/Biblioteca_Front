@@ -36,27 +36,98 @@
   
   .loan-history-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    text-align: center;
   }
   
   .loan-history-table th {
-    padding: 12px;
-    text-align: center; /* Centra los encabezados */
-    background-color: #f4f4f4;
-    border-bottom: 1px solid #ccc;
+    padding: 16px;
+    text-align: center;
+    background-color: #002952;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.5px;
   }
   
   .loan-history-table td {
-    padding: 12px;
-    text-align: left; /* Mantiene los datos alineados a la izquierda */
-    border-bottom: 1px solid #ccc;
-  }
-  
-  
-  .loan-history-table th {
-    background-color: #f4f4f4;
+    padding: 14px 16px;
+    border-bottom: 1px solid #eaeaea;
+    color: #333;
+    font-size: 14px;
+    text-align: center;
+    vertical-align: middle;
   }
   
   .loan-history-table tbody tr:hover {
-    background-color: #f9f9f9;
+    background-color: #f8f9ff;
+    transition: background-color 0.2s ease;
+  }
+  
+  /* Estilos para los botones de recibo y factura */
+  .loan-history-table button {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-color: #e6f3ff;
+    color: #004080;
+  }
+  
+  .loan-history-table button:hover {
+    background-color: #004080;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Estilo para el total */
+  .loan-history-table td:nth-child(3) {
+    font-weight: 600;
+    color: #004080;
+  }
+  
+  /* Estilo para la cantidad */
+  .loan-history-table td:nth-child(1) {
+    font-weight: 500;
+  }
+  
+  /* Estilo para la fecha */
+  .loan-history-table td:nth-child(2) {
+    color: #666;
+  }
+  
+  /* Mensaje cuando no hay registros */
+  .no-records {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-size: 16px;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .loan-history-table {
+      font-size: 14px;
+    }
+  
+    .loan-history-table th,
+    .loan-history-table td {
+      padding: 12px 8px;
+    }
+  
+    .loan-history-table button {
+      padding: 6px 12px;
+      font-size: 11px;
+    }
   }

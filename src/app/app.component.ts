@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { LoadingComponent } from './core/components/loading/loading.component';
 import { ImageLoadingDirective } from './shared/directives/image-loading.directive';
+import { FooterService } from './core/services/footer.service';
 
 @Component({
   selector: 'app-root',
@@ -12,4 +13,8 @@ import { ImageLoadingDirective } from './shared/directives/image-loading.directi
 })
 export class AppComponent {
   title = 'Biblioteca_Front';
+  constructor(private footerService: FooterService) {}
+  ngAfterViewInit() {
+    this.footerService.adjustFooterPosition()
+  }
 }

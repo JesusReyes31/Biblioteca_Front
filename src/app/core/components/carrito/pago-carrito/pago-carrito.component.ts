@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { UsersService } from '../../../services/users.service';
 import Swal from 'sweetalert2';
 import { ImageLoadingDirective } from '../../../../shared/directives/image-loading.directive';
+import { FooterService } from '../../../services/footer.service';
 
 @Component({
   selector: 'app-pago-carrito',
@@ -20,18 +21,15 @@ export class PagoCarritoComponent {
   tarjetasGuardadas: any[] = [];
   metodoPagoSeleccionado: any;
 
-  constructor(
-    private router: Router,
-    private userService: UsersService
-  ) {
+  constructor(private router: Router,private userService: UsersService,private footerService: FooterService) {
     // Recuperar datos del carrito
     const navigation = this.router.getCurrentNavigation();
-    console.log(navigation?.extras.state);
     if (navigation?.extras.state) {
       this.librosCarrito = navigation.extras.state['librosCarrito'];
       this.subtotal = navigation.extras.state['subtotal'];
       this.shipping = navigation.extras.state['shipping'];
-      this.total = navigation.extras.state['total'];
+      this.total = navigation.extras.state['total'];  
+      this.metodoPagoSeleccionado = navigation.extras.state['metodoPago'];
     }else{
       Swal.fire({
         title: 'Error',
@@ -44,44 +42,80 @@ export class PagoCarritoComponent {
     }
   }
 
-  ngOnInit() {
-    this.cargarTarjetas();
-  }
-
-  cargarTarjetas() {
-    this.tarjetasGuardadas = [];
-    this.userService.getTarjetas().subscribe({
-      next: (tarjetas:any) => {
-        tarjetas.forEach((tarjeta:any) => {
-          this.tarjetasGuardadas.push({
-            ID_Tarjeta: tarjeta.ID,
-            Nombre_Titular: tarjeta.Nombre_Titular,
-            Fecha_Vencimiento: tarjeta.Fecha_Vencimiento,
-            Tipo_Tarjeta: tarjeta.Tipo_Tarjeta,
-            Activa: tarjeta.Activa,
-            Numero_Tarjeta: tarjeta.Numero_Tarjeta,
-            numeroMask: tarjeta.Numero_Tarjeta.slice(-4).padStart(tarjeta.Numero_Tarjeta.length, '*'),
-          });
-        });
-      },
-      error: (error) => {
-        console.error('Error al cargar tarjetas:', error);
+  async ngOnInit() {
+    try {
+      // Esperamos a que se carguen las tarjetas
+      await this.cargarTarjetas();
+      
+      // Una vez cargadas las tarjetas, seleccionamos el método de pago
+      if (this.metodoPagoSeleccionado) {
+        this.seleccionarMetodoPagoInicial();
       }
+    } catch (error) {
+      console.error('Error en ngOnInit:', error);
+    }
+  }
+  ngAfterViewInit() {
+    this.footerService.adjustFooterPosition()
+  }
+  cargarTarjetas(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.tarjetasGuardadas = [];
+      this.userService.getTarjetas().subscribe({
+        next: (tarjetas: any) => {
+          tarjetas.forEach((tarjeta: any) => {
+            this.tarjetasGuardadas.push({
+              ID_Tarjeta: tarjeta.ID,
+              Nombre_Titular: tarjeta.Nombre_Titular,
+              Fecha_Vencimiento: tarjeta.Fecha_Vencimiento,
+              Tipo_Tarjeta: tarjeta.Tipo_Tarjeta,
+              Activa: tarjeta.Activa,
+              Numero_Tarjeta: tarjeta.Numero_Tarjeta,
+              numeroMask: tarjeta.Numero_Tarjeta.slice(-4).padStart(tarjeta.Numero_Tarjeta.length, '*'),
+            });
+          });
+          resolve();
+        },
+        error: (error) => {
+          console.error('Error al cargar tarjetas:', error);
+          reject(error);
+        }
+      });
     });
   }
 
+  seleccionarMetodoPagoInicial() {
+    if (!this.metodoPagoSeleccionado) return;
+
+    if (this.metodoPagoSeleccionado.tipo === 'efectivo') {
+      this.seleccionarMetodoPago('efectivo');
+    } 
+    else if (this.metodoPagoSeleccionado.tipo === 'nueva-debito') {
+      this.seleccionarMetodoPago('nueva-debito');
+    }
+    else if (this.metodoPagoSeleccionado.ID_Tarjeta) {
+      // Asegurarnos de que las tarjetas estén cargadas
+      if (this.tarjetasGuardadas.length > 0) {
+        this.seleccionarMetodoPago('tarjeta', this.metodoPagoSeleccionado.ID_Tarjeta);
+      }
+    }
+  }
+
   seleccionarMetodoPago(tipo: string, id?: number) {
-    let radioId: string;
+    let radioId: string = '';
     
     // Determinar qué radio button seleccionar basado en el tipo
     switch(tipo) {
       case 'tarjeta':
-        radioId = 'tarjeta-' + this.tarjetasGuardadas.find(t => t.ID_Tarjeta === id)?.numeroMask;
-        this.metodoPagoSeleccionado = this.tarjetasGuardadas.find(t => t.ID_Tarjeta === id);
+        const tarjetaSeleccionada = this.tarjetasGuardadas.find(t => t.ID_Tarjeta === id);
+        if (tarjetaSeleccionada) {
+          radioId = 'tarjeta-' + tarjetaSeleccionada.numeroMask;
+          this.metodoPagoSeleccionado = tarjetaSeleccionada;
+        }
         break;
       case 'nueva-debito':
         radioId = 'nueva-debito';
-        this.metodoPagoSeleccionado = { tipo:'nueva-debito' };
+        this.metodoPagoSeleccionado = { tipo: 'nueva-debito' };
         break;
       case 'efectivo':
         radioId = 'efectivo';
@@ -91,11 +125,28 @@ export class PagoCarritoComponent {
         return;
     }
 
-    // Seleccionar el radio button
-    const radioButton = document.getElementById(radioId) as HTMLInputElement;
-    if (radioButton) {
-      radioButton.checked = true;
-    }
+    // Verificamos que radioId no esté vacío antes de continuar
+    if (!radioId) return;
+
+    // Usamos setTimeout para asegurarnos que el DOM esté actualizado
+    setTimeout(() => {
+      // Desmarcar todos los radio buttons primero
+      const radioButtons = document.querySelectorAll('input[name="metodoPago"]');
+      radioButtons.forEach((elem: any) => {
+        elem.checked = false;
+      });
+
+      // Seleccionar el radio button correspondiente
+      const radioButton = document.getElementById(radioId) as HTMLInputElement;
+      if (radioButton) {
+        radioButton.checked = true;
+        // Forzar el evento change para asegurar que Angular detecte el cambio
+        const event = new Event('change', { bubbles: true });
+        radioButton.dispatchEvent(event);
+      } else {
+        console.error('No se encontró el radio button con ID:', radioId);
+      }
+    }, 0);
   }
 
   agregarTarjeta() {
@@ -203,5 +254,9 @@ export class PagoCarritoComponent {
         metodoPago: this.metodoPagoSeleccionado
       }
     });
+  }
+
+  volverAlCarrito() {
+    this.router.navigate(['/carrito']);
   }
 }

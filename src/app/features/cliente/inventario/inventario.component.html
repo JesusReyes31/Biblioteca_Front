@@ -82,19 +82,26 @@
     </div>
 
     <div class="botones">
-      <button type="submit">
-          <i class="fas fa-user-plus"></i> Registrar
+      <button type="submit" 
+              [disabled]="!bookForm.valid || isEditMode">
+        <i class="fas fa-plus"></i> Registrar
       </button>
-      <button type="button" (click)="deleteBook()">
-          <i class="fas fa-user-minus"></i> Eliminar
+      <button type="button" 
+              (click)="deleteBook()"
+              [disabled]="!bookForm.get('ID')?.value">
+        <i class="fas fa-trash"></i> Eliminar
       </button>
-      <button type="button" (click)="updateBook()">
-          <i class="fas fa-user-edit"></i> Modificar
+      <button type="button" 
+              (click)="updateBook()"
+              [disabled]="!isEditMode">
+        <i class="fas fa-edit"></i> Modificar
       </button>
-      <button type="button" (click)="clearForm()">
-          <i class="fas fa-broom"></i> Limpiar
+      <button type="button" 
+              (click)="clearForm()"
+              [disabled]="!isEditMode && bookForm.pristine">
+        <i class="fas fa-broom"></i> Limpiar
       </button>
-  </div>
+    </div>
   </form>  
 </section>
 <div class="content-container">

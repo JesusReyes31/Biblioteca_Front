@@ -1,0 +1,161 @@
+<section class="inventario-contenedor">
+  <form class="formulario" [formGroup]="sucursalForm" (ngSubmit)="addSucursal()">
+    <div class="fila">
+      <div class="campo">
+        <label for="ID">ID Sucursal</label>
+        <input id="ID" formControlName="ID" type="number"/>
+      </div>
+      <div class="campo">
+        <label for="Nombre">Nombre</label>
+        <input id="Nombre" formControlName="Nombre" type="text" required/>
+      </div>
+    </div>
+
+    <div class="fila">
+      <div class="campo">
+        <label for="Estado">Estado</label>
+        <input id="Estado" formControlName="Estado" type="text" required/>
+      </div>
+      <div class="campo">
+        <label for="Municipio">Municipio</label>
+        <input id="Municipio" formControlName="Municipio" type="text" required/>
+      </div>
+    </div>
+
+    <div class="fila">
+      <div class="campo">
+        <label for="Colonia">Colonia</label>
+        <input id="Colonia" formControlName="Colonia" type="text" required/>
+      </div>
+      <div class="campo">
+        <label for="Calle">Calle</label>
+        <input id="Calle" formControlName="Calle" type="text" required/>
+      </div>
+    </div>
+
+    <div class="fila">
+      <div class="campo">
+        <label for="CP">Código Postal</label>
+        <input id="CP" formControlName="CP" type="text" required maxlength="5"/>
+      </div>
+      <div class="campo">
+        <label for="Tel_Contacto">Teléfono de Contacto</label>
+        <input id="Tel_Contacto" formControlName="Tel_Contacto" type="text" required maxlength="10"/>
+      </div>
+    </div>
+
+    <div class="botones">
+      <button type="submit" 
+              [disabled]="!canRegister"
+              [class.active]="canRegister">
+        <i class="fas fa-plus"></i> Registrar
+      </button>
+      
+      <button type="button" 
+              (click)="deleteSucursal()"
+              [disabled]="!canDelete"
+              [class.active]="canDelete">
+        <i class="fas fa-trash"></i> Eliminar
+      </button>
+      
+      <button type="button" 
+              (click)="updateSucursal()"
+              [disabled]="!canModify"
+              [class.active]="canModify">
+        <i class="fas fa-edit"></i> Modificar
+      </button>
+      
+      <button type="button" 
+              (click)="clearForm()"
+              [disabled]="!canClear"
+              [class.active]="canClear">
+        <i class="fas fa-broom"></i> Limpiar
+      </button>
+    </div>
+  </form>
+</section>
+
+<div class="content-container">
+  <div class="search-bar">
+    <input
+      type="text"
+      placeholder="Buscar por nombre, estado, municipio..."
+      [(ngModel)]="searchTerm"
+      (input)="filterRecords()"
+    />
+  </div>
+
+  <div class="pagination">
+    <div class="pagination-info">
+      Mostrando {{ startIndex + 1 }} - {{ endIndex }} de {{ filteredRecords.length }} registros
+    </div>
+    <div class="pagination-controls">
+      <button 
+        [disabled]="currentPage === 0"
+        (click)="changePage(currentPage - 1)"
+        class="pagination-button">
+        Anterior
+      </button>
+      
+      <div class="pagination-pages">
+        <button 
+          *ngFor="let page of getPages()"
+          [class.active]="page === currentPage"
+          (click)="changePage(page)"
+          class="pagination-number">
+          {{ page + 1 }}
+        </button>
+      </div>
+
+      <button 
+        [disabled]="currentPage >= totalPages - 1"
+        (click)="changePage(currentPage + 1)"
+        class="pagination-button">
+        Siguiente
+      </button>
+    </div>
+  
+    <div class="pagination-size">
+      <label>Registros por página:</label>
+      <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+        <option [value]="5">5</option>
+        <option [value]="10">10</option>
+        <option [value]="25">25</option>
+        <option [value]="50">50</option>
+      </select>
+    </div>
+  </div>
+
+  <div *ngIf="paginatedRecords.length > 0; else noRecords">
+    <table class="loan-history-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>NOMBRE</th>
+          <th>ESTADO</th>
+          <th>MUNICIPIO</th>
+          <th>COLONIA</th>
+          <th>CALLE</th>
+          <th>CP</th>
+          <th>TELÉFONO</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let sucursal of paginatedRecords" (click)="selectRow(sucursal)">
+          <td>{{ sucursal.ID }}</td>
+          <td>{{ sucursal.Nombre }}</td>
+          <td>{{ sucursal.Estado }}</td>
+          <td>{{ sucursal.Municipio }}</td>
+          <td>{{ sucursal.Colonia }}</td>
+          <td>{{ sucursal.Calle }}</td>
+          <td>{{ sucursal.CP }}</td>
+          <td>{{ sucursal.Tel_Contacto }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #noRecords>
+    <p>No se encontraron registros.</p>
+  </ng-template>
+</div>
