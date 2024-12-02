@@ -48,6 +48,7 @@
         <table class="loan-history-table">
             <thead>
                 <tr>
+                    <th>ID EJEMPLAR</th>
                     <th>ID LIBRO</th>
                     <th>TÍTULO</th>
                     <th>AUTOR</th>
@@ -58,6 +59,7 @@
             <tbody>
                 @for (reserva of reservas; track reserva.ID_Reserva) {
                     <tr>
+                        <td>{{ reserva.ID_Ejemplar }}</td>
                         <td>{{ reserva.ID_Libro }}</td>
                         <td>{{ reserva.Titulo }}</td>
                         <td>{{ reserva.Autor }}</td>

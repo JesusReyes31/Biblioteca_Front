@@ -419,3 +419,125 @@
   font-size: 0.8rem;
   font-weight: 600;
 }
+
+.btn-regresar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  color: #2d3748;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+  width: fit-content;
+  margin: 0 0 0 2rem;
+}
+
+.btn-regresar:hover {
+  background-color: #f7fafc;
+  border-color: #cbd5e0;
+  transform: translateX(-5px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-regresar:active {
+  transform: translateX(-3px) scale(0.98);
+}
+
+.btn-regresar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 50%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: 0.5s;
+}
+
+.btn-regresar:hover::before {
+  left: 100%;
+}
+
+.btn-regresar i {
+  font-size: 14px;
+  color: #4a5568;
+  transition: transform 0.3s ease;
+}
+
+.btn-regresar:hover i {
+  transform: translateX(-3px);
+}
+
+/* Efecto de focus para accesibilidad */
+.btn-regresar:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+  border-color: #4299e1;
+}
+
+/* Estilos para dispositivos móviles */
+@media (max-width: 640px) {
+  .btn-regresar {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+  }
+}
+
+.sucursal-selector {
+  margin: 1rem 0;
+}
+
+.sucursal-selector select {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.button-container button[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.form-select {
+  background-color: white;
+  color: #333;
+}
+
+.form-select option {
+  padding: 8px;
+}
+
+/* Estilos para el modal de SweetAlert2 */
+:root {
+  --swal2-input-width: 80%;
+}
+
+.swal2-input {
+  text-align: center;
+  font-size: 1.2em !important;
+}
+
+.swal2-html-container {
+  margin: 1em 0 !important;
+}
+
+.swal2-html-container p {
+  margin: 0.5em 0;
+}

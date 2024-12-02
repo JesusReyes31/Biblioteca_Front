@@ -26,36 +26,41 @@ import { ActivateComponent } from './core/components/activate/activate.component
 import { AdminComponent } from './features/cliente/admin/admin.component';
 import { ReciboComponent } from './shared/components/recibo/recibo.component';
 import { PagoSucursalComponent } from './features/cliente/prestamos/pago-sucursal/pago-sucursal.component';
+import { authGuard } from './core/guards/auth.guard';
+import { AccesoDenegadoComponent } from './shared/components/acceso-denegado/acceso-denegado.component';
+import { ReportesComponent } from './features/cliente/AdminSuc/reportes/reportes.component';
 
 export const routes: Routes = [
     {
         path:"",component:ClienteComponent,
         children:[
-            {path:"catalogo",component:CatalogoComponent},
-            {path:"informacion",component:InformacionComponent,canActivate:[informacionGuard]},
-            {path:"reservas",component:LibrosReservadosComponent},
-            {path:"historial-prestamos",component:HistorialPrestamoComponent},
-            {path:"compras",component:HistorialComprasComponent},
-            {path:"recibo/:id",component:ReciboComponent},
-            {path:"credencial",component:CredencialComponent},
-            {path:"registrar-libros",component:InventarioComponent},
-            {path:"registrar-usuarios",component:PrestamosComponent},
-            {path:"prestamos",component:PrestarLibrosComponent},
-            {path:"devoluciones",component:DevolverLibrosComponent},
-            {path:"ventas-por-entregar",component:VentasPorEntregarComponent},
-            {path:"prestamos-generales",component:PrestamosGeneralesComponent},
-            {path:"perfil",component:CambiarInformacionComponent},
-            {path:"carrito",component:CarritoComponent},
-            {path:"metodos-pago",component:MetodosPagoComponent},
-            {path:"pago-carrito",component:PagoCarritoComponent},
-            {path:"confirmacion-pago",component:ConfirmacionPagoComponent},
-            {path:"sucursales",component:AdminComponent},
-            {path: 'pago-sucursal/:id', component: PagoSucursalComponent}
+            {path:"catalogo",component:CatalogoComponent,canActivate:[authGuard]},
+            {path:"informacion",component:InformacionComponent,canActivate:[informacionGuard,authGuard]},
+            {path:"reservas",component:LibrosReservadosComponent,canActivate:[authGuard]},
+            {path:"historial-prestamos",component:HistorialPrestamoComponent,canActivate:[authGuard]},
+            {path:"compras",component:HistorialComprasComponent,canActivate:[authGuard]},
+            {path:"recibo/:id",component:ReciboComponent,canActivate:[authGuard]},
+            {path:"credencial",component:CredencialComponent,canActivate:[authGuard]},
+            {path:"registrar-libros",component:InventarioComponent,canActivate:[authGuard]},
+            {path:"registrar-usuarios",component:PrestamosComponent,canActivate:[authGuard]},
+            {path:"prestamos",component:PrestarLibrosComponent,canActivate:[authGuard]},
+            {path:"devoluciones",component:DevolverLibrosComponent,canActivate:[authGuard]},
+            {path:"ventas-por-entregar",component:VentasPorEntregarComponent,canActivate:[authGuard]},
+            {path:"prestamos-generales",component:PrestamosGeneralesComponent,canActivate:[authGuard]},
+            {path:"perfil",component:CambiarInformacionComponent,canActivate:[authGuard]},
+            {path:"carrito",component:CarritoComponent,canActivate:[authGuard]},
+            {path:"metodos-pago",component:MetodosPagoComponent,canActivate:[authGuard]},
+            {path:"pago-carrito",component:PagoCarritoComponent,canActivate:[authGuard]},
+            {path:"confirmacion-pago",component:ConfirmacionPagoComponent,canActivate:[authGuard]},
+            {path:"sucursales",component:AdminComponent,canActivate:[authGuard]},
+            {path: 'pago-sucursal/:id', component: PagoSucursalComponent,canActivate:[authGuard]},
+            {path: 'reportes', component: ReportesComponent,canActivate:[authGuard]}
         ]
     },
     {path:"login",component:LoginComponent},
     {path:"recover",component:RecoveryComponent},
     {path:"activate/:token",component:ActivateComponent},
     {path:"reset-password/:token",component:ResetPassComponent,canActivate:[resetPassGuard]},
+    {path:"acceso-denegado",component:AccesoDenegadoComponent},
     {path:"**",redirectTo:""}
 ];

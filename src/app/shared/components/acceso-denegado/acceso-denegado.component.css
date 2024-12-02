@@ -1,0 +1,92 @@
+.acceso-denegado-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f3f4f6;
+  padding: 20px;
+}
+
+.contenido {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+}
+
+.icono {
+  font-size: 4rem;
+  color: #ef4444;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  color: #1f2937;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.mensaje {
+  color: #4b5563;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.tipo-usuario {
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+}
+
+.botones {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-volver, .btn-catalogo {
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.btn-volver {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.btn-catalogo {
+  background-color: #10b981;
+  color: white;
+}
+
+.btn-volver:hover {
+  background-color: #2563eb;
+}
+
+.btn-catalogo:hover {
+  background-color: #059669;
+}
+
+.zmdi {
+  font-size: 1.2rem;
+}
+
+@media (max-width: 480px) {
+  .botones {
+    flex-direction: column;
+  }
+  
+  .btn-volver, .btn-catalogo {
+    width: 100%;
+    justify-content: center;
+  }
+}

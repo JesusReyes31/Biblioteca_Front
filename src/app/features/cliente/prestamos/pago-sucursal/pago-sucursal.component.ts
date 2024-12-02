@@ -45,6 +45,7 @@ export class PagoSucursalComponent implements OnInit {
       next: (data) => {
         this.venta = data;
         this.pagar = this.venta?.Total;
+        console.log('Venta',this.venta);
       },
       error: (error) => {
         this.sweetalert.showNoReload('Error al cargar los detalles de la venta');

@@ -59,11 +59,11 @@
               </a>
             </li>
             <li>
-              <div class="dropdown-menu-button" (click)="toggleDropdown()">
+              <a routerLink="reportes">
                 <i class="zmdi zmdi-trending-up zmdi-hc-fw"></i>&nbsp;&nbsp;Generar Reportes
-                <i class="zmdi zmdi-chevron-down pull-right zmdi-hc-fw"></i>
-              </div>
-              <ul class="list-unstyled" *ngIf="dropdownVisible">
+                <!-- <i class="zmdi zmdi-chevron-down pull-right zmdi-hc-fw"></i> -->
+              </a>
+              <!-- <ul class="list-unstyled" *ngIf="dropdownVisible">
                 <li>
                   <a routerLink="#" (click)="reporte($event,'generales')">
                     <i class="zmdi zmdi-calendar zmdi-hc-fw"></i>&nbsp;&nbsp;Generales
@@ -79,7 +79,7 @@
                     <i class="zmdi zmdi-car zmdi-hc-fw"></i>&nbsp;&nbsp;Ventas
                   </a>
                 </li>
-              </ul>
+              </ul> -->
             </li>            
           }
           @if(tipou==='Admin'){

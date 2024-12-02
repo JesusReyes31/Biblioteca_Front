@@ -15,6 +15,7 @@
     <table class="sales-history-table">
       <thead>
         <tr>
+          <th>ID VENTA</th>
           <th>NOMBRE USUARIO</th>
           <th>CANTIDAD DE LIBROS</th>
           <th>FECHA DE COMPRA</th>
@@ -25,11 +26,16 @@
       </thead>
       <tbody>
         <tr *ngFor="let venta of ventasFiltradas">
+          <td>{{ venta.ID_Venta }}</td>
           <td>{{ venta.Nombre_Usuario }}</td>
           <td>{{ venta.Cantidad }}</td>
           <td>{{ venta.Fecha_Venta | date:'yyyy-MM-dd' }}</td>
           <td>
-            <span class="badge-entregado">{{ venta.Entregado }}</span>
+            <button class="btn-generar" 
+                    (click)="procesarEntrega(venta)"
+                    [ngClass]="{'entregado': venta.Entregado === 'SI'}">
+              {{ venta.Entregado === 'SI' ? 'ENTREGADO' : 'ENTREGAR' }}
+            </button>
           </td>
           <td>
             <button class="btn-generar" (click)="generarRecibo(venta.ID_Venta)">GENERAR</button>

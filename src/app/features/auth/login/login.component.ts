@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
 export class LoginComponent {
   Correo: string = '';
   Contra: string = '';
-
+  TipoUss:string[] = ['Admin Sucursal','Inventario','Prestamos'];
   constructor(private authService: AuthService,private router: Router,private sweetalert: SweetalertService) {}
 
   ngOnInit(): void {
@@ -37,9 +37,9 @@ export class LoginComponent {
 
     this.authService.login(loginData).subscribe(
       (response) => {
-        console.log(response.headers)
+        console.log(response)
         const token = response.headers.get('authorization');
-        console.log(token)
+        // console.log(token)
         if (token) {
           // Guarda el token y otros datos en sessionStorage
           sessionStorage.setItem('authToken', token);
@@ -47,6 +47,11 @@ export class LoginComponent {
           sessionStorage.setItem('ID_Uss', response.body.Datos.ID);
           sessionStorage.setItem('tipoUss', response.body.Datos.Tipo_usuario);
           sessionStorage.setItem('Imagen', response.body.Datos.Imagen);
+          if(this.TipoUss.includes(response.body.Datos.Tipo_usuario)){
+            sessionStorage.setItem('ID_Sucursal', response.body.Datos.ID_Sucursal);
+          }else{
+            sessionStorage.removeItem('ID_Sucursal');
+          }
           this.sweetalert.showNoReload('Login exitoso');
           this.router.navigate(['/']); // Redirige al usuario a la página principal
         } else {

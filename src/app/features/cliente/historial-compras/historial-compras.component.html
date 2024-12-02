@@ -12,18 +12,22 @@
     <table class="loan-history-table">
       <thead>
         <tr>
+          <th>ID VENTA</th>
           <th>CANTIDAD DE LIBROS</th>
           <th>FECHA DE COMPRA</th>
           <th>TOTAL</th>
+          <th>CÓDIGO</th>
           <th>RECIBO</th>
           <th>FACTURA</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let record of filteredRecords">
+          <td>{{ record.ID_Venta }}</td>
           <td>{{ record.Cantidad }}</td>
           <td>{{ record.Fecha_Venta }}</td>
           <td>${{ record.Total.toFixed(2) }}</td>
+          <td>{{ record.Codigo? record.Codigo : 'N/A' }}</td>
           <td>
             <button (click)="generarRecibo(record.ID_Venta)">
               Generar Recibo

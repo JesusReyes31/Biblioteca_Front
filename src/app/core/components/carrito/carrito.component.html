@@ -10,32 +10,42 @@
       <div class="lista-productos">
         <h2>Carrito de compras</h2>
         <p class="subtitulo">Tiene {{ librosCarrito.length }} artículos en el carrito</p>
-        <div class="productos">
-          <div class="producto-item" *ngFor="let libro of librosCarrito">
-            <img appImageLoading [src]="libro.Imagen" [alt]="libro.Titulo" class="producto-imagen">
-            <div class="producto-info">
-              <h3>{{ libro.Titulo }}</h3>
-              <p class="autor">{{ libro.Autor }}</p>
-            </div>
-            <div class="cantidad-control">
-              <div class="cantidad-wrapper">
-                <button class="cantidad-btn" (click)="decrementarCantidad(libro)">-</button>
-                <input 
-                  type="number" 
-                  [value]="libro.Cantidad"
-                  (change)="actualizarCantidadDirecta($event, libro)"
-                  [min]="1"
-                  [max]="libro.Cantidad_disponible"
-                  class="cantidad-input">
-                <button class="cantidad-btn" (click)="incrementarCantidad(libro)">+</button>
-              </div>
-            </div>
-            <div class="precio">${{ (libro.Precio * libro.Cantidad).toFixed(2) }}</div>
-            <div class="trash-icon" (click)="eliminarLibro(libro.ID_Libro)">
-              <i class="zmdi zmdi-delete"></i>
+        
+        @for(grupo of librosPorSucursal; track grupo.sucursal) {
+          <div class="sucursal-grupo">
+            <h3 class="sucursal-titulo">Sucursal: {{ grupo.sucursal }}</h3>
+            <p class="sucursal-subtotal">Subtotal de sucursal: ${{ grupo.subtotal.toFixed(2) }}</p>
+            
+            <div class="productos">
+              @for(libro of grupo.libros; track libro.ID) {
+                <div class="producto-item">
+                  <img appImageLoading [src]="libro.Imagen" [alt]="libro.Titulo" class="producto-imagen">
+                  <div class="producto-info">
+                    <h3>{{ libro.Titulo }}</h3>
+                    <p class="autor">{{ libro.Autor }}</p>
+                  </div>
+                  <div class="cantidad-control">
+                    <div class="cantidad-wrapper">
+                      <button class="cantidad-btn" (click)="decrementarCantidad(libro)">-</button>
+                      <input 
+                        type="number" 
+                        [value]="libro.Cantidad"
+                        (change)="actualizarCantidadDirecta($event, libro)"
+                        [min]="1"
+                        [max]="libro.Cantidad_disponible"
+                        class="cantidad-input">
+                      <button class="cantidad-btn" (click)="incrementarCantidad(libro)">+</button>
+                    </div>
+                  </div>
+                  <div class="precio">${{ (libro.Precio * libro.Cantidad).toFixed(2) }}</div>
+                  <div class="trash-icon" (click)="eliminarLibro(libro.ID)">
+                    <i class="zmdi zmdi-delete"></i>
+                  </div>
+                </div>
+              }
             </div>
           </div>
-        </div>
+        }
       </div>
 
       <div class="resumen-compra">
@@ -61,7 +71,7 @@
           <span>Pagar →</span>
         </button>
       </div>
-    }@else{
+    } @else {
       <div class="lista-productos">
         <h2>Carrito de compras</h2>
         <p class="mensaje-carrito-vacio">No hay productos en el carrito</p>

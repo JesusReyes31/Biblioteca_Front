@@ -32,7 +32,7 @@ export class AuthService {
         tap(response => {
           const token = response.headers.get('authorization');
           const userData: any = response.body;
-          
+          console.log(userData)
           if (token && userData) {
             this.setSecureCookie('authToken', token);
             this.tokenSubject.next(token);
@@ -78,13 +78,16 @@ export class AuthService {
   }
 
 
-  recovery(value: string, type: string) {
-    const headers = new HttpHeaders().set('Skip-Interceptor', 'true');
-    
-    return this.http.post(`${this.apiUrl}/recovery`, {
-      value: value,
-      type: type
-    }, { headers });
+  recovery(value: string, type: string): Observable<any> {
+    const headers = new HttpHeaders().set('Skip-Interceptor', 'true'); 
+    return this.http.post(`${this.apiUrl}others/mail`, {
+      Mail: value,
+      Tipo: type
+    }, { 
+      headers,
+      observe: 'response',
+      responseType: 'json'
+    });
   }
   resetPassword(token: string, newPassword: string): Observable<any> {
     const headers = new HttpHeaders().set('Authorization', `${token}`);

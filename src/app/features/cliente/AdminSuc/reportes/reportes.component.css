@@ -1,0 +1,133 @@
+.reportes-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #f9fafb;
+  border-radius: 10px;
+}
+
+h1 {
+  color: #111827;
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+  text-align: center;
+  font-weight: bold;
+}
+
+.reportes-content {
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.reporte-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.tab-group {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.tab-group button {
+  padding: 0.75rem 1.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #f3f4f6;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+  min-width: 150px;
+}
+
+.tab-group button:hover {
+  background: #e5e7eb;
+}
+
+.tab-group button.active {
+  background: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+
+.fecha-selector {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.input-group {
+  flex: 1;
+  min-width: 200px;
+  margin-right: 2rem;
+}
+
+.input-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.btn-consultar {
+  /* margin-left: 1rem; */
+  padding: 0.75rem 1.5rem;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.3s ease;
+  min-width: 150px;
+  justify-content: center;
+}
+
+.btn-consultar:hover {
+  background: #059669;
+}
+
+.zmdi {
+  font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+  .reportes-container {
+    padding: 1rem;
+  }
+
+  .tab-group button {
+    width: 100%;
+  }
+
+  .fecha-selector {
+    flex-direction: column;
+  }
+
+  .btn-consultar {
+    width: 100%;
+  }
+}
+
+.reporte-viewer {
+  margin-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 2rem;
+}

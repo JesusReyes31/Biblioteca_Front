@@ -41,11 +41,9 @@
           <option *ngFor="let sucursal of sucursales" 
                   [value]="sucursal.ID"
                   [disabled]="!isEditMode && 
-                             sucursal.ID_Usuario && 
-                             userForm.get('Tipo_Usuario')?.value === 'Admin Sucursal'">
+                             sucursal.ID_Usuario">
             {{ sucursal.Nombre }} 
             {{ !isEditMode && 
-               userForm.get('Tipo_Usuario')?.value === 'Admin Sucursal' && 
                sucursal.ID_Usuario ? '(Ya tiene administrador)' : '' }}
           </option>
         </select>

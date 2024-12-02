@@ -1,9 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { UsersService } from '../../services/users/users.service';
 import { CommonModule } from '@angular/common';
 import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
 import Swal from 'sweetalert2';
+import { Subscription } from 'rxjs';
+
+interface LibrosPorSucursal {
+  sucursal: string;
+  libros: any[];
+  subtotal: number;
+}
 
 @Component({
   selector: 'app-carrito',
@@ -12,29 +19,63 @@ import Swal from 'sweetalert2';
   templateUrl: './carrito.component.html',
   styleUrl: './carrito.component.css'
 })
-export class CarritoComponent {
+export class CarritoComponent implements OnInit, OnDestroy {
+  private subscription: Subscription;
   librosCarrito: any[] = [];
+  librosPorSucursal: LibrosPorSucursal[] = [];
   subtotal: number = 0;
   shipping: number = 4;
   total: number = 0;
 
-  constructor(private router: Router, private userService: UsersService) {}
+  constructor(private router: Router, private userService: UsersService) {
+    this.subscription = this.userService.carritoActualizado.subscribe(() => {
+      this.cargarCarrito();
+    });
+  }
 
   ngOnInit() {
     this.cargarCarrito();
   }
 
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
   cargarCarrito() {
     this.userService.getCarrito().subscribe({
       next: (data) => {
-        console.log(data);
         this.librosCarrito = data;
+        console.log(this.librosCarrito)
+        this.agruparPorSucursal();
         this.calcularSubtotal();
       },
       error: (error) => {
         console.error('Error al cargar el carrito:', error);
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudo cargar el carrito',
+          icon: 'error'
+        });
       }
     });
+  }
+
+  agruparPorSucursal() {
+    const grupos = this.librosCarrito.reduce((acc: { [key: string]: any[] }, libro) => {
+      if (!acc[libro.Sucursal]) {
+        acc[libro.Sucursal] = [];
+      }
+      acc[libro.Sucursal].push(libro);
+      return acc;
+    }, {});
+
+    this.librosPorSucursal = Object.entries(grupos).map(([sucursal, libros]) => ({
+      sucursal,
+      libros,
+      subtotal: libros.reduce((total, libro) => total + (libro.Precio * libro.Cantidad), 0)
+    }));
   }
 
   calcularSubtotal() {
@@ -90,7 +131,7 @@ export class CarritoComponent {
     });
   }
 
-  eliminarLibro(libroId: string) {
+  eliminarLibro(Id: string) {
     Swal.fire({
       title: '¿Estás seguro?',
       text: "¿Deseas eliminar este libro del carrito?",
@@ -102,23 +143,28 @@ export class CarritoComponent {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.userService.deleteCarrito(libroId).subscribe({
+        const idUsuario = sessionStorage.getItem('ID_Uss');
+        if (!idUsuario) {
+          Swal.fire('Error', 'Usuario no identificado', 'error');
+          return;
+        }
+
+        this.userService.deleteCarrito(Id).subscribe({
           next: () => {
-            this.librosCarrito = this.librosCarrito.filter(libro => libro.ID_Libro !== libroId);
-            this.calcularSubtotal();
             Swal.fire(
               '¡Eliminado!',
               'El libro ha sido eliminado del carrito',
               'success'
             );
+            this.cargarCarrito(); // Recargar el carrito
+            this.userService.notificarActualizacionCarrito(); // Actualizar contador en header
           },
           error: (error) => {
             console.error('Error al eliminar libro:', error);
             Swal.fire({
               title: 'Error',
-              text: 'No se pudo eliminar el libro del carrito',
-              icon: 'error',
-              confirmButtonText: 'Aceptar'
+              text: error.error?.message || 'No se pudo eliminar el libro del carrito',
+              icon: 'error'
             });
           }
         });

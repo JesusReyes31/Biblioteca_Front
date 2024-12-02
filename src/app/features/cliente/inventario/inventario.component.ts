@@ -31,7 +31,7 @@ export class InventarioComponent {
 
   constructor(private fb: FormBuilder, private userService: UsersService, private sweetalert: SweetalertService) {
     this.bookForm = this.fb.group({
-      ID: ['',Validators.required],
+      ID: [''],
       Titulo: ['', Validators.required],
       Autor: ['', Validators.required],
       Genero: ['', Validators.required],
@@ -40,15 +40,31 @@ export class InventarioComponent {
       Cantidad: ['', Validators.required],
       Precio: ['', Validators.required],
       Resumen: ['', Validators.required],
-      Imagen: ['',Validators.required],
+      Imagen: ['', Validators.required],
       ImagenURL: [''],
-      OtroGenero: [''],
-      ID_Sucursal: ['', Validators.required]
+      OtroGenero: ['']
     });
     this.loadBooks();
   }
 
   ngOnInit(): void {
+    this.getgeneros()
+    // this.userService.getSucursales().subscribe(
+    //   (data) => {
+    //     if (data.message) {
+    //       this.sweetalert.showNoReload(data.message);
+    //     } else {
+    //       this.sucursales = data;
+    //     }
+    //   },
+    //   (error) => {
+    //     console.error('Error al cargar el archivo JSON:', error);
+    //   }
+    // );
+    this.loadBooks();
+  }
+  getgeneros():void{
+    this.generos = [];
     this.userService.getGeneros().subscribe(
       (data) => {
         if (data.message) {
@@ -63,19 +79,6 @@ export class InventarioComponent {
         console.error('Error al cargar el archivo JSON:', error);
       }
     );
-    this.userService.getSucursales().subscribe(
-      (data) => {
-        if (data.message) {
-          this.sweetalert.showNoReload(data.message);
-        } else {
-          this.sucursales = data;
-        }
-      },
-      (error) => {
-        console.error('Error al cargar el archivo JSON:', error);
-      }
-    );
-    this.loadBooks();
   }
 
   onFileChange(event: any): void {
@@ -83,13 +86,12 @@ export class InventarioComponent {
     if (file) {
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        // Guardamos la URL base64 en ImagenURL para que el `src` de la imagen la utilice
         this.bookForm.patchValue({
           ImagenURL: e.target.result,
           Imagen: e.target.result
         });
       };
-      reader.readAsDataURL(file); // Convierte el archivo a Base64
+      reader.readAsDataURL(file);
     }
   }
 
@@ -150,6 +152,7 @@ export class InventarioComponent {
 
   //Método para cargar los libros
   loadBooks(): void {
+    this.books = [];
     this.userService.getBooks().subscribe({
       next: (data) => {
         this.books = data;
@@ -164,8 +167,9 @@ export class InventarioComponent {
   selectRow(record: any): void {
     this.isEditMode = true;
     this.selectedBook = record;
+    
     this.bookForm.patchValue({
-      ID: record.ID,
+      ID: record.ID_Libro,
       Titulo: record.Titulo,
       Autor: record.Autor,
       Genero: record.Genero,
@@ -174,9 +178,13 @@ export class InventarioComponent {
       Cantidad: record.Cantidad,
       Precio: record.Precio,
       Resumen: record.Resumen,
-      ImagenURL: record.Imagen,
-      ID_Sucursal: record.ID_Sucursal
+      ImagenURL: record.Imagen
     });
+
+    if (record.Imagen) {
+      this.bookForm.get('Imagen')?.clearValidators();
+      this.bookForm.get('Imagen')?.updateValueAndValidity();
+    }
   }
 
   truncateText(text: string, maxLength: number): string {
@@ -189,56 +197,72 @@ export class InventarioComponent {
 
 
   addBook(): void {
-    if (this.bookForm.get('ID')?.value && this.bookForm.get('Titulo')?.value) {
+    if (this.bookForm.valid) {
       const otroGenero = this.bookForm.get('OtroGenero')?.value;
       const genero = this.bookForm.get('Genero')?.value;
-      if (genero === 'Otro' && otroGenero) {
-        this.bookForm.patchValue({ Genero: otroGenero });
-      } else {
-        this.bookForm.patchValue({ Genero: genero });
-      }
-      // this.bookForm.patchValue({
-      //   Imagen: this.bookForm.get('ImagenURL')?.value
-      // });
-      this.bookForm.removeControl('ImagenURL');
-      this.bookForm.removeControl('OtroGenero');
+      
+      // Preparar los datos del libro
+      const bookData = {
+        ...this.bookForm.value,
+        Genero: genero === 'Otro' && otroGenero ? otroGenero : genero,
+        Imagen: this.bookForm.get('ImagenURL')?.value || this.bookForm.get('Imagen')?.value
+      };
 
-      this.userService.addBook(this.bookForm.value).subscribe(
-        (response) => {
+      // Eliminar campos auxiliares
+      delete bookData.ImagenURL;
+      delete bookData.OtroGenero;
+
+      this.userService.addBook(bookData).subscribe({
+        next: (response) => {
           this.sweetalert.showNoReload('Libro agregado exitosamente');
+          this.getgeneros();
           this.loadBooks();
           this.clearForm();
         },
-        (error) => {
+        error: (error) => {
           this.sweetalert.showNoReload('Error al agregar libro');
           console.error(error);
         }
-      );
+      });
     }
   }
 
   updateBook(): void {
-    if (this.selectedBook && this.selectedBook.ID) {
+    console.log('Form valid:', this.bookForm.valid);
+    console.log('Form values:', this.bookForm.value);
+    console.log('Selected book:', this.selectedBook);
+    
+    if (this.selectedBook && this.bookForm.valid) {
       const otroGenero = this.bookForm.get('OtroGenero')?.value;
       const genero = this.bookForm.get('Genero')?.value;
-      if (genero === 'Otro' && otroGenero) {
-        this.bookForm.patchValue({ Genero: otroGenero });
-      } else {
-        this.bookForm.patchValue({ Genero: genero });
-      }
+      
+      // Preparar los datos del libro
+      const bookData = {
+        ...this.bookForm.value,
+        Genero: genero === 'Otro' && otroGenero ? otroGenero : genero,
+        Imagen: this.bookForm.get('ImagenURL')?.value || 
+                this.bookForm.get('Imagen')?.value || 
+                this.selectedBook.Imagen
+      };
 
-      this.bookForm.removeControl('ImagenURL');
-      this.bookForm.removeControl('OtroGenero');
-
-      this.userService.updateBook(this.selectedBook.ID, this.bookForm.value).subscribe(
-        (response) => {
-          this.sweetalert.showReload('Libro modificado exitosamente')
+      // Eliminar campos auxiliares
+      delete bookData.ImagenURL;
+      delete bookData.OtroGenero;
+      console.log(bookData)
+      this.userService.updateBook(this.selectedBook.ID, bookData).subscribe({
+        next: (response) => {
+          this.sweetalert.showReload('Libro modificado exitosamente');
+          this.loadBooks();
+          this.clearForm();
         },
-        (error) => {
+        error: (error) => {
           this.sweetalert.showNoReload('Error al modificar libro');
           console.error(error);
         }
-      );
+      });
+    } else {
+      this.sweetalert.showNoReload('Por favor, complete todos los campos requeridos');
+      console.log('Form validation errors:', this.getFormValidationErrors());
     }
   }
 
@@ -257,10 +281,25 @@ export class InventarioComponent {
   }
 
   clearForm(): void {
+    const imageControl = this.bookForm.get('Imagen');
     this.bookForm.reset();
+    
+    imageControl?.setValidators([Validators.required]);
+    imageControl?.updateValueAndValidity();
+    
     this.selectedBook = null;
     this.isEditMode = false;
     this.bookForm.get('Genero')?.setValue('');
-    this.bookForm.get('ID_Sucursal')?.setValue('');
+  }
+
+  private getFormValidationErrors() {
+    const errors: any = {};
+    Object.keys(this.bookForm.controls).forEach(key => {
+      const controlErrors = this.bookForm.get(key)?.errors;
+      if (controlErrors != null) {
+        errors[key] = controlErrors;
+      }
+    });
+    return errors;
   }
 }

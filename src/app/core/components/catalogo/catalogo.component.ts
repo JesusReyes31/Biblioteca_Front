@@ -19,6 +19,10 @@ export class CatalogoComponent {
   libros:any[]=[];
   constructor(private userService:UsersService,private sweetalert:SweetalertService,private router:Router,private footerService:FooterService){}
   ngOnInit(): void {
+    this.userService.getBooks().subscribe((data)=>{
+      console.log('Todos los libros',data);
+    })
+
     this.userService.getGeneros().subscribe(
       (data) => {
         if (data.message) {
@@ -80,14 +84,13 @@ export class CatalogoComponent {
   //Traer libros por genero 
   traerLibros(genero: string): void {
     this.borrarlibros();
-    console.log(`Género seleccionado: ${genero}`);
     this.userService.getBooksByGenre(genero).subscribe({
       next: (data) => {
         if (data.message) {
           this.sweetalert.showNoReload(data.message);
         } else {
           this.libros = data;
-          console.log(data);
+          console.log('Libros por genero',data);
           console.log("Adjusting footer position");
           this.footerService.adjustFooterPosition();
         }

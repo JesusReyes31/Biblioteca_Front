@@ -30,11 +30,74 @@
           </a>
         </li>
       }
-      <li class="tooltips-general search-book-button">
-        <a (click)="openNotifications()" title="Notificaciones">
+      <!-- <li class="tooltips-general search-book-button">
+        <a (click)="toggleNotifications($event)" title="Notificaciones">
           <i class="zmdi zmdi-notifications"></i>
+          @if(unreadNotifications > 0){
+            <span class="notification-counter">
+              {{ unreadNotifications > 9 ? '9+' : unreadNotifications }}
+            </span>
+          }
         </a>
-      </li>
+        @if (showNotifications) {
+          <div class="notifications-dropdown" (click)="$event.stopPropagation()">
+            <div class="notifications-header">
+              <h3>Notificaciones</h3>
+              @if (notifications.length > 0) {
+                <div class="notification-actions">
+                  <button class="delete-all-btn" (click)="deleteAllNotifications()">
+                    <i class="zmdi zmdi-delete"></i> Borrar todas
+                  </button>
+                  <button class="mark-all-read" (click)="markAllAsRead()">
+                    <i class="zmdi zmdi-check-all"></i> Marcar como leídas
+                  </button>
+                </div>
+              }
+            </div>
+            
+            @if (notifications.length === 0) {
+              <div class="no-notifications">
+                <i class="zmdi zmdi-notifications-none"></i>
+                <p>No hay notificaciones</p>
+              </div>
+            } @else {
+              <div class="notifications-list">
+                @for (notification of notifications; track notification.ID) {
+                  <div 
+                    class="notification-item" 
+                    [class.unread]="!notification.Leido"
+                    (click)="markAsRead(notification)"
+                  >
+                    <div class="notification-icon">
+                      @switch (notification.Tipo) {
+                        @case ('Prestamo') {
+                          <i class="zmdi zmdi-book text-primary"></i>
+                        }
+                        @case ('Reserva') {
+                          <i class="zmdi zmdi-calendar text-warning"></i>
+                        }
+                        @case ('Venta') {
+                          <i class="zmdi zmdi-shopping-cart text-success"></i>
+                        }
+                        @default {
+                          <i class="zmdi zmdi-info-outline text-info"></i>
+                        }
+                      }
+                    </div>
+                    <div class="notification-content" (click)="markAsRead(notification)">
+                      <p class="message">{{ notification.Mensaje }}</p>
+                      <span class="time">{{ notification.Fecha }}</span>
+                    </div>
+                    <button class="delete-btn" (click)="deleteNotification(notification)">
+                      <i class="zmdi zmdi-delete"></i>
+                    </button>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      </li> -->
     }
     <li class="user-profile-container">
       <div class="user-info" (click)="toggleDropdown()">

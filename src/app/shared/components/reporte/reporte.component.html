@@ -1,0 +1,7 @@
+<div class="pdf-container">
+  @if (pdfUrl) {
+    <iframe [src]="pdfUrl" class="pdf-viewer"></iframe>
+  } @else {
+    <p>No hay documento PDF para mostrar</p>
+  }
+</div>

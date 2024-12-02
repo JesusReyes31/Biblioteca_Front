@@ -3,7 +3,7 @@
     <div class="fila">
       <div class="campo">
         <label for="idLibro">ID Libro</label>
-        <input id="idLibro" formControlName="ID" type="text" required />
+        <input id="idLibro" formControlName="ID" type="text"/>
       </div>
       <div class="campo">
         <label for="Titulo">Título</label>
@@ -68,17 +68,7 @@
         <div class="img-cont" *ngIf="bookForm.get('ImagenURL')?.value">
           <img appImageLoading [src]="bookForm.get('ImagenURL')?.value" alt="Imagen cargada" width="200" />
         </div>
-      </div>
-  
-      <div class="campo">
-        <label for="Sucursal">Sucursal</label>
-        <select id="Sucursal" formControlName="ID_Sucursal" required>
-          <option value="">Seleccione</option>
-          <option *ngFor="let sucursal of sucursales" [value]="sucursal.ID">
-            {{ sucursal.Nombre }}
-          </option>
-        </select>
-      </div>
+      </div>  
     </div>
 
     <div class="botones">
@@ -172,7 +162,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let record of paginatedRecords" (click)="selectRow(record)">
-          <td>{{ record.ID }}</td>
+          <td>{{ record.ID_Libro }}</td>
           <td>{{ record.Titulo }}</td>
           <td>{{ record.Autor }}</td>
           <td>{{ record.Genero }}</td>

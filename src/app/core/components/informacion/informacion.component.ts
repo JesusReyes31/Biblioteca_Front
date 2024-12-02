@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { FooterService } from '../../services/footer/footer.service';
 import { UsersService } from '../../services/users/users.service';
 import { SweetalertService } from '../../services/sweetalert/sweetalert.service';
@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-informacion',
@@ -32,16 +33,24 @@ export class InformacionComponent {
   };
   mostrarFormulario: boolean = false;
   dragStartX: number = 0;
+  sucursalSeleccionada: number = 0;
+  ejemplarSeleccionado: any = null;
+  cantidadCarrito: number = 1;
   onInputChange($event:any){
     console.log(this.nuevaResena)
   }
-  constructor(private footer:FooterService,private userService:UsersService,private sweetalert:SweetalertService){}
+  constructor(
+    private footer:FooterService,
+    private userService:UsersService,
+    private sweetalert:SweetalertService,
+    private location: Location
+  ){}
   ngOnInit(): void {
     this.USS = sessionStorage.getItem('tipoUss') || ''
     this.Nombre = sessionStorage.getItem('Nombre') || ''
     // Recuperamos el objeto libro desde sessionStorage
     const libroData = sessionStorage.getItem('selectedLibro');
-    sessionStorage.removeItem('selectedLibroId');
+    sessionStorage.removeItem('selectedLibro');
     if (libroData) {
       this.libro = JSON.parse(libroData); // Convertimos la cadena JSON de nuevo a un objeto
       // console.log('Libro seleccionado:', this.libro);
@@ -55,6 +64,13 @@ export class InformacionComponent {
   ngAfterViewInit(): void {
     this.footer.adjustFooterPosition();
   }
+  @HostListener('window:beforeunload')
+  ngOnDestroy(): void {
+    // Guardar datos antes de destruir el componente
+    if (this.libro) {
+      sessionStorage.setItem('selectedLibro', JSON.stringify(this.libro));
+    }
+  }
   getCurrentUserId(): number {
     // console.log(sessionStorage.getItem('ID_Uss'))
     return parseInt(sessionStorage.getItem('ID_Uss') || '0');
@@ -64,7 +80,7 @@ export class InformacionComponent {
     if (!idUsuario) return;
 
     // Verificar si el usuario ha devuelto este libro
-    this.userService.verificarPrestamoDevuelto(idUsuario, this.libro.ID).subscribe(
+    this.userService.verificarPrestamoDevuelto(idUsuario, this.libro.Ejemplares[0].ID).subscribe(
       (response) => {
         // console.log('Respuesta:',response)
         if(response.length > 0){
@@ -75,7 +91,7 @@ export class InformacionComponent {
         }
       },
       (error) => {
-        console.error('Error al verificar permisos de reseña', error);
+        // console.error('Error al verificar permisos de reseña', error);
       }
     );
   }
@@ -254,10 +270,11 @@ export class InformacionComponent {
     });
   }
 
-  obtenerResenas(): void {
+  obtenerResenas(): void {  
+    console.log(this.libro.Ejemplares[0].ID)
     // Llamamos al servicio para obtener las reseñas asociadas al libro
-    if (this.libro?.ID) {
-      this.userService.getResenasLibro(this.libro.ID).subscribe({
+    if (this.libro.Ejemplares[0].ID) {
+      this.userService.getResenasLibro(this.libro.Ejemplares[0].ID).subscribe({
         next: (resenas) => {
           // Obtenemos el ID del usuario actual
           const idUsuarioActual = this.getCurrentUserId();
@@ -279,6 +296,11 @@ export class InformacionComponent {
     }
   }
   reservarLibro(idLibro: string): void {
+    if (!this.sucursalSeleccionada || !this.ejemplarSeleccionado) {
+      this.sweetalert.showNoReload('Por favor, selecciona una sucursal');
+      return;
+    }
+
     const idUsuario = sessionStorage.getItem('ID_Uss');
     
     if (!idUsuario || !idLibro) {
@@ -286,47 +308,39 @@ export class InformacionComponent {
       return;
     }
 
-    // Primero verificamos si ya tiene este libro reservado
-    this.userService.getReservas().subscribe({
-      next: (reservas) => {
-        // Verificar si ya existe una reserva para este libro
-        const reservaExistente = reservas.find(
-          (reserva: any) => reserva.ID_Libro === idLibro
-        );
+    // Verificar disponibilidad
+    if (!this.ejemplarSeleccionado || this.ejemplarSeleccionado.Cantidad <= 0) {
+      this.sweetalert.showNoReload('No hay ejemplares disponibles en esta sucursal.');
+      return;
+    }
 
-        if (reservaExistente) {
-          this.sweetalert.showNoReload('Ya tienes este libro reservado.');
-          return;
-        }
-
-        // Si no tiene más de 3 libros reservados, continuamos con la verificación del carrito
-        if (reservas.length >= 3) {
-          this.sweetalert.showNoReload('Ya tienes la cantidad máxima de libros reservados.');
-          return;
-        }
-        this.userService.reservarLibro(idUsuario, idLibro).subscribe({
-          next: (data) => {
-            // console.log(data)
-            Swal.fire({
-              title: '¡Reserva realizada con éxito! 😊',
-              html: `
-                <span style="font-size: 16px;">Fecha límite para recoger libro:</span><br>
-                <span style="font-size: 16px;">${data.reserva.Fecha_recoger}.</span><br>
-                <span style="font-size: 16px;">Para más información, vaya al apartado de libros reservados.</span>
-              `,
-              icon: 'success',
-              showConfirmButton: true
-            });
-          },
-          error: (error) => {
-            console.error('Error al realizar la reserva', error);
-            this.sweetalert.showNoReload('Error al enviar la solicitud al servidor');
-          }
-        });
-      },
-      error: (error) => {
-        console.error('Error al verificar las reservas:', error);
-        this.sweetalert.showNoReload('Error al verificar las reservas existentes');
+    // Mostrar confirmación con información del plazo
+    Swal.fire({
+      title: '¿Deseas reservar este libro?',
+      html: `
+        <p>Al reservar este libro, tienes <strong>24 horas</strong> para recogerlo en la sucursal ${this.ejemplarSeleccionado.Sucursales.Nombre}.</p>
+        <p>Después de este plazo, la reserva será cancelada automáticamente.</p>
+      `,
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, reservar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.userService.reservarLibro(this.ejemplarSeleccionado.ID, parseInt(idUsuario))
+          .subscribe({
+            next: (response) => {
+              this.sweetalert.showReload('Libro reservado exitosamente. Recuerda recogerlo en las próximas 24 horas.');
+              this.ejemplarSeleccionado.Cantidad--;
+            },
+            error: (error) => {
+              let mensaje = 'Error al reservar el libro';
+              if (error.error?.message) {
+                mensaje = error.error.message;
+              }
+              this.sweetalert.showNoReload(mensaje);
+            }
+          });
       }
     });
   }
@@ -416,19 +430,36 @@ export class InformacionComponent {
   }
 
   async agregarcarrito(): Promise<void> {
-    if (!this.libro || !this.libro.Cantidad) {
-      this.sweetalert.showNoReload('Error al obtener la información del libro');
+    if (!this.sucursalSeleccionada || !this.ejemplarSeleccionado) {
+      this.sweetalert.showNoReload('Por favor, selecciona una sucursal');
       return;
     }
 
-    // Primero verificamos si el libro ya está en el carrito
+    const idUsuario = sessionStorage.getItem('ID_Uss');
+    
+    if (!idUsuario) {
+      this.sweetalert.showNoReload('Usuario no válido');
+      return;
+    }
+
+    // Verificar disponibilidad
+    if (!this.ejemplarSeleccionado || this.ejemplarSeleccionado.Cantidad <= 0) {
+      this.sweetalert.showNoReload('No hay ejemplares disponibles en esta sucursal.');
+      return;
+    }
+
+    // Obtener el carrito actual del usuario
     this.userService.getCarrito().subscribe({
       next: async (carrito) => {
-        const libroEnCarrito = carrito.find((item: any) => item.ID_Libro === this.libro.ID);
-        const cantidadDisponible = this.libro.Cantidad;
-        let mensajeHTML = `<p>Cantidad disponible: ${cantidadDisponible}</p>`;
+        const libroEnCarrito = carrito.find((item: any) => 
+          item.ID_Ejemplar === this.ejemplarSeleccionado.ID
+        );
+        const cantidadDisponible = this.ejemplarSeleccionado.Cantidad;
         
-        // Solo mostramos la cantidad en carrito si ya existe
+        let mensajeHTML = `
+          <p>Cantidad disponible en ${this.ejemplarSeleccionado.Sucursales.Nombre}: ${cantidadDisponible}</p>
+        `;
+        
         if (libroEnCarrito) {
           mensajeHTML += `<p>Cantidad actual en carrito: ${libroEnCarrito.Cantidad}</p>`;
         }
@@ -466,64 +497,23 @@ export class InformacionComponent {
         });
 
         if (cantidadAgregar) {
-          if (libroEnCarrito) {
-            // Si ya existe en el carrito, actualizamos la cantidad total
-            const nuevaCantidad = libroEnCarrito.Cantidad + parseInt(cantidadAgregar);
-            
-            // Verificar que no exceda el máximo disponible
-            if (nuevaCantidad > cantidadDisponible) {
-              this.userService.actualizarCantidadCarrito(libroEnCarrito.ID, cantidadDisponible).subscribe({
-                next: () => {
-                  Swal.fire({
-                    title: '¡Actualizado!',
-                    text: `Se estableció la cantidad máxima disponible (${cantidadDisponible})`,
-                    icon: 'success',
-                    timer: 1500,
-                    showConfirmButton: false,
-                  }).then(() => {
-                    window.location.reload();
-                  });
-                },
-                error: (error) => {
-                  console.error('Error al actualizar carrito:', error);
-                  this.sweetalert.showNoReload('Error al actualizar el carrito');
-                }
-              });
-            } else {
-              this.userService.actualizarCantidadCarrito(libroEnCarrito.ID, nuevaCantidad).subscribe({
-                next: () => {
-                  Swal.fire({
-                    title: '¡Actualizado!',
-                    text: `Se agregaron ${cantidadAgregar} ejemplares al carrito`,
-                    icon: 'success',
-                    timer: 1500,
-                    showConfirmButton: false
-                  });
-                },
-                error: (error) => {
-                  console.error('Error al actualizar carrito:', error);
-                  this.sweetalert.showNoReload('Error al actualizar el carrito');
-                }
-              });
-            }
-          } else {
-            // Si es nuevo en el carrito, lo agregamos
-            this.userService.agregarAlCarrito(this.libro.ID, parseInt(cantidadAgregar)).subscribe({
-              next: () => {
-                Swal.fire({
-                  title: '¡Agregado!',
-                  text: `Se agregaron ${cantidadAgregar} ejemplares al carrito`,
-                  icon: 'success',
-                  timer: 1500,
-                  showConfirmButton: false
-                });
-              },
-              error: (error) => {
-                console.error('Error al agregar al carrito:', error);
-                this.sweetalert.showNoReload('Error al agregar al carrito');
+          this.userService.agregarAlCarrito(
+            parseInt(idUsuario),
+            this.ejemplarSeleccionado.ID,
+            cantidadAgregar
+          ).subscribe({
+            next: (response) => {
+              this.sweetalert.showNoReload('Libro(s) agregado(s) al carrito exitosamente');
+              this.userService.notificarActualizacionCarrito();
+            },
+            error: (error) => {
+              let mensaje = 'Error al agregar al carrito';
+              if (error.error?.message) {
+                mensaje = error.error.message;
               }
-            });
-          }
+              this.sweetalert.showNoReload(mensaje);
+            }
+          });
         }
       },
       error: (error) => {
@@ -531,5 +521,15 @@ export class InformacionComponent {
         this.sweetalert.showNoReload('Error al verificar el carrito');
       }
     });
+  }
+
+  regresar(): void {
+    this.location.back();
+  }
+
+  onSucursalChange() {
+    this.ejemplarSeleccionado = this.libro?.Ejemplares.find(
+      (e: any) => e.ID_Sucursal === Number(this.sucursalSeleccionada)
+    );
   }
 }

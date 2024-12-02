@@ -11,7 +11,7 @@
         <div *ngFor="let libro of libros" [title]="libro.Disponibilidad === 'Disponible' ? 'Disponible' : 'No disponible'" class="libro" (click)="seleccionarLibro(libro)">
           <img appImageLoading [src]="libro.Imagen" 
                alt="{{ libro.Titulo }}" 
-               [ngClass]="['libro-imagen', libro.Disponibilidad === 'Disponible' ? 'disponible' : 'nod']">
+               [ngClass]="['libro-imagen', libro.Ejemplares[0].Cantidad > 0 ? 'disponible' : 'nod']">
           <h3>{{ libro.Titulo }}</h3>
           <p>{{ libro.Autor }}</p>
         </div>

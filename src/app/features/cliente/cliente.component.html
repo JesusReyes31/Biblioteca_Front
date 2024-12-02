@@ -2,125 +2,238 @@
   <app-sidebar></app-sidebar>
   <app-header></app-header>
   <div class="content" id="contenido">
-    <!-- Inicios no dejan que se recargue lo demás  -->
-    <!-- <section class="contenido" *ngIf="url === '/' && (tipoUss === 'Cliente' || tipoUss === 'Anonimo' || tipoUss === 'Prestamos' || tipoUss === 'Inventario')">
-      <div class="horarios-container">
-        <h2 class="titulo">HORARIOS</h2>
-        <div class="horarios-dias">
-          <div class="horario-dia">
-            <span class="dia-titulo">Lunes - Viernes</span>
-            <span class="horario">8:00 a.m. - 1:00 p.m.</span>
-            <span class="horario">3:00 p.m. - 8:00 p.m.</span>
+    <!-- Mostrar contenido inicial solo si estamos en la ruta raíz -->
+    <section class="contenido" *ngIf="url === '/'">
+      <!-- Contenido para Cliente/Anonimo/Prestamos/Inventario -->
+      <div *ngIf="tipoUss === 'Cliente' || tipoUss === 'Anonimo' || tipoUss === 'Prestamos' || tipoUss === 'Inventario'">
+        <div class="horarios-container">
+          <h2 class="titulo">Horarios de Atención</h2>
+          <div class="horarios-dias">
+            <div class="horario-dia">
+              <span class="dia-titulo">Lunes a Viernes</span>
+              <span class="horario">8:00 AM - 8:00 PM</span>
+            </div>
+            <div class="horario-dia">
+              <span class="dia-titulo">Sábados</span>
+              <span class="horario">9:00 AM - 6:00 PM</span>
+            </div>
+            <div class="horario-dia">
+              <span class="dia-titulo">Domingos</span>
+              <span class="horario cerrado">Cerrado</span>
+            </div>
           </div>
-          <div class="horario-dia">
-            <span class="dia-titulo">Sábados</span>
-            <span class="horario">10:00 a.m. - 5:00 p.m.</span>
-          </div>
-          <div class="horario-dia">
-            <span class="dia-titulo">Domingo</span>
-            <span class="horario cerrado">Cerrado</span>
+        </div>
+
+        <div class="recomendaciones-container">
+          <h2 class="titulo">Libros Recomendados</h2>
+          <div class="recomendaciones-libros">
+            <div class="recomendacion-libro" *ngFor="let libro of librosRecomendados" 
+                 (click)="verInformacionLibro(libro)"
+                 [style.cursor]="'pointer'">
+              <img [src]="libro.Imagen" [alt]="libro.Titulo" appImageLoading>
+              <span class="libro-nombre">{{libro.Titulo}}</span>
+            </div>
           </div>
         </div>
       </div>
-    
-      <div class="recomendaciones-container">
-        <h2 class="titulo">RECOMENDACIONES</h2>
-        <div class="recomendaciones-libros">
-          <div class="recomendacion-libro" *ngFor="let libro of librosRecomendados">
-            <img appImageLoading [src]="libro.Imagen" [alt]="libro.Titulo">
-            <span class="libro-nombre">{{libro.Titulo}}</span>
+
+      <!-- Contenido para Admin Sucursal -->
+      <div *ngIf="tipoUss === 'Admin Sucursal'">
+        <div class="dashboard-container">
+          <h2 class="dashboard-title">Panel de Control</h2>
+          
+          <!-- Sección de Inventario -->
+          <div class="dashboard-section">
+            <h3 class="section-title">Inventario</h3>
+            <div class="cards-grid">
+              <div class="stat-card books">
+                <div class="card-icon">
+                  <i class="fas fa-book"></i>
+                </div>
+                <div class="card-content">
+                  <h4>Libros Totales</h4>
+                  <p class="stat-number">{{estadisticas.totalLibros}}</p>
+                </div>
+              </div>
+
+              <div class="stat-card genres">
+                <div class="card-icon">
+                  <i class="fas fa-tags"></i>
+                </div>
+                <div class="card-content">
+                  <h4>Géneros</h4>
+                  <p class="stat-number">{{estadisticas.generos}}</p>
+                </div>
+              </div>
+            </div>
+            <!-- Seccion de Usuarios -->
+            <h3 class="section-title">Usuarios</h3>
+            <div class="cards-grid">
+              <div class="stat-card staff">
+                <div class="card-icon">
+                  <i class="fas fa-users"></i>
+                </div>
+                <div class="card-content">
+                  <h4>Clientes</h4>
+                  <p class="stat-number">{{estadisticas.clientes}}</p>
+                </div>
+              </div>
+              <div class="stat-card staff">
+                <div class="card-icon">
+                  <i class="fas fa-boxes"></i>
+                </div>
+                <div class="card-content">
+                  <h4>Personal Inventario</h4>
+                  <p class="stat-number">{{estadisticas.inventario}}</p>
+                </div>
+              </div>
+              <div class="stat-card staff">
+                <div class="card-icon">
+                  <i class="fas fa-users"></i>
+                </div>
+                <div class="card-content">
+                  <h4>Personal Préstamos</h4>
+                  <p class="stat-number">{{estadisticas.prestamos}}</p>
+                </div>
+              </div>
+            </div>
+          <!-- Sección de Préstamos -->
+            <h3 class="section-title">Préstamos</h3>
+            <div class="cards-grid">
+              <div class="stat-card loans">
+                <div class="card-icon">
+                  <i class="fas fa-clock"></i>
+                </div>
+                <div class="card-content">
+                  <h4>Préstamos Pendientes</h4>
+                  <p class="stat-number">{{estadisticas.prestamosPendientes}}</p>
+                </div>
+              </div>
+
+              <div class="stat-card loans">
+                <div class="card-icon">
+                  <i class="fas fa-handshake"></i>
+                </div>
+                <div class="card-content">
+                  <h4>Total Préstamos</h4>
+                  <p class="stat-number">{{estadisticas.prestamosTotal}}</p>
+                </div>
+              </div>
+
+              <div class="stat-card loans">
+                <div class="card-icon">
+                  <i class="fas fa-bookmark"></i>
+                </div>
+                <div class="card-content">
+                  <h4>Reservas</h4>
+                  <p class="stat-number">{{estadisticas.reservas}}</p>
+                </div>
+              </div>
+            </div>
+            <!-- Sección de Ventas -->
+            <h3 class="section-title">Ventas</h3>
+            <div class="cards-grid">
+              <div class="stat-card sales">
+                <div class="card-icon">
+                  <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="card-content">
+                  <h4>Total Ventas</h4>
+                  <p class="stat-number">{{estadisticas.totalVentas}}</p>
+                </div>
+              </div>
+
+              <div class="stat-card sales">
+                <div class="card-icon">
+                  <i class="fas fa-truck"></i>
+                </div>
+                <div class="card-content">
+                  <h4>Ventas por Entregar</h4>
+                  <p class="stat-number">{{estadisticas.ventasNoEntregadas}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenido para Admin -->
+      <div *ngIf="tipoUss === 'Admin'">
+        <div class="admin-dashboard-container">
+          <h2 class="admin-dashboard-title">Panel de Administración General</h2>
+          <div class="admin-cards-grid">
+            <!-- Sucursales -->
+            <div class="admin-stat-card branch">
+              <div class="admin-card-icon">
+                <i class="fas fa-building"></i>
+              </div>
+              <div class="admin-card-content">
+                <h4>Sucursales Activas</h4>
+                <p class="admin-stat-number">{{estadisticas.Sucursales}}</p>
+              </div>
+            </div>
+
+            <!-- Administradores -->
+            <div class="admin-stat-card admin">
+              <div class="admin-card-icon">
+                <i class="fas fa-user-shield"></i>
+              </div>
+              <div class="admin-card-content">
+                <h4>Administradores de Sucursales</h4>
+                <p class="admin-stat-number">{{estadisticas.Administradores_Sucursales}}</p>
+              </div>
+            </div>
+
+            <!-- Clientes -->
+            <div class="admin-stat-card users">
+              <div class="admin-card-icon">
+                <i class="fas fa-users"></i>
+              </div>
+              <div class="admin-card-content">
+                <h4>Clientes</h4>
+                <p class="admin-stat-number">{{estadisticas.Clientes}}</p>
+              </div>
+            </div>
+
+            <!-- Personal Inventario -->
+            <div class="admin-stat-card inventory">
+              <div class="admin-card-icon">
+                <i class="fas fa-boxes"></i>
+              </div>
+              <div class="admin-card-content">
+                <h4>Personal Inventario</h4>
+                <p class="admin-stat-number">{{estadisticas.Personal_Inventario}}</p>
+              </div>
+            </div>
+
+            <!-- Personal Préstamos -->
+            <div class="admin-stat-card loans">
+              <div class="admin-card-icon">
+                <i class="fas fa-handshake"></i>
+              </div>
+              <div class="admin-card-content">
+                <h4>Personal Préstamos</h4>
+                <p class="admin-stat-number">{{estadisticas.Personal_Prestamo}}</p>
+              </div>
+            </div>
+
+            <!-- Libros -->
+            <div class="admin-stat-card books">
+              <div class="admin-card-icon">
+                <i class="fas fa-book"></i>
+              </div>
+              <div class="admin-card-content">
+                <h4>Libros</h4>
+                <p class="admin-stat-number">{{estadisticas.Libros}}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="estadisticas-container" *ngIf="url === '/' && tipoUss === 'Admin Sucursal'">
-      <div class="estadisticas-grid">
-        <div class="estadistica-item">
-          <div class="icono-container">
-            <i class="fas fa-users"></i>
-          </div>
-          <span class="etiqueta">CLIENTES</span>
-          <span class="cantidad">{{estadisticas.clientes}}</span>
-        </div>
-    
-        <div class="estadistica-item">
-          <div class="icono-container">
-            <i class="fas fa-user"></i>
-          </div>
-          <span class="etiqueta">PERSONAL INVENTARIO</span>
-          <span class="cantidad">{{estadisticas.inventario}}</span>
-        </div>
-    
-        <div class="estadistica-item">
-          <div class="icono-container">
-            <i class="fas fa-users"></i>
-          </div>
-          <span class="etiqueta">PERSONAL PRÉSTAMOS</span>
-          <span class="cantidad">{{estadisticas.prestamos}}</span>
-        </div>
-    
-        <div class="estadistica-item">
-          <div class="icono-container">
-            <i class="fas fa-book"></i>
-          </div>
-          <span class="etiqueta">LIBROS</span>
-          <span class="cantidad">{{estadisticas.totalLibros}}</span>
-        </div>
-    
-        
-        <div class="estadistica-item">
-          <div class="icono-container">
-            <i class="fas fa-bookmark"></i>
-          </div>
-          <span class="etiqueta">GÉNEROS</span>
-          <span class="cantidad">{{estadisticas.generos}}</span>
-        </div>
-    
-        <div class="estadistica-item">
-          <div class="icono-container">
-            <i class="fas fa-clock"></i>
-          </div>
-          <span class="etiqueta">RESERVAS</span>
-          <span class="cantidad">{{estadisticas.reservas}}</span>
-        </div>
-    
-        <div class="estadistica-item">
-          <div class="icono-container">
-            <i class="fas fa-calendar"></i>
-          </div>
-          <span class="etiqueta">PRÉSTAMOS</span>
-          <span class="cantidad">{{estadisticas.prestamosTotal}}</span>
-        </div>
-    
-        <div class="estadistica-item">
-          <div class="icono-container">
-            <i class="fas fa-history"></i>
-          </div>
-          <span class="etiqueta">DEVOLUCIONES PENDIENTES</span>
-          <span class="cantidad">{{estadisticas.prestamosPendientes}}</span>
-        </div>
-        <br>
-
-        <div class="estadistica-item">
-          <div class="icono-container">
-            <i class="fas fa-clock"></i>
-          </div>
-          <span class="etiqueta">VENTAS PENDIENTES DE ENTREGA</span>
-          <span class="cantidad">{{estadisticas.ventasNoEntregadas}}</span>
-        </div>
-    
-        <div class="estadistica-item">
-          <div class="icono-container">
-            <i class="fas fa-check-circle"></i>
-          </div>
-          <span class="etiqueta">VENTAS REALIZADAS</span>
-          <span class="cantidad">{{estadisticas.totalVentas}}</span>
-        </div>
-      </div>
-    </section> -->
-
-    <router-outlet *ngIf="url !== '/' || (tipoUss !== 'Cliente' && tipoUss !== 'Anonimo' && tipoUss !== 'Prestamos' && tipoUss !== 'Inventario' && tipoUss !== 'Admin Sucursal')"></router-outlet>
+    <!-- Router outlet para otras rutas -->
+    <router-outlet *ngIf="url !== '/'"></router-outlet>
     <footer class="footer" id="footer"></footer>
   </div>
 </div>

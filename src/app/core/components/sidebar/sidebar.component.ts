@@ -12,7 +12,7 @@ import { RouterLink } from '@angular/router';
 })
 export class SidebarComponent {
   tipou: string = '';
-  dropdownVisible = false;
+  // dropdownVisible = false;
 
   constructor() {
   }
@@ -21,7 +21,7 @@ export class SidebarComponent {
     this.tipou = sessionStorage.getItem('tipoUss') || 'Anonimo';
   }
   toggleDropdown() {
-    this.dropdownVisible = !this.dropdownVisible; // Toggle dropdown visibility
+    // this.dropdownVisible = !this.dropdownVisible; // Toggle dropdown visibility
   }
 
   reporte(event: Event, tipo: string) {

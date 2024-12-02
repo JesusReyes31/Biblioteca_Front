@@ -24,6 +24,7 @@ export class HistorialComprasComponent {
   ngOnInit(): void {
     this.userService.getPurchaseHistory().subscribe({
       next: (data) => {
+        console.log(data);
         this.records = data;
         this.filteredRecords = data;
       },

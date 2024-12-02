@@ -1,113 +1,118 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import * as signalR from '@microsoft/signalr';
+// import { Injectable, OnDestroy } from '@angular/core';
+// import { HttpClient, HttpHeaders } from '@angular/common/http';
+// import { BehaviorSubject, Observable } from 'rxjs';
+// import { io, Socket } from 'socket.io-client';
 
-export interface AppNotification {
-  id: number;
-  userId: string;
-  message: string;
-  type: 'info' | 'success' | 'warning' | 'error';
-  isRead: boolean;
-  createdAt: Date;
-}
+// export interface UserNotification {
+//   ID: number;
+//   ID_Usuario: number;
+//   Mensaje: string;
+//   Tipo: 'Prestamo' | 'Reserva' | 'Venta' | 'Sistema';
+//   Leido: boolean;
+//   Fecha: Date;
+// }
 
-@Injectable({
-  providedIn: 'root'
-})
-export class NotificationService {
-  private hubConnection!: signalR.HubConnection;
-  private readonly apiUrl = 'http://localhost:9500/api'; // Ajusta esta URL según tu backend
-  
-  private notificationsSubject = new BehaviorSubject<AppNotification[]>([]);
-  private unreadCountSubject = new BehaviorSubject<number>(0);
-  
-  notifications$ = this.notificationsSubject.asObservable();
-  unreadCount$ = this.unreadCountSubject.asObservable();
+// @Injectable({
+//   providedIn: 'root'
+// })
+// export class NotificationService implements OnDestroy {
+//   private readonly apiUrl = 'http://localhost:9500/notificacion';
+//   private socket: Socket;
+//   private notificationsSubject = new BehaviorSubject<UserNotification[]>([]);
+//   private unreadCountSubject = new BehaviorSubject<number>(0);
 
-  constructor(private http: HttpClient) {
-    this.initializeSignalRConnection();
-    this.loadInitialNotifications();
-  }
+//   notifications$ = this.notificationsSubject.asObservable();
+//   unreadCount$ = this.unreadCountSubject.asObservable();
 
-  private initializeSignalRConnection() {
-    this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(`${this.apiUrl}/notificationHub`)
-      .withAutomaticReconnect()
-      .build();
+//   constructor(private http: HttpClient) {
+//     this.socket = io('http://localhost:9500'); // URL de tu servidor
+//     this.setupSocketListeners();
+//     this.loadNotifications(); // Carga inicial
+//   }
 
-    this.hubConnection.start()
-      .then(() => {
-        console.log('SignalR Connected');
-        this.registerSignalRHandlers();
-      })
-      .catch(err => console.error('Error while connecting SignalR:', err));
-  }
+//   private setupSocketListeners() {
+//     const userId = sessionStorage.getItem('ID_Uss');
 
-  private registerSignalRHandlers() {
-    this.hubConnection.on('ReceiveNotification', (notification: AppNotification) => {
-      this.addNotification(notification);
-    });
-  }
+//     if (userId) {
+//       // Escuchar notificaciones específicas para este usuario
+//       this.socket.on(`newNotification_${userId}`, () => {
+//         console.log('Nueva notificación recibida via socket');
+//         this.loadNotifications();
+//       });
 
-  private loadInitialNotifications() {
-    this.getNotifications().subscribe({
-      next: (notifications) => {
-        this.notificationsSubject.next(notifications);
-        this.updateUnreadCount();
-      },
-      error: (error) => console.error('Error loading notifications:', error)
-    });
-  }
+//       // Conectar al room del usuario
+//       this.socket.emit('joinRoom', userId);
+//     }
+//   }
 
-  private addNotification(notification: AppNotification) {
-    const currentNotifications = this.notificationsSubject.value;
-    this.notificationsSubject.next([notification, ...currentNotifications]);
-    this.updateUnreadCount();
-  }
+//   loadNotifications() {
+//     const userId = sessionStorage.getItem('ID_Uss');
+//     if (userId) {
+//       const headers = new HttpHeaders({
+//         'Content-Type': 'application/json',
+//         'authorization': `${sessionStorage.getItem('authToken')}`
+//       });
 
-  getNotifications(): Observable<AppNotification[]> {
-    return this.http.get<AppNotification[]>(`${this.apiUrl}/notifications/user`);
-  }
+//       this.http.get<UserNotification[]>(`${this.apiUrl}/${userId}`, { headers })
+//         .subscribe({
+//           next: (notifications) => {
+//             console.log('Notificaciones actualizadas:', notifications);
+//             this.notificationsSubject.next(notifications);
+//             this.updateUnreadCount(notifications);
+//           },
+//           error: (error) => {
+//             console.error('Error loading notifications:', error);
+//           }
+//         });
+//     }
+//   }
 
-  markAsRead(notificationId: number): Observable<any> {
-    return this.http.put(`${this.apiUrl}/notifications/${notificationId}/read`, {});
-  }
+//   markAsRead(notificationId: number): Observable<any> {
+//     const headers = new HttpHeaders({
+//       'Content-Type': 'application/json',
+//       'authorization': `${sessionStorage.getItem('authToken')}`
+//     });
 
-  markAllAsRead(): Observable<any> {
-    return this.http.put(`${this.apiUrl}/notifications/read-all`, {});
-  }
+//     return this.http.put(`${this.apiUrl}/read/${notificationId}`, {}, { headers });
+//   }
 
-  deleteNotification(notificationId: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/notifications/${notificationId}`);
-  }
+//   markAllAsRead(): Observable<any> {
+//     const userId = sessionStorage.getItem('id');
+//     const headers = new HttpHeaders({
+//       'Content-Type': 'application/json',
+//       'authorization': `${sessionStorage.getItem('authToken')}`
+//     });
 
-  clearAllNotifications(): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/notifications/clear-all`);
-  }
+//     return this.http.put(`${this.apiUrl}/readall/${userId}`, {}, { headers });
+//   }
 
-  private updateUnreadCount() {
-    const unreadCount = this.notificationsSubject.value.filter(n => !n.isRead).length;
-    this.unreadCountSubject.next(unreadCount);
-  }
+//   private updateUnreadCount(notifications: UserNotification[]) {
+//     const unreadCount = notifications.filter(n => !n.Leido).length;
+//     this.unreadCountSubject.next(unreadCount);
+//   }
 
-  // Método para reconectar manualmente si es necesario
-  reconnect(): Promise<void> {
-    return this.hubConnection.start();
-  }
+//   deleteNotification(notificationId: number): Observable<any> {
+//     const headers = new HttpHeaders({
+//       'Content-Type': 'application/json',
+//       'authorization': `${sessionStorage.getItem('authToken')}`
+//     });
 
-  // Método para desconectar al cerrar sesión
-  disconnect(): Promise<void> {
-    return this.hubConnection.stop();
-  }
+//     return this.http.delete(`${this.apiUrl}/${notificationId}`, { headers });
+//   }
 
-  // Método para enviar una notificación (útil para testing o notificaciones locales)
-  sendNotification(notification: Partial<AppNotification>): Observable<AppNotification> {
-    return this.http.post<AppNotification>(`${this.apiUrl}/notifications`, notification);
-  }
+//   deleteAllNotifications(): Observable<any> {
+//     const userId = sessionStorage.getItem('ID_Uss');
+//     const headers = new HttpHeaders({
+//       'Content-Type': 'application/json',
+//       'authorization': `${sessionStorage.getItem('authToken')}`
+//     });
 
-  // Método para obtener el estado de la conexión
-  getConnectionState(): signalR.HubConnectionState {
-    return this.hubConnection.state;
-  }
-}
+//     return this.http.delete(`${this.apiUrl}/all/${userId}`, { headers });
+//   }
+
+//   ngOnDestroy() {
+//     if (this.socket) {
+//       this.socket.disconnect();
+//     }
+//   }
+// }

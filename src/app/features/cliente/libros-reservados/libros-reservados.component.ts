@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FooterService } from '../../../core/services/footer/footer.service';
 import { SweetalertService } from '../../../core/services/sweetalert/sweetalert.service';
 import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-libros-reservados',
@@ -22,26 +23,48 @@ export class LibrosReservadosComponent {
   cargarReservas(): void {
     this.userService.getReservas().subscribe({
       next: (data) => {
-        if (!data.message) {
-          this.reservas = data;
+        if (Array.isArray(data)) {
+          this.reservas = data.map(reserva => ({
+            ...reserva,
+            fecha1: this.formatearFecha(reserva.fecha1),
+            fecha2: this.formatearFecha(reserva.fecha2)
+          }));
           this.footer.adjustFooterPosition();
         }
       },
       error: (error) => {
         console.error('Error al cargar las reservas:', error);
+        this.sweetalert.showNoReload('Error al cargar las reservas');
       }
     });
   }
-  deshacerReserva(id:string){
-    this.userService.deshacerReserva(id).subscribe({
-      next: () => {
-        // Actualizamos las reservas después de eliminar una
-        this.reservas = this.reservas.filter(reserva => reserva.ID_libro !== id);
-        this.sweetalert.showReload(`Reserva eliminada con éxito`);
-      },
-      error: (error) => {
-        this.sweetalert.showNoReload(`Error al deshacer la reserva: ${error}`);
-        console.error('Error al deshacer la reserva:', error);
+  formatearFecha(fecha: string): string {
+    if (!fecha) return '';
+    const [year, month, day] = fecha.split('-');
+    return `${day}/${month}/${year}`;
+  }
+  deshacerReserva(id: string) {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: "Esta acción no se puede deshacer",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#6366F1',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, cancelar reserva',
+      cancelButtonText: 'No, mantener reserva'
+    }).then((result: any) => {
+      if (result.isConfirmed) {
+        this.userService.deshacerReserva(id).subscribe({
+          next: () => {
+            this.cargarReservas(); // Recargar todas las reservas
+            this.sweetalert.showNoReload('Reserva cancelada con éxito');
+          },
+          error: (error) => {
+            console.error('Error al deshacer la reserva:', error);
+            this.sweetalert.showNoReload('Error al cancelar la reserva');
+          }
+        });
       }
     });
   }

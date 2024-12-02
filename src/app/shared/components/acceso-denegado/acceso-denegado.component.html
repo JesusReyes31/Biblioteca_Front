@@ -1,0 +1,22 @@
+<div class="acceso-denegado-container">
+  <div class="contenido">
+    <div class="icono">
+      <i class="zmdi zmdi-lock"></i>
+    </div>
+    <h1>Acceso Denegado</h1>
+    <p class="mensaje">Lo sentimos, no tienes permisos para acceder a esta página</p>
+    <p class="tipo-usuario">Usuario actual: {{tipoUsuario}}</p>
+    <div class="botones">
+      <a routerLink="/" class="btn-volver">
+        <i class="zmdi zmdi-home"></i>
+        Volver al inicio
+      </a>
+      @if(tipoUsuario !== 'Admin' && tipoUsuario !== 'Admin Sucursal'){
+        <a routerLink="/catalogo" class="btn-catalogo">
+    <i class="zmdi zmdi-book"></i>
+    Ir al catálogo
+    </a>
+      }
+    </div>
+  </div>
+</div>

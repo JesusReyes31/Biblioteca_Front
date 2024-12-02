@@ -26,6 +26,11 @@ export class UsersService {
     const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
     return this.http.get<any>(`${this.apiUrl}others/prinadminsuc`,{ headers });
   }
+  //Principal Administrador
+  getEstadisticasAdmin(): Observable<any> {
+    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
+    return this.http.get<any>(`${this.apiUrl}others/prinadmin`,{ headers });
+  }
 
 
 
@@ -63,7 +68,11 @@ export class UsersService {
     return this.http.get(`${this.apiUrl}others/booksgenre/${genero}`);
   }
   getBooks(): Observable<any> {
-    return this.http.get(`${this.apiUrl}books`);
+    if(sessionStorage.getItem('ID_Sucursal')){
+      return this.http.get(`${this.apiUrl}books/${sessionStorage.getItem('ID_Sucursal')}`);
+    }else{
+      return this.http.get(`${this.apiUrl}books`);
+    }
   }
 
   //Reservas
@@ -76,9 +85,16 @@ export class UsersService {
     });
     return this.http.get(`${this.apiUrl}reservas/ByID/${id}`,{headers});
   }
-  reservarLibro(idUsuario: string, idLibro: string): Observable<any> {
-    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
-    return this.http.post<any>(`${this.apiUrl}reservas`, { ID_usuario: idUsuario, ID_libro: idLibro },{headers});
+  reservarLibro(ID_Ejemplar: number, ID_usuario: number): Observable<any> {
+    const headers = new HttpHeaders({ 
+      'authorization': `${sessionStorage.getItem('authToken')}`,
+      'Content-Type': 'application/json' 
+    });
+    
+    return this.http.post(`${this.apiUrl}reservas`, {
+      ID_Ejemplar,
+      ID_usuario
+    }, { headers });
   }
   deshacerReserva(id:string): Observable<any> {
     const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
@@ -91,18 +107,15 @@ export class UsersService {
   }
 
   //Prestar Libro
-  prestarLibro(idLibro: string, idUsuario: number): Observable<any> {
-    const headers = new HttpHeaders({
-        'authorization': `${sessionStorage.getItem('authToken')}`,
-        'Content-Type': 'application/json'
+  prestarLibro(idEjemplar: string, idUsuario: number): Observable<any> {
+    const headers = new HttpHeaders({ 
+      'authorization': `${sessionStorage.getItem('authToken')}`,
+      'Content-Type': 'application/json' 
     });
-    
-    const body = {
-        idlibro: idLibro,
-        idusuario: idUsuario
-    };
-
-    return this.http.post(`${this.apiUrl}prestamos`, body, { headers });
+    return this.http.post(`${this.apiUrl}prestamos`, {
+      idEjemplar,
+      idusuario: idUsuario
+    }, { headers });
   }
   getPrestamos(): Observable<any> {
     const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
@@ -110,17 +123,17 @@ export class UsersService {
   }
 
   //Obtener libro disponible
-  getLibroDisponible(idLibro: string): Observable<any> {
+  getLibroDisponible(id: string): Observable<any> {
     const headers = new HttpHeaders({
         'authorization': `${sessionStorage.getItem('authToken')}`,
         'Content-Type': 'application/json'
     });
-    return this.http.get(`${this.apiUrl}books/${idLibro}`, { headers });
+    return this.http.get(`${this.apiUrl}books/obtener/disponibles/${id}`, { headers });
   }
   //Devolver Libro
-  devolverLibro(idPrestamo: string,idUsuario:number): Observable<any> {
+  devolverLibro(id: string,idUsuario:number): Observable<any> {
     const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
-    return this.http.put(`${this.apiUrl}prestamos/${idPrestamo}`, { ID_usuario: idUsuario }, { headers });
+    return this.http.put(`${this.apiUrl}prestamos/${id}`, { ID_usuario: idUsuario }, { headers });
   }
 
   //Historial de prestamos
@@ -157,29 +170,47 @@ export class UsersService {
     );
   }
   //Carrito de compras
-  getCarrito(): Observable<any>{
-    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
-    const id = sessionStorage.getItem('ID_Uss');
-    return this.http.get(`${this.apiUrl}cart/${id}`,{ headers });
+  getCarrito(): Observable<any> {
+    const idUsuario = sessionStorage.getItem('ID_Uss');
+    const headers = new HttpHeaders({ 
+      'authorization': `${sessionStorage.getItem('authToken')}`,
+      'Content-Type': 'application/json' 
+    });
+    return this.http.get(`${this.apiUrl}cart/${idUsuario}`, { headers });
   }
-  agregarAlCarrito(ID_Libro: string, Cantidad: number) {
-    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
-    const ID_Usuario = sessionStorage.getItem('ID_Uss');
-    return this.http.post<any>(`${this.apiUrl}cart`, {ID_Libro,ID_Usuario,Cantidad},{ headers }).pipe(
-      tap(() => {
-        this.notificarActualizacionCarrito();
-      })
-    );
+  agregarAlCarrito(ID_Usuario: number, ID_Ejemplar: number, Cantidad: number = 1): Observable<any> {
+    const headers = new HttpHeaders({ 
+      'authorization': `${sessionStorage.getItem('authToken')}`,
+      'Content-Type': 'application/json' 
+    });
+    
+    return this.http.post(`${this.apiUrl}cart`, {
+      ID_Usuario,
+      ID_Ejemplar,
+      Cantidad
+    }, { headers });
   }
-  actualizarCantidadCarrito(id: string, Cantidad: number) {
-    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
-    // const ID_Usuario = sessionStorage.getItem('ID_Uss');
-    return this.http.put<any>(`${this.apiUrl}cart/${id}`, {cantidad:Cantidad},{ headers });
+  actualizarCantidadCarrito(id: number, cantidad: number): Observable<any> {
+    const headers = new HttpHeaders({ 
+      'authorization': `${sessionStorage.getItem('authToken')}`,
+      'Content-Type': 'application/json' 
+    });
+    return this.http.put(`${this.apiUrl}cart/${id}`, { cantidad }, { headers })
+      .pipe(
+        tap(() => this.carritoActualizadoSource.next())
+      );
   }
-  deleteCarrito(libro: string): Observable<any>{
-    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
-    const id = sessionStorage.getItem('ID_Uss');
-    return this.http.delete(`${this.apiUrl}cart/one/${id}/${libro}`,{ headers });
+
+  deleteCarrito(Id: string): Observable<any> {
+    const idUsuario = sessionStorage.getItem('ID_Uss');
+    const headers = new HttpHeaders({ 
+      'authorization': `${sessionStorage.getItem('authToken')}`,
+      'Content-Type': 'application/json' 
+    });
+    return this.http.delete(`${this.apiUrl}cart/${Id}`, { headers })
+      .pipe(
+        tap(() => this.carritoActualizadoSource.next())
+      );
   }
   deleteAllCarrito(): Observable<any>{
     const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
@@ -196,7 +227,7 @@ export class UsersService {
 
 
   //Reseñas de los Libros
-  getResenasLibro(id: string): Observable<any[]> {
+  getResenasLibro(id: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}resenas/all/${id}`);
   }
   verificarPrestamoDevuelto(idUsuario: string, idLibro: string) {
@@ -234,12 +265,13 @@ export class UsersService {
 
   updateBook(id: string, book: any): Observable<any> {
     const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
-    return this.http.put(`${this.apiUrl}books/${id}`, book, { headers });
+    console.log('Antes de enviar: ',book)
+    return this.http.put(`${this.apiUrl}books/${id}/${sessionStorage.getItem('ID_Sucursal')}`, book, { headers });
   }
 
   deleteBook(id: string): Observable<any> {
     const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
-    return this.http.delete(`${this.apiUrl}books/${id}`, { headers });
+    return this.http.delete(`${this.apiUrl}books/${id}/${sessionStorage.getItem('ID_Sucursal')}`, { headers });
   }
 
   //Usuarios 
@@ -409,6 +441,12 @@ export class UsersService {
     const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
     return this.http.get<any>(`${this.apiUrl}sales/${id}`, { headers });
   }
+  //Actualizar el estado de entrega de la venta
+  actualizarEntregaVenta(venta: any) {
+    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
+    return this.http.put<any>(`${this.apiUrl}sales/${venta.ID_Venta}`, {Entregado: 'Si'}, { headers });
+  }
+
   // Procesar el pago en sucursal
   // procesarPagoSucursal(id: number): Observable<any> {
   //   const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
@@ -431,5 +469,10 @@ export class UsersService {
   exportToPDF(data: any): Observable<any> {
     const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
     return this.http.get(`${this.apiUrl}doctos/prestamos`,{ headers,responseType: 'blob' });
+  }
+  generarReporte(tipo: string, fechaInicio: string, fechaFin: string): Observable<any> {
+    const headers = new HttpHeaders({ 'authorization':`${sessionStorage.getItem('authToken')}`,'Content-Type': 'application/json' });
+    const body = { tipo, fechaInicio, fechaFin };
+    return this.http.post(`${this.apiUrl}doctos/reporte`, body, { headers,responseType: 'arraybuffer'  });
   }
 }

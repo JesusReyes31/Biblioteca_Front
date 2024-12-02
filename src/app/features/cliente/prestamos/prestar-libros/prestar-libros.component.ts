@@ -52,6 +52,7 @@ export class PrestarLibrosComponent {
     this.usersService.getReservasByID(this.idUsuario).subscribe({
       next: (data) => {
         this.reservas = data;
+        console.log(this.reservas);
         this.error = '';
         if (this.reservas.length === 0) {
           Swal.fire({
@@ -84,12 +85,16 @@ export class PrestarLibrosComponent {
         // Asumiendo que el servicio devuelve un libro individual
         if (data) {
           this.reservas = [{
-            ID_Libro: data.ID,
-            Titulo: data.Titulo,
-            Autor: data.Autor,
-            Cantidad: data.Cantidad,
+            ID_Ejemplar: data[0].ID,
+            ID_Libro: data[0].ID,
+            Titulo: data[0].Titulo,
+            Autor: data[0].Autor,
+            Cantidad: data[0].Cantidad,
+            ID_Sucursal: data[0].ID_Sucursal,
+            Sucursal: data[0].Sucursal
             // Otros campos necesarios...
           }];
+          console.log(this.reservas);
         } else {
           Swal.fire({
             icon: 'info',
@@ -162,7 +167,7 @@ export class PrestarLibrosComponent {
             }
         }).then((result) => {
             if (result.isConfirmed && result.value) {
-                this.realizarPrestamo(reserva.ID_Libro, parseInt(result.value));
+                this.realizarPrestamo(reserva.ID_Ejemplar, parseInt(result.value));
             }
         });
     } else {
@@ -178,13 +183,13 @@ export class PrestarLibrosComponent {
             });
             return;
         }
-        this.realizarPrestamo(reserva.ID_Libro, idUsuarioNum);
+        this.realizarPrestamo(reserva.ID_Ejemplar, idUsuarioNum);
     }
   }
 
   // Método separado para realizar el préstamo
-  private realizarPrestamo(idLibro: string, idUsuario: number): void {
-    this.usersService.prestarLibro(idLibro, idUsuario).subscribe({
+  private realizarPrestamo(idEjemplar: string, idUsuario: number): void {
+    this.usersService.prestarLibro(idEjemplar, idUsuario).subscribe({
         next: (response) => {
             Swal.fire({
                 icon: 'success' as SweetAlertIcon,

@@ -1,4 +1,7 @@
 <section class="margen container cont-inf" id="contenido">
+  <button class="btn-regresar" (click)="regresar()">
+    <i class="fas fa-arrow-left"></i> Regresar
+  </button>
   <div class="book-advertisement info">
     <img appImageLoading [src]="libro?.Imagen" class="libro-imagen" alt="Portada del Libro">
     <div class="book-details">
@@ -8,9 +11,32 @@
       <p><strong>Año de publicación:</strong> {{ libro?.Anio_publicacion }}</p>
       <p><strong>Resumen:</strong> {{ libro?.Resumen }}</p>
       @if(USS !== 'Anonimo'){
+        <div class="sucursal-selector">
+          <label for="sucursal"><strong>Selecciona la sucursal:</strong></label>
+          <select 
+            id="sucursal" 
+            [(ngModel)]="sucursalSeleccionada" 
+            (change)="onSucursalChange()"
+            class="form-select">
+            <option value="0">Selecciona una sucursal</option>
+            @for(ejemplar of libro?.Ejemplares; track ejemplar.ID_Sucursal){
+              <option [value]="ejemplar.ID_Sucursal">
+                {{ejemplar.Sucursales.Nombre}} ({{ejemplar.Cantidad}} disponibles)
+              </option>
+            }
+          </select>
+        </div>
         <div class="button-container">
-          <button id="reservar" (click)="reservarLibro(libro?.ID)">Reservar</button>
-          <button id="carrito" (click)="agregarcarrito()">Añadir al carrito</button>
+          <button id="reservar" 
+                  (click)="reservarLibro(libro?.ID)"
+                  [disabled]="!sucursalSeleccionada || !ejemplarSeleccionado || ejemplarSeleccionado?.Cantidad <= 0">
+            Reservar
+          </button>
+          <button id="carrito" 
+                  (click)="agregarcarrito()"
+                  [disabled]="!sucursalSeleccionada || !ejemplarSeleccionado || ejemplarSeleccionado?.Cantidad <= 0">
+            Añadir al carrito
+          </button>
         </div>
       }
     </div>

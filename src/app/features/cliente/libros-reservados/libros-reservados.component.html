@@ -1,29 +1,35 @@
 <section id="contenido">
   <h1>Libros Reservados</h1>
   
-  <div *ngIf="reservas.length === 0" class="no-reservas">
-    No tienes libros reservados en este momento.
-  </div>
+  @if (reservas.length === 0) {
+    <div class="no-reservas">
+      No tienes libros reservados en este momento.
+    </div>
+  } @else {
+    @for (reserva of reservas; track reserva.ID_Reserva) {
+      <div class="reserva">
+        <img appImageLoading [src]="reserva.Imagen" [alt]="reserva.Titulo" class="imgreserva">
+        <div class="detallesreserva">
+          <h2>{{ reserva.Titulo }}</h2>
+          <p class="autor">{{ reserva.Autor }}</p>
+          <p class="sucursal">Sucursal: {{ reserva.Sucursal }}</p>
+          
+          <div class="fecha-container">
+            <div class="fecha-item">
+              <p>Fecha de reservación:</p>
+              <strong>{{ reserva.fecha1 }}</strong>
+            </div>
+            <div class="fecha-item">
+              <p>Fecha límite de recogida:</p>
+              <strong>{{ reserva.fecha2 }}</strong>
+            </div>
+          </div>
 
-  <div *ngFor="let reserva of reservas" class="reserva">
-    <img appImageLoading [src]="reserva.Imagen" alt="Portada del Libro" class="imgreserva">
-    <div class="detallesreserva">
-      <h2>{{ reserva.Titulo }}</h2>
-      
-      <div class="fecha-container">
-        <div class="fecha-item">
-          <p>Fecha de reservación:</p>
-          <strong>{{ reserva.fecha1 }}</strong>
-        </div>
-        <div class="fecha-item">
-          <p>Fecha límite:</p>
-          <strong>{{ reserva.fecha2 }}</strong>
+          <button class="btn-cancelar" (click)="deshacerReserva(reserva.ID_Reserva)">
+            <i class="zmdi zmdi-close-circle"></i> Cancelar reservación
+          </button>
         </div>
       </div>
-
-      <button (click)="deshacerReserva(reserva.ID_Reserva)">
-        <i class="fas fa-times-circle"></i> Cancelar reservación
-      </button>
-    </div>
-  </div>
+    }
+  }
 </section>

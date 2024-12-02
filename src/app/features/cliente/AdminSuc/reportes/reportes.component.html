@@ -1,1 +1,106 @@
-<p>reportes works!</p>
+<div class="reportes-container">
+  <h1>Reportes</h1>
+  
+  <div class="reportes-content">
+    <!-- Selector de tipo de reporte -->
+    <div class="reporte-selector">
+      <div class="tab-group">
+        <button 
+          [class.active]="reporteSeleccionado === 'inventario'"
+          (click)="reporteSeleccionado = 'inventario'">
+          General de Inventario
+        </button>
+        <button 
+          [class.active]="reporteSeleccionado === 'libros-genero'"
+          (click)="reporteSeleccionado = 'libros-genero'">
+          Libros por Género
+        </button>
+        <button 
+          [class.active]="reporteSeleccionado === 'prestamos-usuario'"
+          (click)="reporteSeleccionado = 'prestamos-usuario'">
+          Préstamos por Usuario
+        </button>
+        <button 
+          [class.active]="reporteSeleccionado === 'prestamos-genero'"
+          (click)="reporteSeleccionado = 'prestamos-genero'">
+          Préstamos por Género
+        </button>
+      </div>
+
+      <div class="tab-group">
+        <button 
+          [class.active]="reporteSeleccionado === 'pendientes'"
+          (click)="reporteSeleccionado = 'pendientes'">
+          Pendientes de entrega
+        </button>
+        <button 
+          [class.active]="reporteSeleccionado === 'ventas'"
+          (click)="reporteSeleccionado = 'ventas'">
+          Ventas Realizadas
+        </button>
+      </div>
+
+      <!-- <div class="tab-group">
+        <button 
+          [class.active]="reporteSeleccionado === 'todos'"
+          (click)="reporteSeleccionado = 'todos'">
+          Todos
+        </button>
+        <button 
+          [class.active]="reporteSeleccionado === 'personal'"
+          (click)="reporteSeleccionado = 'personal'">
+          Personal
+        </button>
+        <button 
+          [class.active]="reporteSeleccionado === 'clientes'"
+          (click)="reporteSeleccionado = 'clientes'">
+          Clientes
+        </button>
+      </div> -->
+    </div>
+
+    <!-- Formulario de fechas -->
+    <div class="fecha-selector">
+      @if(reporteSeleccionado !== 'inventario'){
+        <div class="input-group">
+          <label>
+            <i class="zmdi zmdi-calendar"></i>
+            Fecha Inicio
+          </label>
+          <input 
+            type="date" 
+            [(ngModel)]="fechaInicio"
+            [max]="fechaFin || undefined">
+        </div>
+
+        <div class="input-group">
+          <label>
+            <i class="zmdi zmdi-calendar"></i>
+            Fecha Fin
+          </label>
+          <input 
+            type="date" 
+            [(ngModel)]="fechaFin"
+            [min]="fechaInicio || undefined">
+        </div>
+      }
+
+      <button class="btn-consultar" (click)="generarReporte()">
+        @if(reporteSeleccionado === 'inventario'){
+          <i class="zmdi zmdi-file-text"></i>
+          Solo Consultalo
+        } @else {
+          <i class="zmdi zmdi-search"></i>
+          Consultar
+        }
+      </button>
+    </div>
+
+    <!-- Agregar el componente de reporte después del formulario -->
+    @if (pdfData) {
+      <div class="reporte-viewer">
+        <app-reporte [pdfData]="pdfData"></app-reporte>
+      </div>
+    }
+  </div>
+</div>
