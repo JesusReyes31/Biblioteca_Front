@@ -11,6 +11,9 @@
       <p><strong>Año de publicación:</strong> {{ libro?.Anio_publicacion }}</p>
       <p><strong>Resumen:</strong> {{ libro?.Resumen }}</p>
       @if(USS !== 'Anonimo'){
+        <p>
+          <strong>Precio:</strong> ${{ libro?.Ejemplares[0].Precio.toFixed(2) }}
+        </p>
         <div class="sucursal-selector">
           <label for="sucursal"><strong>Selecciona la sucursal:</strong></label>
           <select 

@@ -96,7 +96,6 @@ export class PrestamosComponent {
     this.startIndex = this.currentPage * this.pageSize;
     this.endIndex = Math.min(this.startIndex + this.pageSize, this.filteredRecords.length);
     this.paginatedRecords = this.filteredRecords.slice(this.startIndex, this.endIndex);
-    console.log(this.paginatedRecords)
   }
 
   getPages(): number[] {
@@ -178,7 +177,6 @@ export class PrestamosComponent {
           this.clearForm();
         },
         error: (error) => {
-          console.log('ERROR', error.error);
           this.sweetalert.showNoReload(error.error?.message || 'Error al agregar usuario');
         }
       });

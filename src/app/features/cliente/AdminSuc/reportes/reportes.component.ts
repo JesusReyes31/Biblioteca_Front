@@ -22,7 +22,6 @@ export class ReportesComponent {
       .subscribe({
         next: (response: ArrayBuffer) => {
           this.pdfData = response;
-          console.log('Reporte generado con éxito');
         },
         error: (error) => {
           console.error('Error al generar el reporte:', error);

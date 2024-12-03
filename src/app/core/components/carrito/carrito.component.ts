@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
 import Swal from 'sweetalert2';
 import { Subscription } from 'rxjs';
+import { DatosService } from '../../services/users/datos.service';
 
 interface LibrosPorSucursal {
   sucursal: string;
@@ -27,7 +28,7 @@ export class CarritoComponent implements OnInit, OnDestroy {
   shipping: number = 4;
   total: number = 0;
 
-  constructor(private router: Router, private userService: UsersService) {
+  constructor(private router: Router, private userService: UsersService,private datos:DatosService) {
     this.subscription = this.userService.carritoActualizado.subscribe(() => {
       this.cargarCarrito();
     });
@@ -47,7 +48,6 @@ export class CarritoComponent implements OnInit, OnDestroy {
     this.userService.getCarrito().subscribe({
       next: (data) => {
         this.librosCarrito = data;
-        console.log(this.librosCarrito)
         this.agruparPorSucursal();
         this.calcularSubtotal();
       },
@@ -143,7 +143,7 @@ export class CarritoComponent implements OnInit, OnDestroy {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        const idUsuario = sessionStorage.getItem('ID_Uss');
+        const idUsuario = this.datos.getID_Uss();
         if (!idUsuario) {
           Swal.fire('Error', 'Usuario no identificado', 'error');
           return;

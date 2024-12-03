@@ -36,7 +36,6 @@
 //     if (userId) {
 //       // Escuchar notificaciones específicas para este usuario
 //       this.socket.on(`newNotification_${userId}`, () => {
-//         console.log('Nueva notificación recibida via socket');
 //         this.loadNotifications();
 //       });
 
@@ -56,7 +55,6 @@
 //       this.http.get<UserNotification[]>(`${this.apiUrl}/${userId}`, { headers })
 //         .subscribe({
 //           next: (notifications) => {
-//             console.log('Notificaciones actualizadas:', notifications);
 //             this.notificationsSubject.next(notifications);
 //             this.updateUnreadCount(notifications);
 //           },

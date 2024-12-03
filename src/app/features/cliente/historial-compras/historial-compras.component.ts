@@ -24,7 +24,7 @@ export class HistorialComprasComponent {
   ngOnInit(): void {
     this.userService.getPurchaseHistory().subscribe({
       next: (data) => {
-        console.log(data);
+        console.log(data)
         this.records = data;
         this.filteredRecords = data;
       },
@@ -61,16 +61,10 @@ export class HistorialComprasComponent {
     this.router.navigate(['/recibo', id]);
   }
 
-  generateInvoice(id: number): void {
-    // this.userService.generateInvoicePDF(id).subscribe(
-    //   (response) => {
-    //     const url = window.URL.createObjectURL(response);
-    //     const link = document.createElement('a');
-    //     link.href = url;
-    //     link.download = `Factura_${id}.pdf`;
-    //     link.click();
-    //   },
-    //   (error) => console.error('Error al generar la factura:', error)
-    // );
+  generarFactura(id: number): void {
+    this.router.navigate(['/factura', id], {
+      skipLocationChange: false,
+      replaceUrl: false
+    });
   }
 }

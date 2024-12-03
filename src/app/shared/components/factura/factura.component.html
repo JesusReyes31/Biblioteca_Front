@@ -1,0 +1,35 @@
+@defer{
+  <div class="recibo-container">
+    <div class="header-buttons">
+      <button class="btn-volver" (click)="volver()">
+        <i class="zmdi zmdi-arrow-left"></i> Volver
+      </button>
+      <button class="btn-descargar" (click)="descargarPDF()">
+        <i class="zmdi zmdi-download"></i> Descargar PDF
+      </button>
+      <button class="btn-email" (click)="enviarPorCorreo()">
+        <i class="zmdi zmdi-email"></i> Enviar por correo
+      </button>
+    </div>
+    
+    <div class="pdf-container">
+      <iframe 
+        *ngIf="pdfUrl" 
+        [src]="pdfUrl" 
+        width="100%" 
+        height="600px" 
+        frameborder="0">
+      </iframe>
+    </div>
+  </div>
+}@loading(minimum 1s){
+  <div class="recibo-container loading-container">
+    <p class="loading-text">Cargando factura...</p>
+    <div class="loading-spinner"></div>
+  </div>
+}@error{
+  <div class="recibo-container">
+    <p>Error al cargar la factura</p>
+  </div>
+}
+  

@@ -52,7 +52,6 @@ export class PrestarLibrosComponent {
     this.usersService.getReservasByID(this.idUsuario).subscribe({
       next: (data) => {
         this.reservas = data;
-        console.log(this.reservas);
         this.error = '';
         if (this.reservas.length === 0) {
           Swal.fire({
@@ -81,7 +80,6 @@ export class PrestarLibrosComponent {
   private consultarLibroDisponible(): void {
     this.usersService.getLibroDisponible(this.idUsuario).subscribe({
       next: (data) => {
-        console.log(data);
         // Asumiendo que el servicio devuelve un libro individual
         if (data) {
           this.reservas = [{
@@ -94,7 +92,6 @@ export class PrestarLibrosComponent {
             Sucursal: data[0].Sucursal
             // Otros campos necesarios...
           }];
-          console.log(this.reservas);
         } else {
           Swal.fire({
             icon: 'info',

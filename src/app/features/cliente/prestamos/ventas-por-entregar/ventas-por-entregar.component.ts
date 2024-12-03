@@ -27,7 +27,6 @@ export class VentasPorEntregarComponent {
       next: (data) => {
         this.ventas = data.data;
         this.ventasFiltradas = data.data;
-        console.log(this.ventas);
         if(this.ventas.length == 0){
           this.sweetalert.showNoReload(data.message);
         }
@@ -83,7 +82,6 @@ export class VentasPorEntregarComponent {
       const detalles = await this.userService.getDetalleVenta(venta.ID_Venta).toPromise();
       
       // Crear lista HTML de libros
-      console.log(detalles);
       const librosHTML = detalles.map((libro: any) => 
         `<li>${libro.Titulo} (${libro.Cantidad} unidades)</li>`
       ).join('');

@@ -9,6 +9,7 @@ import { UsersService } from '../../core/services/users/users.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ImageLoadingDirective } from '../../shared/directives/image-loading.directive';
+import { DatosService } from '../../core/services/users/datos.service';
 
 @Component({
   selector: 'app-cliente',
@@ -42,7 +43,8 @@ export class ClienteComponent {
   constructor(
     private footer: FooterService,
     private router: Router,
-    private userService: UsersService
+    private userService: UsersService,
+    private datos:DatosService
   ) {
     // Suscribirse a cambios de ruta
     this.router.events.subscribe((event) => {
@@ -52,14 +54,12 @@ export class ClienteComponent {
     });
   }
   ngOnInit(){
-    if(!sessionStorage.getItem('Nombre')){
-      sessionStorage.setItem('Nombre', 'Anonimo');
-      sessionStorage.setItem('tipoUss', 'Anonimo');
+    if(!this.datos.getNombre()){
+      this.datos.setData({Nombre:'Anonimo',tipoUss:'Anonimo'})
     }
     
     this.url = this.router.url;
-    this.tipoUss = sessionStorage.getItem('tipoUss') || 'Anonimo';
-    console.log(this.tipoUss);
+    this.tipoUss = this.datos.getTipoUss() || 'Anonimo';
     // Solo cargar datos si estamos en la ruta principal
     if(this.url === '/') {
       if(this.tipoUss == 'Cliente' || this.tipoUss == 'Anonimo' || this.tipoUss == 'Prestamos' || this.tipoUss == 'Inventario'){
@@ -77,15 +77,10 @@ export class ClienteComponent {
   ngAfterViewChecked(): void {
     this.footer.adjustFooterPosition()
   }
-  ngOnDestroy(){
-    sessionStorage.setItem('Holaa', 'Laso');
-    console.log('Destruyendo componente');
-  }
   cargarLibrosRecomendados() {
     this.userService.getLibrosRecomendados().subscribe({
       next: (response) => {
         this.librosRecomendados = response;
-        console.log(response);
       },
       error: (error) => {
         console.error('Error al cargar libros recomendados:', error);
@@ -93,7 +88,6 @@ export class ClienteComponent {
     });
   }
   cargarEstadisticas() {
-    console.log('Cargando estadisticas');
     this.userService.getEstadisticasAdminSucursal().subscribe({
       next: (response) => {
         this.estadisticas = {
@@ -108,7 +102,6 @@ export class ClienteComponent {
           totalVentas: response.totalVentas,
           ventasNoEntregadas: response.ventasNoEntregadas
         };
-        console.log(this.estadisticas);
       },
       error: (error) => {
         console.error('Error al cargar estadísticas:', error);
@@ -126,7 +119,6 @@ export class ClienteComponent {
           Personal_Prestamo: response.Personal_Prestamo,
           Libros: response.Libros
         };
-        console.log(this.estadisticas);
       },
       error: (error) => {
         console.error('Error al cargar estadísticas:', error);

@@ -52,7 +52,6 @@ export class ReciboComponent implements OnInit {
         this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(pdfUrl);
       },
       error: (error:any) => {
-        console.log(error);
         Swal.fire({
           icon: 'error',
           title: 'Error',

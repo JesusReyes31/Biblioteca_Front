@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { SweetalertService } from '../../../core/services/sweetalert/sweetalert.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { DatosService } from '../../../core/services/users/datos.service';
 
 @Component({
   selector: 'app-login',
@@ -16,9 +17,10 @@ export class LoginComponent {
   Correo: string = '';
   Contra: string = '';
   TipoUss:string[] = ['Admin Sucursal','Inventario','Prestamos'];
-  constructor(private authService: AuthService,private router: Router,private sweetalert: SweetalertService) {}
+  constructor(private authService: AuthService,private router: Router,private sweetalert: SweetalertService,private datos:DatosService) {}
 
   ngOnInit(): void {
+    this.datos.setData({Nombre:'Anonimo',tipoUss:'Anonimo'})
     sessionStorage.setItem('Nombre', 'Anonimo');
     sessionStorage.setItem('tipoUss', 'Anonimo');
     setTimeout(() => document.body.classList.remove('loading'), 500);
@@ -37,11 +39,17 @@ export class LoginComponent {
 
     this.authService.login(loginData).subscribe(
       (response) => {
-        console.log(response)
         const token = response.headers.get('authorization');
-        // console.log(token)
         if (token) {
           // Guarda el token y otros datos en sessionStorage
+          this.datos.setData({
+            authToken:token,
+            Nombre:response.body.Datos.Nombre_usuario,
+            ID_Uss:response.body.Datos.ID,
+            tipoUss:response.body.Datos.Tipo_usuario,
+            Imagen:response.body.Datos.Imagen,
+            ID_Sucursal: response.body.Datos.ID_Sucursal || undefined,
+          })
           sessionStorage.setItem('authToken', token);
           sessionStorage.setItem('Nombre', response.body.Datos.Nombre_usuario);
           sessionStorage.setItem('ID_Uss', response.body.Datos.ID);

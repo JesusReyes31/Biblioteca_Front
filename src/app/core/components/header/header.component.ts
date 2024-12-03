@@ -6,6 +6,7 @@ import { ImageLoadingDirective } from '../../../shared/directives/image-loading.
 import { Subscription } from 'rxjs';
 // import { NotificationService, UserNotification } from '../../services/notifications/notification.service';
 import Swal from 'sweetalert2';
+import { DatosService } from '../../services/users/datos.service';
 
 @Component({
   selector: 'app-header',
@@ -30,6 +31,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private notificationSubscription?: Subscription;
 
   constructor(private router:Router,private SearchService: SearchService, private userService: UsersService,
+    private datos:DatosService
     //  private notificationService: NotificationService
     ) {
     document.addEventListener('click', (event) => {
@@ -58,10 +60,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
   ngOnInit(){
     this.url = this.router.url;
-    console.log(this.url)
-    this.tipou = sessionStorage.getItem('tipoUss')||null;
-    this.Nombre = sessionStorage.getItem('Nombre')||null;
-    this.Imagen = sessionStorage.getItem('Imagen')||'null';
+    this.tipou = this.datos.getTipoUss() || null;
+    this.Nombre = this.datos.getNombre()||null;
+    this.Imagen = this.datos.getImagen()||'null';
     
     // Obtener cantidad inicial
     this.actualizarCantidadCarrito();
@@ -69,14 +70,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     // Suscribirse a las notificaciones
     // this.notificationSubscription = this.notificationService.notifications$.subscribe(
     //   notifications => {
-    //     console.log('Notificaciones actualizadas:', notifications); // Para debugging
     //     this.notifications = notifications;
     //   }
     // );
 
     // this.notificationService.unreadCount$.subscribe(
     //   count => {
-    //     console.log('Contador de no leídas actualizado:', count); // Para debugging
     //     this.unreadNotifications = count;
     //   }
     // );
@@ -115,18 +114,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.SearchService.showSearchModal().then((result) => {
       if (result.isConfirmed) {
         this.buscar(result.value);
-        console.log(result.value);
       }
     });
   }
 
   buscar(bookName: string) {
-    // console.log('Buscando libro:', bookName);
     sessionStorage.setItem('busqueda',bookName);
     this.router.navigate(['catalogo']);
     // Aquí puedes implementar la lógica de búsqueda, por ejemplo, haciendo una llamada a una API.
   }
   salir(){
+    this.datos.clean();
     sessionStorage.clear();
     this.router.navigate(['/login'])
   }

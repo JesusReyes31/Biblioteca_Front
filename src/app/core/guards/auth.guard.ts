@@ -1,9 +1,11 @@
 import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
+import { DatosService } from '../services/users/datos.service';
 
 export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
-  const tipoUsuario = sessionStorage.getItem('tipoUss');
+  const datos = inject(DatosService)
+  const tipoUsuario = datos.getTipoUss();
   
   // Definir rutas permitidas por tipo de usuario
   const rutasPermitidas: { [key: string]: string[] } = {
@@ -17,7 +19,8 @@ export const authGuard: CanActivateFn = (route, state) => {
       '/reservas',
       '/historial-prestamos',
       '/compras',
-      '/recibo/:id',
+      '/recibo',
+      '/factura',
       '/credencial',
       '/perfil',
       '/carrito',
@@ -31,7 +34,8 @@ export const authGuard: CanActivateFn = (route, state) => {
       '/reservas',
       '/historial-prestamos',
       '/compras',
-      '/recibo/:id',
+      '/recibo',
+      '/factura',
       '/credencial',
       '/perfil',
       '/carrito',
@@ -42,6 +46,7 @@ export const authGuard: CanActivateFn = (route, state) => {
       '/prestamos',
       '/devoluciones',
       '/ventas-por-entregar',
+      '/pago-sucursal',
     ],
     'Inventario': [
       '/catalogo',
@@ -49,7 +54,8 @@ export const authGuard: CanActivateFn = (route, state) => {
       '/reservas',
       '/historial-prestamos',
       '/compras',
-      '/recibo/:id',
+      '/recibo',
+      '/factura',
       '/credencial',
       '/perfil',
       '/carrito',

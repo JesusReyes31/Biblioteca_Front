@@ -134,10 +134,8 @@ export class ConfirmacionPagoComponent {
             error: (error:any) => console.error('Error al registrar pago pendiente:', error)
           });
         }
-
         this.ventasService.registrarDetalleVenta(response.ID_Venta, this.librosCarrito).subscribe({
           next: () => {
-            console.log('Detalle registrado');
             this.userService.deleteAllCarrito().subscribe({
               next: () => {
                 Swal.fire({

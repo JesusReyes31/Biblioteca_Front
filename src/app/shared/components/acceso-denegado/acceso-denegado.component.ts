@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { DatosService } from '../../../core/services/users/datos.service';
 
 @Component({
   selector: 'app-acceso-denegado',
@@ -9,5 +10,8 @@ import { RouterLink } from '@angular/router';
   styleUrl: './acceso-denegado.component.css'
 })
 export class AccesoDenegadoComponent {
-  tipoUsuario = sessionStorage.getItem('tipoUss') || 'Anonimo';
+  tipoUsuario:string =''
+  constructor(private datos:DatosService){
+    this.tipoUsuario = this.datos.getTipoUss() || 'Anonimo';
+  }
 }

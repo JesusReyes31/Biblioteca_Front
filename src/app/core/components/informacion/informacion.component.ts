@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
 import { Location } from '@angular/common';
+import { DatosService } from '../../services/users/datos.service';
 
 @Component({
   selector: 'app-informacion',
@@ -36,29 +37,24 @@ export class InformacionComponent {
   sucursalSeleccionada: number = 0;
   ejemplarSeleccionado: any = null;
   cantidadCarrito: number = 1;
-  onInputChange($event:any){
-    console.log(this.nuevaResena)
-  }
   constructor(
     private footer:FooterService,
     private userService:UsersService,
     private sweetalert:SweetalertService,
-    private location: Location
+    private location: Location,
+    private datos:DatosService
   ){}
   ngOnInit(): void {
-    this.USS = sessionStorage.getItem('tipoUss') || ''
-    this.Nombre = sessionStorage.getItem('Nombre') || ''
+    this.USS = this.datos.getTipoUss() || ''
+    this.Nombre = this.datos.getNombre() || ''
     // Recuperamos el objeto libro desde sessionStorage
     const libroData = sessionStorage.getItem('selectedLibro');
     sessionStorage.removeItem('selectedLibro');
     if (libroData) {
       this.libro = JSON.parse(libroData); // Convertimos la cadena JSON de nuevo a un objeto
-      // console.log('Libro seleccionado:', this.libro);
       this.obtenerResenas();
       this.verificarPermisosResena();
       this.footer.adjustFooterPosition()
-    } else {
-      console.log('No se ha seleccionado un libro.');
     }
   }
   ngAfterViewInit(): void {
@@ -72,17 +68,15 @@ export class InformacionComponent {
     }
   }
   getCurrentUserId(): number {
-    // console.log(sessionStorage.getItem('ID_Uss'))
-    return parseInt(sessionStorage.getItem('ID_Uss') || '0');
+    return parseInt(this.datos.getID_Uss() || '0');
   }
   verificarPermisosResena(): void {
-    const idUsuario = sessionStorage.getItem('ID_Uss');
+    const idUsuario = this.datos.getID_Uss();
     if (!idUsuario) return;
 
     // Verificar si el usuario ha devuelto este libro
     this.userService.verificarPrestamoDevuelto(idUsuario, this.libro.Ejemplares[0].ID).subscribe(
       (response) => {
-        // console.log('Respuesta:',response)
         if(response.length > 0){
           this.puedeResenar = true;
         }
@@ -99,13 +93,11 @@ export class InformacionComponent {
     this.userService.obtenerResenaUsuario(idUsuario, this.libro.ID).subscribe(
       (resena) => {
         if (resena) {
-          console.log(resena)
           this.resenaExistente = true;
           this.nuevaResena.descripcion = resena.Descripcion;
           this.nuevaResena.calificacion = resena.Calificacion;
           this.nuevaResena.ID_Resena = resena.ID_Resena;
           this.nuevaResena.ID_Usuario = resena.ID_Usuario;
-          console.log(this.nuevaResena)
         }
       },
       (error) => {
@@ -136,7 +128,7 @@ export class InformacionComponent {
   }
 
   guardarResena(): void {
-    const idUsuario = sessionStorage.getItem('ID_Uss');
+    const idUsuario = this.datos.getID_Uss();
     if (!idUsuario) return;
   
     // Construimos el objeto con todos los datos necesarios
@@ -148,14 +140,10 @@ export class InformacionComponent {
       ID_Resena: this.nuevaResena.ID_Resena
     };
   
-    console.log('Datos a enviar:', resenaData);
-  
     // Si es una actualización
     if (this.resenaExistente) {
       this.userService.actualizarResena(resenaData).subscribe({
         next: (response) => {
-          console.log('Respuesta del servidor:', response);
-          
           // Actualizamos el estado local con los datos enviados, no con la respuesta
           this.nuevaResena = {
             ...this.nuevaResena,
@@ -271,7 +259,6 @@ export class InformacionComponent {
   }
 
   obtenerResenas(): void {  
-    console.log(this.libro.Ejemplares[0].ID)
     // Llamamos al servicio para obtener las reseñas asociadas al libro
     if (this.libro.Ejemplares[0].ID) {
       this.userService.getResenasLibro(this.libro.Ejemplares[0].ID).subscribe({
@@ -281,7 +268,6 @@ export class InformacionComponent {
           
           // Ordenamos las reseñas: primero la del usuario actual, luego el resto
           this.resenas = resenas.sort((a, b) => {
-            console.log('ASldsa ',a,b);
             if (a.ID_Usuario === idUsuarioActual) return -1;
             if (b.ID_Usuario === idUsuarioActual) return 1;
             
@@ -301,7 +287,7 @@ export class InformacionComponent {
       return;
     }
 
-    const idUsuario = sessionStorage.getItem('ID_Uss');
+    const idUsuario = this.datos.getID_Uss();
     
     if (!idUsuario || !idLibro) {
       this.sweetalert.showNoReload('ID de usuario o libro inválido.');
@@ -418,7 +404,7 @@ export class InformacionComponent {
       descripcion: '',
       calificacion: 0,
       ID_Resena: 0,
-      ID_Usuario: parseInt(sessionStorage.getItem('ID_Uss') || '0')
+      ID_Usuario: parseInt(this.datos.getID_Uss() || '0')
     };
     this.calificacion = 0;
     
@@ -435,7 +421,7 @@ export class InformacionComponent {
       return;
     }
 
-    const idUsuario = sessionStorage.getItem('ID_Uss');
+    const idUsuario = this.datos.getID_Uss();
     
     if (!idUsuario) {
       this.sweetalert.showNoReload('Usuario no válido');

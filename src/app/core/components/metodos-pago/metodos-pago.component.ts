@@ -43,8 +43,6 @@ export class MetodosPagoComponent {
           Activa: tarjeta.Activa,
           Numero_Tarjeta: tarjeta.Numero_Tarjeta
         }));
-        console.log(this.tarjetasactivas);
-        console.log(this.tarjetasinactivas);
       },
       error: (error) => {
         Swal.fire('Error', 'No se pudieron cargar las tarjetas', 'error');
@@ -53,7 +51,6 @@ export class MetodosPagoComponent {
   }
 
   editarTarjeta(tarjeta: any) {
-    console.log('Datos recibidos:', tarjeta);
     const fechaActual = new Date();
     const fechaMaxima = new Date(fechaActual.getFullYear() + 15, fechaActual.getMonth());
     
@@ -111,7 +108,6 @@ export class MetodosPagoComponent {
       }
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log('Datos a enviar:', result.value);
         this.userService.actualizarTarjeta(result.value).subscribe({
           next: () => {
             Swal.fire('¡Actualizado!', 'La tarjeta ha sido actualizada correctamente.', 'success');
@@ -197,7 +193,6 @@ export class MetodosPagoComponent {
   }
 
   eliminarTarjeta(id: number) {
-    console.log(id);
     Swal.fire({
       title: '¿Estás seguro?',
       text: "Esta acción no se puede revertir",
@@ -237,7 +232,6 @@ export class MetodosPagoComponent {
           ...tarjeta,
           Activa: nuevoEstado
         };
-        console.log(tarjetaActualizada);
         this.userService.actualizarTarjeta(tarjetaActualizada).subscribe({
           next: () => {
             Swal.fire(

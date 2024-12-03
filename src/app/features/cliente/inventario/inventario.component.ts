@@ -228,9 +228,6 @@ export class InventarioComponent {
   }
 
   updateBook(): void {
-    console.log('Form valid:', this.bookForm.valid);
-    console.log('Form values:', this.bookForm.value);
-    console.log('Selected book:', this.selectedBook);
     
     if (this.selectedBook && this.bookForm.valid) {
       const otroGenero = this.bookForm.get('OtroGenero')?.value;
@@ -248,7 +245,6 @@ export class InventarioComponent {
       // Eliminar campos auxiliares
       delete bookData.ImagenURL;
       delete bookData.OtroGenero;
-      console.log(bookData)
       this.userService.updateBook(this.selectedBook.ID, bookData).subscribe({
         next: (response) => {
           this.sweetalert.showReload('Libro modificado exitosamente');
@@ -262,7 +258,6 @@ export class InventarioComponent {
       });
     } else {
       this.sweetalert.showNoReload('Por favor, complete todos los campos requeridos');
-      console.log('Form validation errors:', this.getFormValidationErrors());
     }
   }
 

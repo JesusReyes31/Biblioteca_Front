@@ -1,3 +1,20 @@
+<div class="search-container">
+  <div class="search-box">
+    <i class="zmdi zmdi-search search-icon"></i>
+    <input 
+      type="text" 
+      [(ngModel)]="searchTerm" 
+      (input)="onSearch()"
+      placeholder="Buscar por título, autor o género..."
+      autocomplete="off"
+    >
+    @if (searchTerm) {
+      <button class="clear-search" (click)="clearSearch()">
+        <i class="zmdi zmdi-close"></i>
+      </button>
+    }
+  </div>
+</div>
 <section id="contenido" class="contenedor">
     <div class="generos-libros">
       <ul class="ul-generos">
@@ -8,7 +25,7 @@
     </div>
     <div class="imagenes-libros">
       <div class="libros-container">
-        <div *ngFor="let libro of libros" [title]="libro.Disponibilidad === 'Disponible' ? 'Disponible' : 'No disponible'" class="libro" (click)="seleccionarLibro(libro)">
+        <div *ngFor="let libro of librosFiltrados" [title]="libro.Disponibilidad === 'Disponible' ? 'Disponible' : 'No disponible'" class="libro" (click)="seleccionarLibro(libro)">
           <img appImageLoading [src]="libro.Imagen" 
                alt="{{ libro.Titulo }}" 
                [ngClass]="['libro-imagen', libro.Ejemplares[0].Cantidad > 0 ? 'disponible' : 'nod']">

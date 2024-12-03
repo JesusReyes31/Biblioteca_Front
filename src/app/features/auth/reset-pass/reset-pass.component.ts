@@ -27,8 +27,6 @@ export class ResetPassComponent {
       if (!isValid) {
         this.sweetalert.showNoReload('Token inválido o expirado');
         this.router.navigate(['/login'])
-      } else {
-        console.log('Token válido');
       }
     });
   }
@@ -47,7 +45,6 @@ export class ResetPassComponent {
             this.router.navigate(['/login']); // Redirige al login o a otra página
           },
           (error) => {
-            console.log(error)
             this.sweetalert.showNoReload('Hubo un error al cambiar la contraseña. Intenta nuevamente.');
           }
         );  

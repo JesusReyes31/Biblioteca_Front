@@ -59,7 +59,6 @@ export class DevolverLibrosComponent {
           cancelButtonText: 'Cancelar'
         }).then((confirmResult) => {
           if (confirmResult.isConfirmed) {
-            console.log(this.idLibro, idUsuario);
             this.userService.devolverLibro(this.idLibro, idUsuario).subscribe({
               next: (response) => {
                 Swal.fire({

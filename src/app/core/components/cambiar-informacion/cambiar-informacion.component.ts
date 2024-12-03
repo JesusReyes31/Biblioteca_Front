@@ -4,6 +4,7 @@ import { FormBuilder, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SweetalertService } from '../../services/sweetalert/sweetalert.service';
 import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
+import { DatosService } from '../../services/users/datos.service';
 
 
 @Component({
@@ -20,7 +21,7 @@ export class CambiarInformacionComponent {
   userTypes = ['Admin', 'Sucursal', 'Prestamos', 'Inventario'];
   newPasswordVisible: boolean = false;
   confirmPasswordVisible: boolean = false;
-  constructor(private userService:UsersService,private fb:FormBuilder,private sweetalert:SweetalertService) {}
+  constructor(private userService:UsersService,private fb:FormBuilder,private sweetalert:SweetalertService,private datos:DatosService) {}
 
   ngOnInit(): void {
     this.getUserInfo();
@@ -31,7 +32,7 @@ export class CambiarInformacionComponent {
       next: (data) => {
         this.userData = data;
         if(this.userData.Imagen!==null){
-          sessionStorage.setItem('Imagen',this.userData.Imagen);
+          this.datos.setData({Imagen:this.userData.Imagen})
         }
         // Si el usuario es de alguno de los tipos especificados, obtener info de sucursal
         if (this.userData.Tipo_Usuario==='Admin Sucursal') {
@@ -49,7 +50,6 @@ export class CambiarInformacionComponent {
     this.userService.getSucursal().subscribe({
       next: (data) => {
         this.sucursalInfo = data[0];
-        console.log(this.sucursalInfo)
       },
       error: (error) => {
         console.error('Error al obtener información de la sucursal:', error);
@@ -68,7 +68,6 @@ export class CambiarInformacionComponent {
       };
       reader.readAsDataURL(this.selectedFile); // Convierte el archivo a Base64
     }
-    console.log(this.selectedFile)
   }
 
   uploadImage(): void {
@@ -77,12 +76,8 @@ export class CambiarInformacionComponent {
         Imagen: this.selectedFile,
         Nombre_Usuario: this.userData.Nombre_Usuario
       }).value;
-
-      // console.log('Datos de imagen:', formData);
-
       this.userService.updateUserImage(this.userData.ID, formData).subscribe({
         next: (response) => {
-          console.log(response)
           this.sweetalert.showReload('Imagen actualizada exitosamente');
           this.getUserInfo();
         },
@@ -97,7 +92,6 @@ export class CambiarInformacionComponent {
     this.userService.updateUserInfo(this.userData).subscribe({
       next: (response) => {
         if(response.message==='Información actualizada exitosamente'){
-          console.log('Información actualizada exitosamente');
           this.sweetalert.showReload(response.message);
         } 
       },
@@ -112,7 +106,6 @@ export class CambiarInformacionComponent {
       this.sweetalert.showNoReload('Las contraseñas no coinciden');
       return;
     }
-    console.log(this.userData.newPassword)
     this.userService.updatePassword({
       Password: this.userData.newPassword
     }).subscribe({

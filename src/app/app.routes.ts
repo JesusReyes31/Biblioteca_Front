@@ -29,6 +29,7 @@ import { PagoSucursalComponent } from './features/cliente/prestamos/pago-sucursa
 import { authGuard } from './core/guards/auth.guard';
 import { AccesoDenegadoComponent } from './shared/components/acceso-denegado/acceso-denegado.component';
 import { ReportesComponent } from './features/cliente/AdminSuc/reportes/reportes.component';
+import { FacturaComponent } from './shared/components/factura/factura.component';
 
 export const routes: Routes = [
     {
@@ -40,6 +41,7 @@ export const routes: Routes = [
             {path:"historial-prestamos",component:HistorialPrestamoComponent,canActivate:[authGuard]},
             {path:"compras",component:HistorialComprasComponent,canActivate:[authGuard]},
             {path:"recibo/:id",component:ReciboComponent,canActivate:[authGuard]},
+            {path:"factura/:id",component:FacturaComponent,canActivate:[authGuard]},
             {path:"credencial",component:CredencialComponent,canActivate:[authGuard]},
             {path:"registrar-libros",component:InventarioComponent,canActivate:[authGuard]},
             {path:"registrar-usuarios",component:PrestamosComponent,canActivate:[authGuard]},

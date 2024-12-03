@@ -32,7 +32,6 @@ export class AuthService {
         tap(response => {
           const token = response.headers.get('authorization');
           const userData: any = response.body;
-          console.log(userData)
           if (token && userData) {
             this.setSecureCookie('authToken', token);
             this.tokenSubject.next(token);

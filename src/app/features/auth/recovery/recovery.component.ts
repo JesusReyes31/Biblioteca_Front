@@ -28,7 +28,6 @@ export class RecoveryComponent {
     const value = activo === 'Correo' ? this.Correo : this.Nombre_Usuario;
     this.authService.recovery(value, activo).subscribe({
       next: (response) => {
-        // console.log('Respuesta recibida:', response);
         // if (response.body?.message) {
         //   // Si hay un mensaje de error del backend
         //   this.sweetalert.showNoReload(response.body.message);

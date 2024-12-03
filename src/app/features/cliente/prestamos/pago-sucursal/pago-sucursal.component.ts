@@ -45,7 +45,6 @@ export class PagoSucursalComponent implements OnInit {
       next: (data) => {
         this.venta = data;
         this.pagar = this.venta?.Total;
-        console.log('Venta',this.venta);
       },
       error: (error) => {
         this.sweetalert.showNoReload('Error al cargar los detalles de la venta');
@@ -55,7 +54,6 @@ export class PagoSucursalComponent implements OnInit {
     this.userService.getDetalleVenta(this.idVenta).subscribe({
       next: (data) => {
         this.detalleVenta = data;
-        console.log(this.detalleVenta);
       },
       error: (error) => {
         this.sweetalert.showNoReload('Error al cargar los detalles de la venta');
@@ -71,7 +69,6 @@ export class PagoSucursalComponent implements OnInit {
   }
 
   procesarPago() {
-    console.log(this.pagoForm.value);
     if (this.pagoForm.valid) {
       const cambio = this.calcularCambio();
       if (cambio < 0) {

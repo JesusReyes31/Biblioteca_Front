@@ -17,10 +17,21 @@ import { ImageLoadingDirective } from '../../../shared/directives/image-loading.
 export class CatalogoComponent {
   generos:string[]=[];
   libros:any[]=[];
+  todoslibros:any[]=[];
+  filteredRecords: any[] = [];
+  searchTerm: string = '';
+  itemsPerPage = 1;
+  pageSize = 10;
+  currentPage = 0;
+  totalPages = 0;
+  startIndex = 0;
+  endIndex = 0;
+  paginatedRecords: any[] = [];
+  librosFiltrados: any[] = [];
   constructor(private userService:UsersService,private sweetalert:SweetalertService,private router:Router,private footerService:FooterService){}
   ngOnInit(): void {
     this.userService.getBooks().subscribe((data)=>{
-      console.log('Todos los libros',data);
+      this.todoslibros=data
     })
 
     this.userService.getGeneros().subscribe(
@@ -90,8 +101,9 @@ export class CatalogoComponent {
           this.sweetalert.showNoReload(data.message);
         } else {
           this.libros = data;
-          console.log('Libros por genero',data);
-          console.log("Adjusting footer position");
+          this.librosFiltrados = [...this.libros];
+          this.searchTerm = ''; // Limpiar búsqueda al cambiar de género
+          this.currentPage = 1;
           this.footerService.adjustFooterPosition();
         }
       },
@@ -104,8 +116,33 @@ export class CatalogoComponent {
     this.libros = []; // Limpiar el arreglo de libros
   }
   seleccionarLibro(libro: any): void {
-    console.log("Entró a libros")
     sessionStorage.setItem('selectedLibro', JSON.stringify(libro)); // Guardamos el id en sessionStorage
     this.router.navigate(['/informacion']);
+  }
+
+  // Barra de Búsqueda
+  onSearch(): void {
+    if (!this.searchTerm.trim()) {
+      this.librosFiltrados = [...this.libros]; // Si no hay término de búsqueda, mostrar todos los libros
+    } else {
+      const searchTermLower = this.searchTerm.toLowerCase().trim();
+      this.librosFiltrados = this.libros.filter(libro => {
+        return (
+          libro.Titulo.toLowerCase().includes(searchTermLower) ||
+          libro.Autor.toLowerCase().includes(searchTermLower)
+          //  ||
+          // libro.Genero.toLowerCase().includes(searchTermLower) // Filtrar también por género
+        );
+      });
+    }
+    this.currentPage = 1; // Resetear a la primera página
+    this.footerService.adjustFooterPosition();
+  }
+
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.librosFiltrados = [...this.libros];
+    this.currentPage = 1;
+    this.footerService.adjustFooterPosition();
   }
 }
