@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
-import { SweetalertService } from '../../../core/services/sweetalert/sweetalert.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-reset-pass',
@@ -19,13 +19,17 @@ export class ResetPassComponent {
   passwordVisible2: boolean = false; // Propiedad para controlar la visibilidad de la contraseña
   token:string | null = null;
   
-  constructor(private route:ActivatedRoute,private authService:AuthService,private router:Router,private sweetalert:SweetalertService) {
+  constructor(private route:ActivatedRoute,
+    private authService:AuthService,
+    private router:Router,
+    private toastr: ToastrService
+  ) {
     this.token = this.route.snapshot.paramMap.get('token') || null;
   }
   ngOnInit(): void {
     this.authService.verifyToken(this.token as string).subscribe(isValid => {
       if (!isValid) {
-        this.sweetalert.showNoReload('Token inválido o expirado');
+        this.toastr.error('Token inválido o expirado','',{positionClass:'toast-bottom-left'});
         this.router.navigate(['/login'])
       }
     });
@@ -41,11 +45,11 @@ export class ResetPassComponent {
       if(this.Contra1 === this.Contra2){
         this.authService.resetPassword(this.token, this.Contra1).subscribe(
           (response) => {
-            this.sweetalert.showNoReload('Contraseña cambiada exitosamente.');
+            this.toastr.success('Contraseña cambiada exitosamente.','',{positionClass:'toast-bottom-left'});
             this.router.navigate(['/login']); // Redirige al login o a otra página
           },
           (error) => {
-            this.sweetalert.showNoReload('Hubo un error al cambiar la contraseña. Intenta nuevamente.');
+            this.toastr.error('Hubo un error al cambiar la contraseña. Intenta nuevamente.','',{positionClass:'toast-bottom-left'});
           }
         );  
       }

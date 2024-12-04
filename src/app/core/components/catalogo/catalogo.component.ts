@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FooterService } from '../../services/footer/footer.service';
 import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-catalogo',
@@ -28,16 +29,17 @@ export class CatalogoComponent {
   endIndex = 0;
   paginatedRecords: any[] = [];
   librosFiltrados: any[] = [];
-  constructor(private userService:UsersService,private sweetalert:SweetalertService,private router:Router,private footerService:FooterService){}
+  constructor(private userService:UsersService,
+    private sweetalert:SweetalertService,
+    private router:Router,
+    private footerService:FooterService,
+    private toastr: ToastrService
+  ){}
   ngOnInit(): void {
-    this.userService.getBooks().subscribe((data)=>{
-      this.todoslibros=data
-    })
-
     this.userService.getGeneros().subscribe(
       (data) => {
         if (data.message) {
-          this.sweetalert.showNoReload(data.message);
+          this.toastr.error(data.message);
         } else {
           data.forEach((gen: any) => {
             this.generos.push(gen.Genero);
@@ -45,14 +47,7 @@ export class CatalogoComponent {
           if(sessionStorage.getItem('busqueda')){
             this.traerLibrosBusqueda(sessionStorage.getItem('busqueda')||'');
           }else{
-            // Seleccionar automáticamente el primer género
-            setTimeout(() => {
-              const primerGenero = document.querySelector('.generos-libros ul li');
-              if (primerGenero) {
-                primerGenero.classList.add('selected');
-                this.traerLibros(this.generos[0]);
-                }
-            }, 100);
+            this.primergenero();
           }
         }
       },
@@ -60,6 +55,16 @@ export class CatalogoComponent {
         console.error('Error al cargar el archivo JSON:', error);
       }
     );
+  }
+  primergenero():void{
+    // Seleccionar automáticamente el primer género
+    setTimeout(() => {
+      const primerGenero = document.querySelector('.generos-libros ul li');
+      if (primerGenero) {
+        primerGenero.classList.add('selected');
+        this.traerLibros(this.generos[0]);
+        }
+    }, 100);
   }
   selecciongenero(event: any, genero: string): void {
     const listaGeneros = document.querySelectorAll('.generos-libros ul li');
@@ -74,21 +79,26 @@ export class CatalogoComponent {
 
   //Traer libros por busqueda
   traerLibrosBusqueda(busqueda: string): void {
+    // Deseleccionar cualquier género previamente seleccionado
+    const listaGeneros = document.querySelectorAll('.generos-libros ul li');
+    listaGeneros.forEach((item: any) => {
+      item.classList.remove('selected');
+    });
+
     this.userService.getBooksByName(busqueda).subscribe({
       next: (data) => {
         if (data.message) {
-          this.sweetalert.showNoReload(data.message);
-          this.borrarlibros();
+          this.toastr.error(data.message);
+          this.primergenero();
         } else {
           this.libros = data;
+          this.librosFiltrados = [...this.libros];
           this.footerService.adjustFooterPosition();
         }
-        sessionStorage.removeItem('busqueda');
       },
       error: (error) => {
-        console.error(`Error al obtener libros por busqueda:`, error);
         this.borrarlibros();
-        this.sweetalert.showNoReload('Error al buscar libros');
+        this.toastr.error('Error al buscar libros');
       }
     });
   }
@@ -98,8 +108,9 @@ export class CatalogoComponent {
     this.userService.getBooksByGenre(genero).subscribe({
       next: (data) => {
         if (data.message) {
-          this.sweetalert.showNoReload(data.message);
+          this.toastr.error(data.message);
         } else {
+          sessionStorage.removeItem('busqueda');
           this.libros = data;
           this.librosFiltrados = [...this.libros];
           this.searchTerm = ''; // Limpiar búsqueda al cambiar de género

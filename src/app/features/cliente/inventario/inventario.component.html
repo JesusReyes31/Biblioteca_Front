@@ -58,7 +58,18 @@
   
     <div class="campo">
       <label for="Resumen">Resumen</label>
-      <textarea id="Resumen" formControlName="Resumen" required></textarea>
+      <div class="resumen-container">
+        <textarea id="Resumen" formControlName="Resumen" required></textarea>
+        <button type="button" 
+                class="btn-generar-resumen"
+                (click)="generarResumen()"
+                [disabled]="!bookForm.get('Titulo')?.value || 
+                           !bookForm.get('Autor')?.value || 
+                           !bookForm.get('ISBN')?.value || 
+                           !bookForm.get('Anio_publicacion')?.value">
+          <i class="fas fa-magic"></i> Generar
+        </button>
+      </div>
     </div>
   
     <div class="fila">

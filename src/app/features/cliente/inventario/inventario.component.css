@@ -225,3 +225,27 @@ ng-template p {
       width: 100%;
   }
 }
+.resumen-container {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.btn-generar-resumen {
+  padding: 8px 15px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-generar-resumen:hover:not(:disabled) {
+  background-color: #357abd;
+}
+
+.btn-generar-resumen:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}

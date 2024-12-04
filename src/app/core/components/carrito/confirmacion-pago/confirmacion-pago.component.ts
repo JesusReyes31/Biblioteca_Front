@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UsersService } from '../../../services/users/users.service';
@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import { VentasService } from '../../../services/ventas/ventas.service';
 import html2canvas from 'html2canvas';
 import { ImageLoadingDirective } from '../../../../shared/directives/image-loading.directive';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-confirmacion-pago',
   standalone: true,
@@ -24,6 +25,7 @@ export class ConfirmacionPagoComponent {
     private router: Router,
     private userService: UsersService,
     private ventasService: VentasService,
+    private toastr: ToastrService
   ) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras.state) {
@@ -33,16 +35,27 @@ export class ConfirmacionPagoComponent {
       this.total = navigation.extras.state['total'];
       this.metodoPago = navigation.extras.state['metodoPago'];
     }else{
-      Swal.fire({
-        title: 'Error',
-        text: 'No se encontraron datos del carrito',
-        icon: 'error',
-        confirmButtonText: 'Aceptar'
-      }).then(() => {
-        this.router.navigate(['/carrito']);
-      });
+      this.toastr.error('No se encontraron datos del carrito','',{toastClass:'custom-toast'});
+      window.location.href = '/carrito';
     }
   }
+  ngOnInit(): void {
+    this.librosCarrito = sessionStorage.getItem('librosCarrito') ? JSON.parse(sessionStorage.getItem('librosCarrito')!) : [];
+    this.subtotal = parseFloat(sessionStorage.getItem('subtotal') || '0');
+    this.shipping = parseFloat(sessionStorage.getItem('shipping') || '4');
+    this.total = parseFloat(sessionStorage.getItem('total') || '0');
+    this.metodoPago = sessionStorage.getItem('metodoPago') ? JSON.parse(sessionStorage.getItem('metodoPago')!) : null;
+    sessionStorage.clear();
+  }
+  @HostListener('window:beforeunload')
+  antesRecargar():void{
+    sessionStorage.setItem('librosCarrito', JSON.stringify(this.librosCarrito));
+    sessionStorage.setItem('subtotal', this.subtotal.toString());
+    sessionStorage.setItem('shipping', this.shipping.toString());
+    sessionStorage.setItem('total', this.total.toString());
+    sessionStorage.setItem('metodoPago', JSON.stringify(this.metodoPago));
+  }
+  
 
   confirmarPago() {
     if (this.metodoPago.tipo === 'efectivo') {
@@ -166,27 +179,14 @@ export class ConfirmacionPagoComponent {
           },
           error: (error) => {
             console.error('Error al registrar detalle de venta:', error);
-            Swal.fire({
-              title: 'Error',
-              text: 'Hubo un problema al procesar tu compra, inténtalo de nuevo más tarde',
-              icon: 'error',
-              confirmButtonText: 'Aceptar'
-            }).then(() => {
-              this.router.navigate(['/carrito']);
-            });
+            this.toastr.error('Hubo un problema al procesar tu compra, inténtalo de nuevo más tarde','',{toastClass:'custom-toast'});
+            this.router.navigate(['/carrito']);
           }
         });
       },
       error: (error) => {
-        console.error('Error al registrar venta:', error);
-        Swal.fire({
-          title: 'Error',
-          text: 'Hubo un problema al procesar tu compra',
-          icon: 'error',
-          confirmButtonText: 'Aceptar'
-        }).then(() => {
-          this.router.navigate(['/carrito']);
-        });
+        this.toastr.error('Hubo un problema al procesar tu compra','',{toastClass:'custom-toast'});
+        this.router.navigate(['/carrito']);
       }
     });
   }

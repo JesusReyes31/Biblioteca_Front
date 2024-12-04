@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { FooterService } from '../../../core/services/footer/footer.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-historial-prestamo',
@@ -17,7 +18,10 @@ export class HistorialPrestamoComponent {
   filteredRecords: any[] = [];
   searchTerm: string = '';
 
-  constructor(private userService: UsersService,private footer:FooterService) {}
+  constructor(private userService: UsersService,
+    private footer:FooterService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.userService.getLoanHistory().subscribe({
@@ -27,19 +31,9 @@ export class HistorialPrestamoComponent {
       },
       error: (error) => {
         if (error.message === 'No se encontraron prestamos para este usuario.') {
-          Swal.fire({
-            icon: 'info',
-            title: 'Sin Prestamos',
-            text: 'No se encontraron prestamos para este usuario.',
-            confirmButtonText: 'Aceptar'
-          });
+          this.toastr.info('No se encontraron prestamos para este usuario.','',{toastClass:'custom-toast'});
         } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Hubo un problema al obtener los prestamos. Intenta nuevamente más tarde.',
-            confirmButtonText: 'Aceptar'
-          });
+          this.toastr.error('Hubo un problema al obtener los prestamos. Intenta nuevamente más tarde.','',{toastClass:'custom-toast'});
         }
       }
     });

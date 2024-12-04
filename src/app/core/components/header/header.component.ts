@@ -25,12 +25,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
   mostrarBusqueda: boolean = true;
   url:string=''
   private subscription: Subscription;
-  unreadNotifications: number = 0;
+  // unreadNotifications: number = 0;
   // notifications: UserNotification[] = [];
-  showNotifications = false;
-  private notificationSubscription?: Subscription;
+  // showNotifications = false;
+  // private notificationSubscription?: Subscription;
 
-  constructor(private router:Router,private SearchService: SearchService, private userService: UsersService,
+  constructor(private router:Router,
+    private SearchService: SearchService,
+    private userService: UsersService,
     private datos:DatosService
     //  private notificationService: NotificationService
     ) {
@@ -59,11 +61,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
   }
   ngOnInit(){
-    this.url = this.router.url;
-    this.tipou = this.datos.getTipoUss() || null;
-    this.Nombre = this.datos.getNombre()||null;
-    this.Imagen = this.datos.getImagen()||'null';
-    
+    // this.url = this.router.url;
+    this.tipou = this.datos.getTipoUss();
+    this.Nombre = this.datos.getNombre();
+    this.Imagen = this.datos.getImagen();
     // Obtener cantidad inicial
     this.actualizarCantidadCarrito();
     

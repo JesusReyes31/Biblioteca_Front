@@ -2,12 +2,13 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { catchError, Observable, Subject, throwError, tap } from 'rxjs';
 import { DatosService } from './datos.service';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsersService {
-  private apiUrl = 'http://localhost:9500/';
+  private apiUrl = environment.Api_URL;
   private carritoActualizadoSource = new Subject<void>();
   carritoActualizado = this.carritoActualizadoSource.asObservable();
   constructor(private http:HttpClient,private datos:DatosService) { }
@@ -179,7 +180,7 @@ export class UsersService {
     });
     return this.http.get(`${this.apiUrl}cart/${idUsuario}`, { headers });
   }
-  agregarAlCarrito(ID_Usuario: number, ID_Ejemplar: number, Cantidad: number = 1): Observable<any> {
+  agregarAlCarrito(ID_Usuario: number, ID_Ejemplar: number, Cantidad: number): Observable<any> {
     const headers = new HttpHeaders({ 
       'authorization': `${this.datos.getAuthToken()}`,
       'Content-Type': 'application/json' 
@@ -270,7 +271,7 @@ export class UsersService {
 
   deleteBook(id: string): Observable<any> {
     const headers = new HttpHeaders({ 'authorization':`${this.datos.getAuthToken()}`,'Content-Type': 'application/json' });
-    return this.http.delete(`${this.apiUrl}books/${id}/${this.datos.getID_Sucursal()}`, { headers });
+    return this.http.delete(`${this.apiUrl}books/${id}`, { headers });
   }
 
   //Usuarios 

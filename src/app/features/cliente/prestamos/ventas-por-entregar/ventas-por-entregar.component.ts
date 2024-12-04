@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { SweetalertService } from '../../../../core/services/sweetalert/sweetalert.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-ventas-por-entregar',
@@ -17,7 +18,11 @@ export class VentasPorEntregarComponent {
   ventas: any[] = [];
   ventasFiltradas: any[] = [];
   searchTerm: string = '';
-  constructor(private userService: UsersService,private sweetalert:SweetalertService,private router:Router){}
+  constructor(private userService: UsersService,
+    private sweetalert:SweetalertService,
+    private router:Router,
+    private toastr: ToastrService
+  ){}
   ngOnInit(): void {
     this.cargarVentas();
   }
@@ -28,7 +33,7 @@ export class VentasPorEntregarComponent {
         this.ventas = data.data;
         this.ventasFiltradas = data.data;
         if(this.ventas.length == 0){
-          this.sweetalert.showNoReload(data.message);
+          this.toastr.info(data.message,'',{toastClass:'custom-toast'});
         }
       },
       error: (error) => {
@@ -110,25 +115,19 @@ export class VentasPorEntregarComponent {
         // Actualizar estado de entrega
         this.userService.actualizarEntregaVenta(venta).subscribe({
           next: (response) => {
-            Swal.fire({
-              title: '¡Entregado!',
-              text: 'La venta ha sido marcada como entregada exitosamente',
-              icon: 'success',
-              timer: 1500,
-              showConfirmButton: false
-            });
+            this.toastr.success('La venta ha sido marcada como entregada exitosamente','',{toastClass:'custom-toast'});
             // Recargar datos
             this.cargarVentas();
           },
           error: (error) => {
             console.error('Error al actualizar entrega:', error);
-            this.sweetalert.showNoReload('Error al actualizar el estado de la entrega');
+            this.toastr.error('Error al actualizar el estado de la entrega','',{toastClass:'custom-toast'});
           }
         });
       }
     } catch (error) {
       console.error('Error al procesar la entrega:', error);
-      this.sweetalert.showNoReload('Error al procesar la entrega');
+      this.toastr.error('Error al procesar la entrega','',{toastClass:'custom-toast'});
     }
   }
 }

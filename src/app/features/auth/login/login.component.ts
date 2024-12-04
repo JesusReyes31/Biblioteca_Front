@@ -2,22 +2,27 @@ import { Component } from '@angular/core';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { SweetalertService } from '../../../core/services/sweetalert/sweetalert.service';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DatosService } from '../../../core/services/users/datos.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule,CommonModule,RouterLink],
+  imports: [FormsModule,CommonModule,RouterLink,ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  Correo: string = '';
-  Contra: string = '';
+  loginForm: FormGroup; 
   TipoUss:string[] = ['Admin Sucursal','Inventario','Prestamos'];
-  constructor(private authService: AuthService,private router: Router,private sweetalert: SweetalertService,private datos:DatosService) {}
+  constructor(private authService: AuthService,private router: Router,private sweetalert: SweetalertService,private datos:DatosService,private toastr: ToastrService,private fb: FormBuilder) {
+    this.loginForm = this.fb.group({
+      Correo: ['', [Validators.required]],
+      Contra: ['', [Validators.required, Validators.minLength(6)]]
+    });
+  }
 
   ngOnInit(): void {
     this.datos.setData({Nombre:'Anonimo',tipoUss:'Anonimo'})
@@ -32,12 +37,7 @@ export class LoginComponent {
     this.passwordVisible = !this.passwordVisible;
   }
   ingresar(){
-    const loginData = {
-      Correo: this.Correo,
-      Contra: this.Contra
-    };
-
-    this.authService.login(loginData).subscribe(
+    this.authService.login(this.loginForm.value).subscribe(
       (response) => {
         const token = response.headers.get('authorization');
         if (token) {
@@ -60,15 +60,15 @@ export class LoginComponent {
           }else{
             sessionStorage.removeItem('ID_Sucursal');
           }
-          this.sweetalert.showNoReload('Login exitoso');
+          this.toastr.success('Se ha iniciado sesión correctamente', 'Operación exitosa',{toastClass:'custom-toast'});
           this.router.navigate(['/']); // Redirige al usuario a la página principal
         } else {
-          this.sweetalert.showNoReload('No se recibió un token de autenticación.');
+          this.toastr.error('No se recibió un token de autenticación.', 'Error');
         }
       },
       (error) => {
         // Manejo del error, como mostrar un mensaje
-        this.sweetalert.showNoReload('Error al iniciar sesión, Datos Incorrectos');
+        this.toastr.error('Error al iniciar sesión, Datos Incorrectos', 'Error');
       }
     );  
   }

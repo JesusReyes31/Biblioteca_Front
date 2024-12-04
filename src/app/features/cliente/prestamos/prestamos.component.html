@@ -40,11 +40,9 @@
           <option value="">Seleccione una sucursal</option>
           <option *ngFor="let sucursal of sucursales" 
                   [value]="sucursal.ID"
-                  [disabled]="!isEditMode && 
-                             sucursal.ID_Usuario">
+                  [disabled]="sucursal.disabled">
             {{ sucursal.Nombre }} 
-            {{ !isEditMode && 
-               sucursal.ID_Usuario ? '(Ya tiene administrador)' : '' }}
+            {{ sucursal.disabled ? '(Ya tiene administrador)' : '' }}
           </option>
         </select>
       </div>

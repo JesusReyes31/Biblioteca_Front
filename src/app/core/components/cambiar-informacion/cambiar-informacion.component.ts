@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { SweetalertService } from '../../services/sweetalert/sweetalert.service';
 import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
 import { DatosService } from '../../services/users/datos.service';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -21,7 +22,12 @@ export class CambiarInformacionComponent {
   userTypes = ['Admin', 'Sucursal', 'Prestamos', 'Inventario'];
   newPasswordVisible: boolean = false;
   confirmPasswordVisible: boolean = false;
-  constructor(private userService:UsersService,private fb:FormBuilder,private sweetalert:SweetalertService,private datos:DatosService) {}
+  constructor(private userService:UsersService,
+    private fb:FormBuilder,
+    private sweetalert:SweetalertService,
+    private datos:DatosService,
+    private toastr:ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.getUserInfo();
@@ -78,11 +84,12 @@ export class CambiarInformacionComponent {
       }).value;
       this.userService.updateUserImage(this.userData.ID, formData).subscribe({
         next: (response) => {
-          this.sweetalert.showReload('Imagen actualizada exitosamente');
+          this.toastr.success('Imagen actualizada exitosamente','',{toastClass:'custom-toast'});
           this.getUserInfo();
         },
         error: (error) => {
           console.error('Error al actualizar la imagen:', error);
+          this.toastr.error('Error al actualizar la imagen','',{toastClass:'custom-toast'});
         }
       });
     }
@@ -92,18 +99,19 @@ export class CambiarInformacionComponent {
     this.userService.updateUserInfo(this.userData).subscribe({
       next: (response) => {
         if(response.message==='Información actualizada exitosamente'){
-          this.sweetalert.showReload(response.message);
+          this.toastr.success(response.message,'',{toastClass:'custom-toast'});
         } 
       },
       error: (error) => {
         console.error('Error al actualizar la información:', error);
+        this.toastr.error('Error al actualizar la información','',{toastClass:'custom-toast'});
       }
     });
   }
 
   updatePassword(): void {
     if (this.userData.newPassword !== this.userData.confirmPassword) {
-      this.sweetalert.showNoReload('Las contraseñas no coinciden');
+      this.toastr.error('Las contraseñas no coinciden','',{toastClass:'custom-toast'});
       return;
     }
     this.userService.updatePassword({
@@ -111,13 +119,14 @@ export class CambiarInformacionComponent {
     }).subscribe({
       next: (response) => {
         if(response.message==='Contraseña actualizada exitosamente'){
-          this.sweetalert.showReload(response.message);
+          this.toastr.success(response.message,'',{toastClass:'custom-toast'});
           this.userData.newPassword = '';
           this.userData.confirmPassword = '';
         }
       },
       error: (error) => {
         console.error('Error al actualizar la contraseña:', error);
+        this.toastr.error('Error al actualizar la contraseña','',{toastClass:'custom-toast'});
       }
     });
   }

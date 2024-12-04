@@ -3,6 +3,7 @@ import { UsersService } from '../../../../core/services/users/users.service';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-devolver-libros',
@@ -14,16 +15,13 @@ import { CommonModule } from '@angular/common';
 export class DevolverLibrosComponent {
   idLibro: string = '';
   
-  constructor(private userService: UsersService) {}
+  constructor(private userService: UsersService,
+    private toastr: ToastrService
+  ) {}
 
   onDevolver(): void {
     if (!this.idLibro) {
-      Swal.fire({
-        icon: 'warning',
-        title: '¡Atención!',
-        text: 'Por favor ingrese el ID del libro',
-        confirmButtonColor: '#3085d6'
-      });
+      this.toastr.warning('Por favor ingrese el ID del libro','',{toastClass:'custom-toast'});
       return;
     }
 
@@ -61,21 +59,11 @@ export class DevolverLibrosComponent {
           if (confirmResult.isConfirmed) {
             this.userService.devolverLibro(this.idLibro, idUsuario).subscribe({
               next: (response) => {
-                Swal.fire({
-                  icon: 'success',
-                  title: '¡Éxito!',
-                  text: 'Libro devuelto exitosamente',
-                  confirmButtonColor: '#3085d6'
-                });
+                this.toastr.success('Libro devuelto exitosamente','',{toastClass:'custom-toast'});
                 this.idLibro = '';
               },
               error: (error) => {
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Error',
-                  text: error.error.message || 'Error al devolver el libro',
-                  confirmButtonColor: '#3085d6'
-                });
+                this.toastr.error(error.error.message || 'Error al devolver el libro','',{toastClass:'custom-toast'});
               }
             });
           }

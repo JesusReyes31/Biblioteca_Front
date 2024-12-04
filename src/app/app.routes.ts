@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+
 import { ClienteComponent } from './features/cliente/cliente.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { RecoveryComponent } from './features/auth/recovery/recovery.component';
@@ -30,6 +31,7 @@ import { authGuard } from './core/guards/auth.guard';
 import { AccesoDenegadoComponent } from './shared/components/acceso-denegado/acceso-denegado.component';
 import { ReportesComponent } from './features/cliente/AdminSuc/reportes/reportes.component';
 import { FacturaComponent } from './shared/components/factura/factura.component';
+import { SucursalesComponent } from './features/cliente/sucursales/sucursales.component';
 
 export const routes: Routes = [
     {
@@ -56,7 +58,8 @@ export const routes: Routes = [
             {path:"confirmacion-pago",component:ConfirmacionPagoComponent,canActivate:[authGuard]},
             {path:"sucursales",component:AdminComponent,canActivate:[authGuard]},
             {path: 'pago-sucursal/:id', component: PagoSucursalComponent,canActivate:[authGuard]},
-            {path: 'reportes', component: ReportesComponent,canActivate:[authGuard]}
+            {path: 'reportes', component: ReportesComponent,canActivate:[authGuard]},
+            {path: 'info-sucursales', component: SucursalesComponent,canActivate:[authGuard]}
         ]
     },
     {path:"login",component:LoginComponent},

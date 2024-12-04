@@ -3,37 +3,53 @@
     <div class="login-form">
       <h1>INICIAR SESIÓN</h1>
       <p>Inicie sesión en su cuenta en unos segundos</p>
-      <div>
-        <div class="input-group">
-          <input type="text" [(ngModel)]="Correo" placeholder="Correo o Nombre de Usuario" />
-        </div>
-        <div class="input-group">
-          <div class="password-container">
+      <form [formGroup]="loginForm" (ngSubmit)="ingresar()" autocomplete="on">
+        <div>
+          <div class="input-group">
             <input 
-              [type]="passwordVisible ? 'text' : 'password'" 
-              [(ngModel)]="Contra" 
-              placeholder="Contraseña" 
-              aria-label="Contraseña"
+              type="text" 
+              formControlName="Correo"
+              placeholder="Correo o Nombre de Usuario"
+              autocomplete="username"
             />
-            <button 
-              type="button"
-              class="toggle-password" 
-              (click)="togglePasswordVisibility()"
-              [attr.aria-label]="passwordVisible ? 'Ocultar contraseña' : 'Mostrar contraseña'"
-              tabindex="0"
-            >
-              <svg *ngIf="!passwordVisible" viewBox="0 0 24 24" width="24" height="24">
-                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-              </svg>
-              <svg *ngIf="passwordVisible" viewBox="0 0 24 24" width="24" height="24">
-                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-                <path d="M2 2L22 22" stroke="currentColor" stroke-width="2"/>
-              </svg>
-            </button>
-          </div>             
+          </div>
+
+          <div class="input-group">
+            <div class="password-container">
+              <input 
+                [type]="passwordVisible ? 'text' : 'password'"
+                formControlName="Contra"
+                placeholder="Contraseña"
+                aria-label="Contraseña"
+                autocomplete="current-password"
+              />
+              <button 
+                type="button"
+                class="toggle-password"
+                (click)="togglePasswordVisibility()"
+                [attr.aria-label]="passwordVisible ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+                tabindex="0"
+              >
+                <svg *ngIf="!passwordVisible" viewBox="0 0 24 24" width="24" height="24">
+                  <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                </svg>
+                <svg *ngIf="passwordVisible" viewBox="0 0 24 24" width="24" height="24">
+                  <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                  <path d="M2 2L22 22" stroke="currentColor" stroke-width="2"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <button 
+            type="submit" 
+            class="login-button"
+            [disabled]="loginForm.invalid"
+          >
+            INGRESAR
+          </button>
         </div>
-        <button type="submit" (click)="ingresar()" class="login-button">INGRESAR</button>
-      </div>
+      </form>
       <a routerLink="/recover" class="forgot-password">¿Olvidó su contraseña?</a><br><br>
       <a routerLink="/" class="forgot-password">Ingresar como invitado</a>
     </div>

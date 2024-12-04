@@ -8,6 +8,8 @@ import Swal from 'sweetalert2';
 import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
 import { Location } from '@angular/common';
 import { DatosService } from '../../services/users/datos.service';
+import { ToastrService } from 'ngx-toastr';
+import { GeminiService } from '../../../features/gemini/service/gemini.service';
 
 @Component({
   selector: 'app-informacion',
@@ -42,7 +44,9 @@ export class InformacionComponent {
     private userService:UsersService,
     private sweetalert:SweetalertService,
     private location: Location,
-    private datos:DatosService
+    private datos:DatosService,
+    private toastr: ToastrService,
+    private geminiService: GeminiService
   ){}
   ngOnInit(): void {
     this.USS = this.datos.getTipoUss() || ''
@@ -61,7 +65,7 @@ export class InformacionComponent {
     this.footer.adjustFooterPosition();
   }
   @HostListener('window:beforeunload')
-  ngOnDestroy(): void {
+  recargar(): void {
     // Guardar datos antes de destruir el componente
     if (this.libro) {
       sessionStorage.setItem('selectedLibro', JSON.stringify(this.libro));
@@ -130,82 +134,75 @@ export class InformacionComponent {
   guardarResena(): void {
     const idUsuario = this.datos.getID_Uss();
     if (!idUsuario) return;
-  
-    // Construimos el objeto con todos los datos necesarios
-    const resenaData = {
-      ID_Usuario: parseInt(idUsuario),
-      ID_Libro: this.libro.ID,
-      Calificacion: this.calificacion,
-      Descripcion: this.nuevaResena.descripcion,
-      ID_Resena: this.nuevaResena.ID_Resena
-    };
-  
-    // Si es una actualización
-    if (this.resenaExistente) {
-      this.userService.actualizarResena(resenaData).subscribe({
-        next: (response) => {
-          // Actualizamos el estado local con los datos enviados, no con la respuesta
-          this.nuevaResena = {
-            ...this.nuevaResena,
-            calificacion: this.calificacion,
-            descripcion: this.nuevaResena.descripcion,
-            ID_Usuario: parseInt(idUsuario)
-          };
-  
-          Swal.fire({
-            title: '¡Actualizada!',
-            text: 'La reseña se actualizó correctamente',
-            icon: 'success',
-            timer: 1500,
-            showConfirmButton: false
+
+    // Primero verificamos con Gemini
+    this.geminiService.getResenaResponse(this.nuevaResena.descripcion).subscribe({
+      next: (response) => {
+        // Si la respuesta contiene 'error-message', significa que el contenido es inapropiado
+        if (response.includes('error-message')) {
+          // Extraemos el motivo del mensaje HTML
+          const motivo = response.match(/Motivo: (.*?)<\/p>/)?.[1] || 'Contenido inapropiado';
+          this.toastr.error(motivo, '', {toastClass:'custom-toast'});
+          return;
+        }
+
+        // Si llegamos aquí, la reseña es apropiada y podemos guardarla
+        const resenaData = {
+          ID_Usuario: parseInt(idUsuario),
+          ID_Libro: this.libro.ID,
+          Calificacion: this.calificacion,
+          Descripcion: this.nuevaResena.descripcion,
+          ID_Resena: this.nuevaResena.ID_Resena
+        };
+
+        // Lógica existente para guardar/actualizar reseña
+        if (this.resenaExistente) {
+          this.userService.actualizarResena(resenaData).subscribe({
+            next: (response) => {
+              // Actualizamos el estado local con los datos enviados, no con la respuesta
+              this.nuevaResena = {
+                ...this.nuevaResena,
+                calificacion: this.calificacion,
+                descripcion: this.nuevaResena.descripcion,
+                ID_Usuario: parseInt(idUsuario)
+              };
+      
+              this.toastr.success('La reseña se actualizó correctamente','',{toastClass:'custom-toast'});
+      
+              this.obtenerResenas();
+              this.mostrarFormulario = false;
+            },
+            error: (error) => {
+              console.error('Error al actualizar reseña:', error);
+              this.toastr.error('No se pudo actualizar la reseña','',{toastClass:'custom-toast'});
+            }
           });
-  
-          this.obtenerResenas();
-          this.mostrarFormulario = false;
-        },
-        error: (error) => {
-          console.error('Error al actualizar reseña:', error);
-          Swal.fire({
-            title: 'Error',
-            text: 'No se pudo actualizar la reseña',
-            icon: 'error',
-            timer: 1500,
-            showConfirmButton: false
+        } else {
+          // Si es una nueva reseña
+          this.userService.crearResena(resenaData).subscribe({
+            next: (response) => {
+              if (response.ID_Resena) {
+                this.nuevaResena.ID_Resena = response.ID_Resena;
+                this.resenaExistente = true;
+              }
+      
+              this.toastr.success('La reseña se publicó correctamente','',{toastClass:'custom-toast'});
+      
+              this.obtenerResenas();
+              this.mostrarFormulario = false;
+            },
+            error: (error) => {
+              console.error('Error al crear reseña:', error);
+              this.toastr.error('No se pudo crear la reseña','',{toastClass:'custom-toast'});
+            }
           });
         }
-      });
-    } else {
-      // Si es una nueva reseña
-      this.userService.crearResena(resenaData).subscribe({
-        next: (response) => {
-          if (response.ID_Resena) {
-            this.nuevaResena.ID_Resena = response.ID_Resena;
-            this.resenaExistente = true;
-          }
-  
-          Swal.fire({
-            title: '¡Publicada!',
-            text: 'La reseña se publicó correctamente',
-            icon: 'success',
-            timer: 1500,
-            showConfirmButton: false
-          });
-  
-          this.obtenerResenas();
-          this.mostrarFormulario = false;
-        },
-        error: (error) => {
-          console.error('Error al crear reseña:', error);
-          Swal.fire({
-            title: 'Error',
-            text: 'No se pudo crear la reseña',
-            icon: 'error',
-            timer: 1500,
-            showConfirmButton: false
-          });
-        }
-      });
-    }
+      },
+      error: (error) => {
+        console.error('Error al verificar reseña con Gemini:', error);
+        this.toastr.error('Error al procesar la reseña', '', {toastClass:'custom-toast'});
+      }
+    });
   }
 
   eliminarResena(): void {
@@ -224,13 +221,7 @@ export class InformacionComponent {
       if (result.isConfirmed) {
         this.userService.eliminarResena(this.nuevaResena.ID_Resena).subscribe(
           () => {
-            Swal.fire({
-              title: '¡Eliminada!',
-              text: 'La reseña ha sido eliminada exitosamente',
-              icon: 'success',
-              timer: 1500,
-              showConfirmButton: false
-            });
+            this.toastr.success('La reseña ha sido eliminada exitosamente','',{toastClass:'custom-toast'});
             
             // Resetear el estado
             this.resenaExistente = false;
@@ -245,13 +236,7 @@ export class InformacionComponent {
           },
           (error) => {
             console.error('Error al eliminar reseña', error);
-            Swal.fire({
-              title: 'Error',
-              text: 'No se pudo eliminar la reseña',
-              icon: 'error',
-              timer: 1500,
-              showConfirmButton: false
-            });
+            this.toastr.error('No se pudo eliminar la reseña','',{toastClass:'custom-toast'});
           }
         );
       }
@@ -283,20 +268,20 @@ export class InformacionComponent {
   }
   reservarLibro(idLibro: string): void {
     if (!this.sucursalSeleccionada || !this.ejemplarSeleccionado) {
-      this.sweetalert.showNoReload('Por favor, selecciona una sucursal');
+      this.toastr.error('Por favor, selecciona una sucursal','',{toastClass:'custom-toast'});
       return;
     }
 
     const idUsuario = this.datos.getID_Uss();
     
     if (!idUsuario || !idLibro) {
-      this.sweetalert.showNoReload('ID de usuario o libro inválido.');
+      this.toastr.error('ID de usuario o libro inválido.','',{toastClass:'custom-toast'});
       return;
     }
 
     // Verificar disponibilidad
     if (!this.ejemplarSeleccionado || this.ejemplarSeleccionado.Cantidad <= 0) {
-      this.sweetalert.showNoReload('No hay ejemplares disponibles en esta sucursal.');
+      this.toastr.error('No hay ejemplares disponibles en esta sucursal.','',{toastClass:'custom-toast'});
       return;
     }
 
@@ -316,7 +301,7 @@ export class InformacionComponent {
         this.userService.reservarLibro(this.ejemplarSeleccionado.ID, parseInt(idUsuario))
           .subscribe({
             next: (response) => {
-              this.sweetalert.showReload('Libro reservado exitosamente. Recuerda recogerlo en las próximas 24 horas.');
+              this.toastr.success('Libro reservado exitosamente. Recuerda recogerlo en las próximas 24 horas.','',{toastClass:'custom-toast'});
               this.ejemplarSeleccionado.Cantidad--;
             },
             error: (error) => {
@@ -324,7 +309,7 @@ export class InformacionComponent {
               if (error.error?.message) {
                 mensaje = error.error.message;
               }
-              this.sweetalert.showNoReload(mensaje);
+              this.toastr.error(mensaje,'',{toastClass:'custom-toast'});
             }
           });
       }
@@ -417,20 +402,20 @@ export class InformacionComponent {
 
   async agregarcarrito(): Promise<void> {
     if (!this.sucursalSeleccionada || !this.ejemplarSeleccionado) {
-      this.sweetalert.showNoReload('Por favor, selecciona una sucursal');
+      this.toastr.info('Por favor, selecciona una sucursal','',{toastClass:'custom-toast'});
       return;
     }
 
     const idUsuario = this.datos.getID_Uss();
     
     if (!idUsuario) {
-      this.sweetalert.showNoReload('Usuario no válido');
+      this.toastr.error('Usuario no válido','',{toastClass:'custom-toast'});
       return;
     }
 
     // Verificar disponibilidad
     if (!this.ejemplarSeleccionado || this.ejemplarSeleccionado.Cantidad <= 0) {
-      this.sweetalert.showNoReload('No hay ejemplares disponibles en esta sucursal.');
+      this.toastr.error('No hay ejemplares disponibles en esta sucursal.','',{toastClass:'custom-toast'});
       return;
     }
 
@@ -481,15 +466,14 @@ export class InformacionComponent {
             return null;
           }
         });
-
         if (cantidadAgregar) {
           this.userService.agregarAlCarrito(
             parseInt(idUsuario),
             this.ejemplarSeleccionado.ID,
-            cantidadAgregar
+            parseInt(cantidadAgregar)
           ).subscribe({
             next: (response) => {
-              this.sweetalert.showNoReload('Libro(s) agregado(s) al carrito exitosamente');
+              this.toastr.success('Libro(s) agregado(s) al carrito exitosamente','',{toastClass:'custom-toast'});
               this.userService.notificarActualizacionCarrito();
             },
             error: (error) => {
@@ -497,19 +481,20 @@ export class InformacionComponent {
               if (error.error?.message) {
                 mensaje = error.error.message;
               }
-              this.sweetalert.showNoReload(mensaje);
+              this.toastr.error(mensaje,'',{toastClass:'custom-toast'});
             }
           });
         }
       },
       error: (error) => {
         console.error('Error al obtener el carrito:', error);
-        this.sweetalert.showNoReload('Error al verificar el carrito');
+        this.toastr.error('Error al verificar el carrito','',{toastClass:'custom-toast'});
       }
     });
   }
 
   regresar(): void {
+    sessionStorage.removeItem('selectedLibro');
     this.location.back();
   }
 

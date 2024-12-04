@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { UsersService } from '../../../core/services/users/users.service';
 import { SweetalertService } from '../../../core/services/sweetalert/sweetalert.service';
 import Swal from 'sweetalert2';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-admin',
@@ -29,7 +30,8 @@ export class AdminComponent {
   constructor(
     private fb: FormBuilder, 
     private userService: UsersService,
-    private sweetalert: SweetalertService
+    private sweetalert: SweetalertService,
+    private toastr: ToastrService
   ) {
     this.sucursalForm = this.fb.group({
       ID: [''],
@@ -54,7 +56,7 @@ export class AdminComponent {
       },
       error: (error) => {
         console.error('Error al cargar sucursales:', error);
-        this.sweetalert.showNoReload('Error al cargar las sucursales');
+        this.toastr.error('Error al cargar las sucursales','',{toastClass:'custom-toast'});
       }
     });
   }
@@ -90,21 +92,16 @@ export class AdminComponent {
 
       this.userService.addSucursal(sucursalData).subscribe({
         next: (response) => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Sucursal agregada correctamente',
-            confirmButtonText: 'Aceptar'
-          });
+          this.toastr.success('Sucursal agregada correctamente','',{toastClass:'custom-toast'});
           this.loadSucursales();
           this.clearForm();
         },
         error: (error) => {
-          console.error('Error al agregar sucursal:', error);
-          this.sweetalert.showNoReload(error || 'Error al agregar la sucursal');
+          this.toastr.error(error || 'Error al agregar la sucursal','',{toastClass:'custom-toast'});
         }
       });
     } else {
-      this.sweetalert.showNoReload('Por favor complete todos los campos requeridos');
+      this.toastr.info('Por favor complete todos los campos requeridos','',{toastClass:'custom-toast'});
     }
   }
 
@@ -116,17 +113,12 @@ export class AdminComponent {
       };
       this.userService.updateSucursal(this.selectedSucursal.ID, sucursalData).subscribe({
         next: (response) => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Sucursal actualizada correctamente',
-            confirmButtonText: 'Aceptar'
-          });
+          this.toastr.success('Sucursal actualizada correctamente','',{toastClass:'custom-toast'});
           this.loadSucursales();
           this.clearForm();
         },
         error: (error) => {
-          console.error('Error al actualizar sucursal:', error);
-          this.sweetalert.showNoReload(error || 'Error al actualizar la sucursal');
+          this.toastr.error(error || 'Error al actualizar la sucursal','',{toastClass:'custom-toast'});
         }
       });
     }
@@ -136,17 +128,12 @@ export class AdminComponent {
     if (this.selectedSucursal) {
       this.userService.deleteSucursal(this.selectedSucursal.ID).subscribe({
         next: (response) => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Sucursal eliminada correctamente',
-            confirmButtonText: 'Aceptar'
-          });
+          this.toastr.success('Sucursal eliminada correctamente','',{toastClass:'custom-toast'});
           this.loadSucursales();
           this.clearForm();
         },
         error: (error) => {
-          console.error('Error al eliminar sucursal:', error);
-          this.sweetalert.showNoReload(error || 'Error al eliminar la sucursal');
+          this.toastr.error(error || 'Error al eliminar la sucursal','',{toastClass:'custom-toast'});
         }
       });
     }

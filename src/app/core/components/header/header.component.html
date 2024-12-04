@@ -101,11 +101,11 @@
     }
     <li class="user-profile-container">
       <div class="user-info" (click)="toggleDropdown()">
-          @if(Nombre!==null){
+          @if(Nombre!=='null'){
               <span class="user-name">{{ Nombre }}</span>
           }
           <figure>
-            @if(Imagen!=='null'){
+            @if(Imagen){
               <img appImageLoading [src]="Imagen" alt="User-log" class="img-user img-responsive img-circle center-box" />
             }@else{
               <img appImageLoading src="../../../../../assets/imgs/user.png" alt="User" class="img-user img-responsive img-circle center-box" />

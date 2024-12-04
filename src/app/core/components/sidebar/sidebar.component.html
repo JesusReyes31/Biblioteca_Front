@@ -84,7 +84,7 @@
           }
           @if(tipou==='Admin'){
             <li>
-              <a routerLink="#">
+              <a routerLink="reportes">
                 <i class="zmdi zmdi-assignment-o zmdi-hc-fw"></i>&nbsp;&nbsp;Reportes Globales
               </a>
             </li>
@@ -115,6 +115,13 @@
             <li>
               <a routerLink="metodos-pago">
                 <i class="zmdi zmdi-card zmdi-hc-fw"></i>&nbsp;&nbsp;Mis métodos de pago
+              </a>
+            </li>
+          }
+          @if(tipou === 'Cliente'){
+            <li>
+              <a routerLink="info-sucursales">
+                <i class="zmdi zmdi-card zmdi-hc-fw"></i>&nbsp;&nbsp;Información de sucursales
               </a>
             </li>
           }

@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { UsersService } from '../../../../core/services/users/users.service';
 import Swal, { SweetAlertIcon } from 'sweetalert2';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-prestar-libros',
   standalone: true,
@@ -16,7 +17,9 @@ export class PrestarLibrosComponent {
   reservas: any[] = [];
   error: string = '';
 
-  constructor(private usersService: UsersService) { }
+  constructor(private usersService: UsersService,
+    private toastr: ToastrService
+  ) { }
 
   ngOnInit(): void {
   }
@@ -27,15 +30,11 @@ export class PrestarLibrosComponent {
 
   consultar(): void {
     if (!this.idUsuario) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Atención',
-        text: this.estadoReservado ? 
+      this.toastr.warning(this.estadoReservado ? 
               'Por favor ingrese un ID de usuario' : 
-              'Por favor ingrese un ID de libro',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Aceptar'
-      });
+              'Por favor ingrese un ID de libro','',
+              {toastClass:'custom-toast'}
+      );
       this.reservas = [];
       return;
     }
@@ -54,24 +53,12 @@ export class PrestarLibrosComponent {
         this.reservas = data;
         this.error = '';
         if (this.reservas.length === 0) {
-          Swal.fire({
-            icon: 'info',
-            title: 'Información',
-            text: 'No hay reservas para este usuario',
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Aceptar'
-          });
+          this.toastr.info('No hay reservas para este usuario','',{toastClass:'custom-toast'});
         }
       },
       error: (error) => {
         console.error('Error al consultar reservas:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Error al consultar las reservas del usuario',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Aceptar'
-        });
+        this.toastr.error('Error al consultar las reservas del usuario','',{toastClass:'custom-toast'});
         this.reservas = [];
       }
     });
@@ -93,25 +80,13 @@ export class PrestarLibrosComponent {
             // Otros campos necesarios...
           }];
         } else {
-          Swal.fire({
-            icon: 'info',
-            title: 'Información',
-            text: 'El libro no está disponible o no existe',
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Aceptar'
-          });
+          this.toastr.info('El libro no está disponible o no existe','',{toastClass:'custom-toast'});
           this.reservas = [];
         }
       },
       error: (error) => {
         console.error('Error al consultar libro:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Error al consultar la disponibilidad del libro',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Aceptar'
-        });
+        this.toastr.error('Error al consultar la disponibilidad del libro','',{toastClass:'custom-toast'});
         this.reservas = [];
       }
     });
@@ -119,13 +94,7 @@ export class PrestarLibrosComponent {
   prestar(reserva: any): void {
     // Validación inicial
     if (!reserva.ID_Libro) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No se puede identificar el libro',
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Aceptar'
-        });
+        this.toastr.error('No se puede identificar el libro','',{toastClass:'custom-toast'});
         return;
     }
 
@@ -133,13 +102,7 @@ export class PrestarLibrosComponent {
     if (!this.estadoReservado) {
         // Verificar que haya cantidad disponible
         if (!reserva.Cantidad || reserva.Cantidad <= 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'El libro no está disponible para préstamo',
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'Aceptar'
-            });
+            this.toastr.error('El libro no está disponible para préstamo','',{toastClass:'custom-toast'});
             return;
         }
 
@@ -171,13 +134,7 @@ export class PrestarLibrosComponent {
         // Para préstamos reservados, usar el ID de usuario actual
         const idUsuarioNum = parseInt(this.idUsuario);
         if (!idUsuarioNum) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'ID de usuario inválido',
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'Aceptar'
-            });
+            this.toastr.error('ID de usuario inválido','',{toastClass:'custom-toast'});
             return;
         }
         this.realizarPrestamo(reserva.ID_Ejemplar, idUsuarioNum);
@@ -201,24 +158,7 @@ export class PrestarLibrosComponent {
             });
         },
         error: (error) => {
-            console.error('Error al realizar el préstamo:', error);
-            let errorMessage = 'Error al realizar el préstamo';
-            
-            if (error.error?.message) {
-                errorMessage = error.error.message;
-            } else if (error.status === 404) {
-                errorMessage = 'Usuario no encontrado';
-            } else if (error.status === 400) {
-                errorMessage = error.error.message || 'El libro no está disponible';
-            }
-            
-            Swal.fire({
-                icon: 'error' as SweetAlertIcon,
-                title: 'Error',
-                text: errorMessage,
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'Aceptar'
-            });
+            this.toastr.error(error.error.message,'',{toastClass:'custom-toast'});
         }
     });
   }

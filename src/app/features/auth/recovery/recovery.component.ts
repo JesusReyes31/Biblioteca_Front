@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { SweetalertService } from '../../../core/services/sweetalert/sweetalert.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-recovery',
@@ -16,28 +17,25 @@ export class RecoveryComponent {
   Correo: string = '';
   Nombre_Usuario: string = '';
 
-  constructor(private router: Router,private sweetalert: SweetalertService,private authService:AuthService) {}
+  constructor(private router: Router,
+    private sweetalert: SweetalertService,
+    private authService:AuthService,
+    private toastr: ToastrService
+  ) {}
   recuperar(activo: string) {
     if (!this.Correo && !this.Nombre_Usuario) {
-      this.sweetalert.showNoReload('Por favor ingrese un correo o nombre de usuario');
+      this.toastr.info('Por favor ingrese un correo o nombre de usuario','',{positionClass:'toast-top-left'});
       return;
     }
 
     // Mostrar loading
-    // this.sweetalert.showLoading('Enviando solicitud...');
     const value = activo === 'Correo' ? this.Correo : this.Nombre_Usuario;
+    this.toastr.info('Si los datos fueron correctos, recibirá un correo para cambiar la contraseña','',{positionClass:'toast-top-left'});
     this.authService.recovery(value, activo).subscribe({
       next: (response) => {
-        // if (response.body?.message) {
-        //   // Si hay un mensaje de error del backend
-        //   this.sweetalert.showNoReload(response.body.message);
-        // } else {
-          // Éxito
-          this.sweetalert.showReload('Si los datos fueron correctos, recibirá un correo para cambiar la contraseña');
-        // }
+        window.location.reload();
       },
       error: (error) => {
-        console.error('Error en la recuperación:', error);
         let errorMessage = 'Error al procesar la solicitud';
         
         if (error.error?.message) {
@@ -45,8 +43,6 @@ export class RecoveryComponent {
         } else if (error.status === 404) {
           errorMessage = 'Usuario no encontrado';
         }
-        
-        this.sweetalert.showNoReload(errorMessage);
       }
     });
   }  

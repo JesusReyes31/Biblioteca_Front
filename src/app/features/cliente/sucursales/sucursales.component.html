@@ -1,0 +1,46 @@
+<div class="sucursales-container">
+  <h1>Nuestras Sucursales</h1>
+  
+  <div *ngIf="loading" class="loading-spinner">
+    <div class="spinner"></div>
+    <p>Cargando sucursales...</p>
+  </div>
+
+  <div *ngIf="!loading" class="sucursales-grid">
+    <div *ngFor="let sucursal of sucursales" class="sucursal-card">
+      <div class="sucursal-header">
+        <h2>{{ sucursal.Nombre }}</h2>
+        <span class="badge">Sucursal {{ sucursal.ID }}</span>
+      </div>
+      
+      <div class="sucursal-info">
+        <div class="info-item">
+          <i class="fas fa-map-marker-alt"></i>
+          <div class="direccion">
+            <p>{{ sucursal.Calle }}</p>
+            <p>Col. {{ sucursal.Colonia }}</p>
+            <p>{{ sucursal.Municipio }}, {{ sucursal.Estado }}</p>
+            <p>CP: {{ sucursal.CP }}</p>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <i class="fas fa-phone"></i>
+          <p>{{ sucursal.Tel_Contacto }}</p>
+        </div>
+      </div>
+
+      <div class="sucursal-footer">
+        <a [href]="'https://www.google.com/maps/search/' + 
+                   sucursal.Calle + ' ' + 
+                   sucursal.Colonia + ' ' + 
+                   sucursal.Municipio + ' ' + 
+                   sucursal.Estado" 
+           target="_blank" 
+           class="maps-link">
+          <i class="fas fa-map"></i> Ver en Google Maps
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

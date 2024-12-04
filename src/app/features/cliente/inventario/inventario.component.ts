@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { SweetalertService } from '../../../core/services/sweetalert/sweetalert.service';
 import { PageEvent } from '@angular/material/paginator';
 import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
+import { ToastrService } from 'ngx-toastr';
+import { GeminiService } from '../../gemini/service/gemini.service';
 
 @Component({
   selector: 'app-inventario',
@@ -29,7 +31,12 @@ export class InventarioComponent {
   paginatedRecords: any[] = [];
   isEditMode: boolean = false;
 
-  constructor(private fb: FormBuilder, private userService: UsersService, private sweetalert: SweetalertService) {
+  constructor(private fb: FormBuilder, 
+    private userService: UsersService,
+    private sweetalert: SweetalertService,
+    private toastr: ToastrService,
+    private geminiService: GeminiService
+  ) {
     this.bookForm = this.fb.group({
       ID: [''],
       Titulo: ['', Validators.required],
@@ -49,18 +56,6 @@ export class InventarioComponent {
 
   ngOnInit(): void {
     this.getgeneros()
-    // this.userService.getSucursales().subscribe(
-    //   (data) => {
-    //     if (data.message) {
-    //       this.sweetalert.showNoReload(data.message);
-    //     } else {
-    //       this.sucursales = data;
-    //     }
-    //   },
-    //   (error) => {
-    //     console.error('Error al cargar el archivo JSON:', error);
-    //   }
-    // );
     this.loadBooks();
   }
   getgeneros():void{
@@ -68,7 +63,7 @@ export class InventarioComponent {
     this.userService.getGeneros().subscribe(
       (data) => {
         if (data.message) {
-          this.sweetalert.showNoReload(data.message);
+          this.toastr.info(data.message,'',{toastClass:'custom-toast'});
         } else {
           data.forEach((gen: any) => {
             this.generos.push(gen.Genero);
@@ -214,14 +209,11 @@ export class InventarioComponent {
 
       this.userService.addBook(bookData).subscribe({
         next: (response) => {
-          this.sweetalert.showNoReload('Libro agregado exitosamente');
-          this.getgeneros();
-          this.loadBooks();
-          this.clearForm();
+          this.toastr.success('Libro agregado exitosamente','',{toastClass:'custom-toast'});
+          this.limpieza();
         },
         error: (error) => {
-          this.sweetalert.showNoReload('Error al agregar libro');
-          console.error(error);
+          this.toastr.error('Error al agregar libro','',{toastClass:'custom-toast'});
         }
       });
     }
@@ -245,34 +237,38 @@ export class InventarioComponent {
       // Eliminar campos auxiliares
       delete bookData.ImagenURL;
       delete bookData.OtroGenero;
-      this.userService.updateBook(this.selectedBook.ID, bookData).subscribe({
+      this.userService.updateBook(this.selectedBook.ID_Libro, bookData).subscribe({
         next: (response) => {
-          this.sweetalert.showReload('Libro modificado exitosamente');
-          this.loadBooks();
-          this.clearForm();
+          this.toastr.success('Libro modificado exitosamente','',{toastClass:'custom-toast'});
+          this.limpieza();
         },
         error: (error) => {
-          this.sweetalert.showNoReload('Error al modificar libro');
-          console.error(error);
+          this.toastr.error('Error al modificar libro','',{toastClass:'custom-toast'});
         }
       });
     } else {
-      this.sweetalert.showNoReload('Por favor, complete todos los campos requeridos');
+      this.toastr.info('Por favor, complete todos los campos requeridos','',{toastClass:'custom-toast'});
     }
   }
 
   deleteBook(): void {
     if (this.selectedBook && this.selectedBook.ID) {
-      this.userService.deleteBook(this.selectedBook.ID).subscribe(
+      this.userService.deleteBook(this.selectedBook.ID_Libro).subscribe(
         (response) => {
-          this.sweetalert.showReload('Libro eliminado exitosamente')
+          this.toastr.success('Libro eliminado exitosamente','',{toastClass:'custom-toast'});
+          this.limpieza();
         },
         (error) => {
-          this.sweetalert.showNoReload('Error al eliminar libro');
-          console.error(error);
+          this.toastr.error('Error al eliminar libro','',{toastClass:'custom-toast'});
         }
       );
     }
+  }
+
+  limpieza(){
+    this.getgeneros();
+    this.loadBooks();
+    this.clearForm();
   }
 
   clearForm(): void {
@@ -296,5 +292,23 @@ export class InventarioComponent {
       }
     });
     return errors;
+  }
+  generarResumen(): void {
+    const titulo = this.bookForm.get('Titulo')?.value;
+    const autor = this.bookForm.get('Autor')?.value;
+    const isbn = this.bookForm.get('ISBN')?.value;
+    const anio = this.bookForm.get('Anio_publicacion')?.value;
+  
+    if (titulo && autor && isbn && anio) {
+      this.geminiService.generarDescripcionLibro(titulo, autor, isbn, anio)
+        .then(descripcion => {
+          this.bookForm.patchValue({
+            Resumen: descripcion
+          });
+        })
+        .catch(error => {
+          this.toastr.error('Error al generar el resumen', '', {toastClass:'custom-toast'});
+        });
+    }
   }
 }

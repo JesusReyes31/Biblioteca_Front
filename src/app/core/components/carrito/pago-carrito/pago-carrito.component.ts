@@ -5,6 +5,7 @@ import { UsersService } from '../../../services/users/users.service';
 import Swal from 'sweetalert2';
 import { ImageLoadingDirective } from '../../../../shared/directives/image-loading.directive';
 import { FooterService } from '../../../services/footer/footer.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-pago-carrito',
@@ -21,7 +22,11 @@ export class PagoCarritoComponent {
   tarjetasGuardadas: any[] = [];
   metodoPagoSeleccionado: any;
 
-  constructor(private router: Router,private userService: UsersService,private footerService: FooterService) {
+  constructor(private router: Router,
+    private userService: UsersService,
+    private footerService: FooterService,
+    private toastr: ToastrService
+  ) {
     // Recuperar datos del carrito
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras.state) {
@@ -31,14 +36,8 @@ export class PagoCarritoComponent {
       this.total = navigation.extras.state['total'];  
       this.metodoPagoSeleccionado = navigation.extras.state['metodoPago'];
     }else{
-      Swal.fire({
-        title: 'Error',
-        text: 'No se encontraron datos del carrito',
-        icon: 'error',
-        confirmButtonText: 'Aceptar'
-      }).then(() => {
-        this.router.navigate(['/carrito']);
-      });
+      this.toastr.error('No se encontraron datos del carrito','',{toastClass:'custom-toast'});
+      this.router.navigate(['/carrito']);
     }
   }
 
@@ -234,13 +233,7 @@ export class PagoCarritoComponent {
 
   confirmarPago() {
     if (!this.metodoPagoSeleccionado) {
-      Swal.fire({
-        title: 'Método de pago requerido',
-        text: 'Por favor selecciona un método de pago para continuar',
-        icon: 'warning',
-        confirmButtonText: 'Entendido',
-        confirmButtonColor: '#6366F1'
-      });
+      this.toastr.warning('Por favor selecciona un método de pago para continuar','Método de pago requerido',{toastClass:'custom-toast'});
       return;
     }
 

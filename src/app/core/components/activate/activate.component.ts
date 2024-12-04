@@ -3,6 +3,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { UsersService } from '../../services/users/users.service';
 import { SweetalertService } from '../../services/sweetalert/sweetalert.service';
 import { CommonModule } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-activate',
@@ -19,7 +20,8 @@ export class ActivateComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private userService: UsersService,
-    private sweetalert: SweetalertService
+    private sweetalert: SweetalertService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
@@ -35,12 +37,12 @@ export class ActivateComponent implements OnInit {
     this.userService.activateAccount(token).subscribe(
       (response) => {
         this.activationSuccess = true;
-        this.sweetalert.showNoReload('Cuenta activada exitosamente');
+        this.toastr.success('Cuenta activada exitosamente');
       },
       (error) => {
         this.activationSuccess = false;
         this.errorMessage = 'Error al activar la cuenta. El enlace puede haber expirado.';
-        this.sweetalert.showNoReload('Error al activar la cuenta');
+        this.toastr.error('Error al activar la cuenta');
       }
     );
   }

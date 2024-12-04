@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { DatosService } from '../users/datos.service';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class VentasService {
-  private url = 'http://localhost:9500/';
+  private url = environment.Api_URL;
   constructor(private http: HttpClient,private datos:DatosService) { }
 
   registrarVenta(venta: any): Observable<any> {

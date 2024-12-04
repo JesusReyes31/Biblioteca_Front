@@ -1,4 +1,10 @@
-<div *ngIf="pdfSrc">
-    <iframe [src]="pdfSrc" title="Credencial de Usuario" style="margin-left: 2rem;" width="95%" height="600px"></iframe>
-</div>
-  
+@defer{
+    <div *ngIf="pdfSrc">
+        <iframe [src]="pdfSrc" title="Credencial de Usuario" style="margin-left: 2rem;" width="95%" height="600px"></iframe>
+    </div>    
+}@loading(minimum 1000ms){
+    <div class="credencial-container loading-container">
+        <p>Cargando credencial...</p>
+        <div class="loading-spinner"></div>
+    </div>
+}

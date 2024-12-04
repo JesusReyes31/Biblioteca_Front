@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { UsersService } from '../../../core/services/users/users.service';
 import Swal from 'sweetalert2';
 import { Location } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-recibo',
@@ -24,7 +25,8 @@ export class ReciboComponent implements OnInit {
     private router: Router,
     private userService: UsersService,
     private sanitizer: DomSanitizer,
-    private location: Location
+    private location: Location,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
@@ -52,12 +54,7 @@ export class ReciboComponent implements OnInit {
         this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(pdfUrl);
       },
       error: (error:any) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudo cargar el recibo',
-          confirmButtonText: 'Aceptar'
-        });
+        this.toastr.error('No se pudo cargar el recibo','',{toastClass:'custom-toast'});
         this.volver();
       }
     });

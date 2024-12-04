@@ -8,8 +8,8 @@ export class FooterService {
     const sectionContent = document.getElementById('contenido');
     const footer = document.getElementById('footer');
     if (sectionContent && footer) {
-      const contentHeight = sectionContent.offsetHeight + 50; // Ajusta la altura del contenido
-      const windowHeight = window.innerHeight - 100; // Altura de la ventana disponible
+      const contentHeight = sectionContent.offsetHeight + 80; // Ajusta la altura del contenido
+      const windowHeight = window.innerHeight - 50; // Altura de la ventana disponible
       if (contentHeight <= windowHeight) {
         footer.classList.add('footer-fixed'); // Fija el pie de página si el contenido es pequeño
         // footer.classList.remove('footer');

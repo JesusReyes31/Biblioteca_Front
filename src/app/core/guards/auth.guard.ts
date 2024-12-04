@@ -14,6 +14,7 @@ export const authGuard: CanActivateFn = (route, state) => {
       '/informacion',
     ],
     'Cliente': [
+      '/info-sucursales',
       '/catalogo',
       '/informacion',
       '/reservas',
@@ -72,6 +73,7 @@ export const authGuard: CanActivateFn = (route, state) => {
       '/reportes'
     ],
     'Admin': [
+      '/reportes',
       '/sucursales',
       '/registrar-usuarios',
       '/perfil',

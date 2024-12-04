@@ -6,6 +6,7 @@ import { FooterService } from '../../../core/services/footer/footer.service';
 import { SweetalertService } from '../../../core/services/sweetalert/sweetalert.service';
 import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
 import Swal from 'sweetalert2';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-libros-reservados',
@@ -16,7 +17,11 @@ import Swal from 'sweetalert2';
 })
 export class LibrosReservadosComponent {
   reservas: any[] = [];
-  constructor(private userService:UsersService,private footer:FooterService,private sweetalert:SweetalertService){}
+  constructor(private userService:UsersService,
+    private footer:FooterService,
+    private sweetalert:SweetalertService,
+    private toastr: ToastrService
+  ){}
   ngOnInit(): void {
     this.cargarReservas();
   }
@@ -33,8 +38,7 @@ export class LibrosReservadosComponent {
         }
       },
       error: (error) => {
-        console.error('Error al cargar las reservas:', error);
-        this.sweetalert.showNoReload('Error al cargar las reservas');
+        this.toastr.error('Error al cargar las reservas','',{toastClass:'custom-toast'});
       }
     });
   }
@@ -58,11 +62,10 @@ export class LibrosReservadosComponent {
         this.userService.deshacerReserva(id).subscribe({
           next: () => {
             this.cargarReservas(); // Recargar todas las reservas
-            this.sweetalert.showNoReload('Reserva cancelada con éxito');
+            this.toastr.success('Reserva cancelada con éxito','',{toastClass:'custom-toast'});
           },
           error: (error) => {
-            console.error('Error al deshacer la reserva:', error);
-            this.sweetalert.showNoReload('Error al cancelar la reserva');
+            this.toastr.error('Error al cancelar la reserva','',{toastClass:'custom-toast'});
           }
         });
       }

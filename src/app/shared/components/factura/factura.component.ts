@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Location } from '@angular/common';
 import { CommonModule } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-factura',
@@ -25,7 +26,8 @@ export class FacturaComponent implements OnInit {
     private router: Router,
     private userService: UsersService,
     private sanitizer: DomSanitizer,
-    private location: Location
+    private location: Location,
+    private toastr: ToastrService
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
@@ -61,12 +63,7 @@ export class FacturaComponent implements OnInit {
         this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(pdfUrl);
       },
       error: (error:any) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudo cargar la factura',
-          confirmButtonText: 'Aceptar'
-        });
+        this.toastr.error('No se pudo cargar la factura','',{toastClass:'custom-toast'});
         this.volver();
       }
     });
@@ -97,20 +94,10 @@ export class FacturaComponent implements OnInit {
         if (this.idVenta) {
           this.userService.enviarFacturaPorCorreo(this.idVenta.toString()).subscribe({
             next: () => {
-              Swal.fire({
-                icon: 'success',
-                title: '¡Éxito!',
-              text: 'La factura ha sido enviada a tu correo electrónico',
-              confirmButtonText: 'Aceptar'
-            });
-          },
-          error: (error) => {
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'No se pudo enviar la factura por correo',
-                confirmButtonText: 'Aceptar'
-              });
+              this.toastr.success('La factura ha sido enviada a tu correo electrónico','',{toastClass:'custom-toast'});
+            },
+            error: (error) => {
+              this.toastr.error('No se pudo enviar la factura por correo','',{toastClass:'custom-toast'});
             }
           });
         }

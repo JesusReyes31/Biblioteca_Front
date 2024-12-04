@@ -4,6 +4,7 @@ import { SweetalertService } from '../../../core/services/sweetalert/sweetalert.
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-prestamos',
@@ -31,7 +32,11 @@ export class PrestamosComponent {
   sucursales: any[] = [];
   tiposUsuarioConSucursal: string[] = ['Admin Sucursal'];
 
-  constructor(private fb: FormBuilder, private userService:UsersService,private sweetalert:SweetalertService){
+  constructor(private fb: FormBuilder, 
+    private userService:UsersService,
+    private sweetalert:SweetalertService,
+    private toastr: ToastrService
+  ){
     this.userForm = this.fb.group({
       ID: [{value: '', disabled: false}],
       Nombre_completo: ['', Validators.required],
@@ -49,7 +54,7 @@ export class PrestamosComponent {
     this.userService.getTipoUsuarios().subscribe(
       (data)=>{
         if (data.message) {
-          this.sweetalert.showNoReload(data.message);
+          this.toastr.info(data.message,'',{toastClass:'custom-toast'});
         } else {
           this.typeusers = [];
           data.forEach((user: any) => {
@@ -64,7 +69,7 @@ export class PrestamosComponent {
     this.userService.getUsuarios().subscribe(
       (data)=>{
         if (data.message) {
-          this.sweetalert.showNoReload(data.message);
+          this.toastr.info(data.message,'',{toastClass:'custom-toast'});
         } else {
           this.users = data;
           this.filteredRecords = [...this.users];
@@ -132,26 +137,29 @@ export class PrestamosComponent {
     this.isEditMode = true;
     this.selectedUser = record;
     
-    // Primero establecemos el tipo de usuario para que se active el selector de sucursal si es necesario
-    this.userForm.patchValue({
-      Tipo_Usuario: record.Tipo_Usuario
-    });
+    // Primero cargamos las sucursales
+    await this.cargarSucursales();
     
-    // Esto disparará onTipoUsuarioChange
-    this.onTipoUsuarioChange();
-    
-    // Una vez que tenemos todos los datos, actualizamos el formulario
+    // Establecemos el tipo de usuario primero
     this.userForm.patchValue({
       ID: record.ID,
       Nombre_completo: record.Nombre_completo,
       Correo: record.Correo,
       CURP: record.CURP,
       Nombre_Usuario: record.Nombre_Usuario,
-      Tipo_Usuario: record.Tipo_Usuario,
-      Sucursal: record.ID_Sucursal // Agregar el ID de la sucursal si existe
+      Tipo_Usuario: record.Tipo_Usuario
     });
     
-    // Deshabilitar el campo de contraseña en modo edición
+    // Disparamos el cambio de tipo de usuario y actualizamos las sucursales
+    this.onTipoUsuarioChange();
+    
+    // Después de que todo esté listo, establecemos la sucursal
+    setTimeout(() => {
+      this.userForm.patchValue({
+        Sucursal: record.ID_Sucursal
+      });
+    }, 0);
+    
     this.userForm.get('Contra')?.disable();
   }
 
@@ -170,18 +178,15 @@ export class PrestamosComponent {
 
       this.userService.addUser(userData).subscribe({
         next: (response) => {
-          this.sweetalert.showReload('Usuario agregado correctamente');
-          this.loadUsers();
-          this.users.push(response);
-          this.filteredRecords = [...this.users];
-          this.clearForm();
+          this.toastr.success('Usuario agregado correctamente','',{toastClass:'custom-toast'});
+          this.limpieza();
         },
         error: (error) => {
-          this.sweetalert.showNoReload(error.error?.message || 'Error al agregar usuario');
+          this.toastr.error(error.error?.message || 'Error al agregar usuario','',{toastClass:'custom-toast'});
         }
       });
     } else {
-      this.sweetalert.showNoReload('Por favor completa todos los campos requeridos');
+      this.toastr.info('Por favor completa todos los campos requeridos','',{toastClass:'custom-toast'});
     }
   }
   deleteUser(){
@@ -189,14 +194,15 @@ export class PrestamosComponent {
     if (id) {
       this.userService.deleteUser(id).subscribe(
         () => {
-          this.sweetalert.showReload('Usuario eliminado correctamente')
+          this.toastr.success('Usuario eliminado correctamente','',{toastClass:'custom-toast'});
+          this.limpieza();
         },
         (error) => {
-          this.sweetalert.showNoReload(error.error.message);
+          this.toastr.error(error.error.message,'',{toastClass:'custom-toast'});
         }
       );
     } else {
-      this.sweetalert.showNoReload('Por favor ingresa un ID de usuario');
+      this.toastr.info('Por favor ingresa un ID de usuario','',{toastClass:'custom-toast'});
     }
   }
   updateUser() {
@@ -207,18 +213,24 @@ export class PrestamosComponent {
         ID_Sucursal: this.userForm.get('Tipo_Usuario')?.value === 'Admin Sucursal' ? 
                      this.userForm.get('Sucursal')?.value : null
       };
-
       this.userService.updateUser(id, userData).subscribe(
         (response) => {
-          this.sweetalert.showReload('Usuario actualizado correctamente');
+          this.toastr.success('Usuario actualizado correctamente','',{toastClass:'custom-toast'});
+          this.limpieza();
         },
         (error) => {
-          this.sweetalert.showNoReload('Error al actualizar usuario');
+          this.toastr.error('Error al actualizar usuario','',{toastClass:'custom-toast'});
         }
       );
     } else {
-      this.sweetalert.showNoReload('Por favor completa todos los campos');
+      this.toastr.info('Por favor completa todos los campos','',{toastClass:'custom-toast'});
     }
+  }
+  limpieza(){
+    this.loadUsers();
+    this.cargarSucursales();
+    this.filteredRecords = [...this.users];
+    this.clearForm();
   }
   clearForm() {
     this.userForm.reset();
@@ -256,6 +268,15 @@ export class PrestamosComponent {
     
     if (this.mostrarSelectSucursal) {
       this.userForm.get('Sucursal')?.setValidators([Validators.required]);
+      
+      // Actualizar el estado de las sucursales manteniendo la referencia original
+      this.sucursales = this.sucursales.map(sucursal => ({
+        ...sucursal,
+        ID: sucursal.ID,
+        Nombre: sucursal.Nombre,
+        ID_Usuario: sucursal.ID_Usuario,
+        disabled: sucursal.ID_Usuario && sucursal.ID !== this.selectedUser?.ID_Sucursal
+      }));
     } else {
       this.userForm.get('Sucursal')?.clearValidators();
       this.userForm.get('Sucursal')?.setValue(null);
@@ -263,14 +284,25 @@ export class PrestamosComponent {
     this.userForm.get('Sucursal')?.updateValueAndValidity();
   }
 
-  cargarSucursales() {
-    this.userService.getSucursales().subscribe(
-      (data) => {
-        this.sucursales = data;
-      },
-      (error) => {
-        this.sweetalert.showNoReload('Error al cargar las sucursales');
-      }
-    );
+  cargarSucursales(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.userService.getSucursales().subscribe({
+        next: (data) => {
+          this.sucursales = data.map((sucursal: any) => ({
+            ...sucursal,
+            disabled: sucursal.ID_Usuario && sucursal.ID !== this.selectedUser?.ID_Sucursal
+          })).sort((a: any, b: any) => {
+            if (a.ID_Usuario && !b.ID_Usuario) return 1;
+            if (!a.ID_Usuario && b.ID_Usuario) return -1;
+            return a.Nombre.localeCompare(b.Nombre);
+          });
+          resolve();
+        },
+        error: (error) => {
+          this.toastr.error('Error al cargar las sucursales','',{toastClass:'custom-toast'});
+          reject(error);
+        }
+      });
+    });
   }
 }

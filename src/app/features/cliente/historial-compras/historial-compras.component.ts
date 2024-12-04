@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -19,30 +20,22 @@ export class HistorialComprasComponent {
   filteredRecords: any[] = [];
   searchTerm: string = '';
 
-  constructor(private userService: UsersService,private router: Router) {}
+  constructor(private userService: UsersService,
+    private router: Router,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.userService.getPurchaseHistory().subscribe({
       next: (data) => {
-        console.log(data)
         this.records = data;
         this.filteredRecords = data;
       },
       error: (error) => {
         if (error.message === 'No se encontraron ventas para este usuario.') {
-          Swal.fire({
-            icon: 'info',
-            title: 'Sin Compras',
-            text: 'No se encontraron compras para este usuario.',
-            confirmButtonText: 'Aceptar'
-          });
+          this.toastr.info('No se encontraron compras para este usuario.','',{toastClass:'custom-toast'});
         } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Hubo un problema al obtener las compras. Intenta nuevamente más tarde.',
-            confirmButtonText: 'Aceptar'
-          });
+          this.toastr.error('Hubo un problema al obtener las compras. Intenta nuevamente más tarde.','',{toastClass:'custom-toast'});
         }
       }
     });

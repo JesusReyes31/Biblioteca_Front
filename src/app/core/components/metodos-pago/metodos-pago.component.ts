@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { UsersService } from '../../services/users/users.service';
 import { ImageLoadingDirective } from '../../../shared/directives/image-loading.directive';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-metodos-pago',
@@ -16,7 +17,9 @@ export class MetodosPagoComponent {
   tarjetasactivas:any[] = [];
   tarjetasinactivas:any[] = [];
   
-  constructor(private userService:UsersService){}
+  constructor(private userService:UsersService,
+    private toastr: ToastrService
+  ){}
   
   ngOnInit(): void{
     this.cargarTarjetas();
@@ -45,7 +48,7 @@ export class MetodosPagoComponent {
         }));
       },
       error: (error) => {
-        Swal.fire('Error', 'No se pudieron cargar las tarjetas', 'error');
+        this.toastr.error('No se pudieron cargar las tarjetas','',{toastClass:'custom-toast'});
       }
     });
   }
@@ -110,11 +113,11 @@ export class MetodosPagoComponent {
       if (result.isConfirmed) {
         this.userService.actualizarTarjeta(result.value).subscribe({
           next: () => {
-            Swal.fire('¡Actualizado!', 'La tarjeta ha sido actualizada correctamente.', 'success');
+            this.toastr.success('La tarjeta ha sido actualizada correctamente.','',{toastClass:'custom-toast'});
             this.cargarTarjetas();
           },
           error: (error) => {
-            Swal.fire('Error', 'No se pudo actualizar la tarjeta', 'error');
+            this.toastr.error('No se pudo actualizar la tarjeta','',{toastClass:'custom-toast'});
           }
         });
       }
@@ -181,11 +184,11 @@ export class MetodosPagoComponent {
       if (result.isConfirmed) {
         this.userService.agregarTarjeta(result.value).subscribe({
           next: () => {
-            Swal.fire('¡Agregada!', 'La tarjeta ha sido agregada correctamente.', 'success');
+            this.toastr.success('La tarjeta ha sido agregada correctamente.','',{toastClass:'custom-toast'});
             this.cargarTarjetas();
           },
           error: (error) => {
-            Swal.fire('Error', 'No se pudo agregar la tarjeta', 'error');
+            this.toastr.error('No se pudo agregar la tarjeta','',{toastClass:'custom-toast'});
           }
         });
       }
@@ -204,11 +207,11 @@ export class MetodosPagoComponent {
       if (result.isConfirmed) {
         this.userService.eliminarTarjeta(id).subscribe({
           next: () => {
-            Swal.fire('¡Eliminada!', 'La tarjeta ha sido eliminada correctamente.', 'success');
+            this.toastr.success('La tarjeta ha sido eliminada correctamente.','',{toastClass:'custom-toast'});
             this.cargarTarjetas();
           },
           error: (error) => {
-            Swal.fire('Error', 'No se pudo eliminar la tarjeta', 'error');
+            this.toastr.error('No se pudo eliminar la tarjeta','',{toastClass:'custom-toast'});
           }
         });
       }
@@ -234,19 +237,11 @@ export class MetodosPagoComponent {
         };
         this.userService.actualizarTarjeta(tarjetaActualizada).subscribe({
           next: () => {
-            Swal.fire(
-              '¡Actualizada!',
-              `La tarjeta ha sido ${mensaje}da correctamente.`,
-              'success'
-            );
+            this.toastr.success(`La tarjeta ha sido ${mensaje}da correctamente.`,'',{toastClass:'custom-toast'});
             this.cargarTarjetas();
           },
           error: (error) => {
-            Swal.fire(
-              'Error',
-              `No se pudo ${mensaje} la tarjeta`,
-              'error'
-            );
+            this.toastr.error(`No se pudo ${mensaje} la tarjeta`,'',{toastClass:'custom-toast'});
           }
         });
       }

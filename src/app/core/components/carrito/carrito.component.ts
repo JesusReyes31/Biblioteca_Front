@@ -6,6 +6,7 @@ import { ImageLoadingDirective } from '../../../shared/directives/image-loading.
 import Swal from 'sweetalert2';
 import { Subscription } from 'rxjs';
 import { DatosService } from '../../services/users/datos.service';
+import { ToastrService } from 'ngx-toastr';
 
 interface LibrosPorSucursal {
   sucursal: string;
@@ -28,7 +29,11 @@ export class CarritoComponent implements OnInit, OnDestroy {
   shipping: number = 4;
   total: number = 0;
 
-  constructor(private router: Router, private userService: UsersService,private datos:DatosService) {
+  constructor(private router: Router, 
+    private userService: UsersService,
+    private datos:DatosService,
+    private toastr: ToastrService
+  ) {
     this.subscription = this.userService.carritoActualizado.subscribe(() => {
       this.cargarCarrito();
     });
@@ -52,12 +57,7 @@ export class CarritoComponent implements OnInit, OnDestroy {
         this.calcularSubtotal();
       },
       error: (error) => {
-        console.error('Error al cargar el carrito:', error);
-        Swal.fire({
-          title: 'Error',
-          text: 'No se pudo cargar el carrito',
-          icon: 'error'
-        });
+        this.toastr.error('No se pudo cargar el carrito','',{toastClass:'custom-toast'});
       }
     });
   }
@@ -102,12 +102,7 @@ export class CarritoComponent implements OnInit, OnDestroy {
     if (nuevaCantidad > libro.Cantidad_disponible) {
       nuevaCantidad = libro.Cantidad_disponible;
       event.target.value = libro.Cantidad_disponible;
-      Swal.fire({
-        title: 'Cantidad no disponible',
-        text: `Solo hay ${libro.Cantidad_disponible} unidades disponibles`,
-        icon: 'warning',
-        confirmButtonText: 'Entendido'
-      });
+      this.toastr.warning(`Solo hay ${libro.Cantidad_disponible} unidades disponibles`, 'Cantidad no disponible', { toastClass: 'custom-toast' });
     }
 
     this.actualizarCantidad(libro, nuevaCantidad);
@@ -120,13 +115,7 @@ export class CarritoComponent implements OnInit, OnDestroy {
         this.calcularSubtotal();
       },
       error: (error) => {
-        console.error('Error al actualizar cantidad:', error);
-        Swal.fire({
-          title: 'Error',
-          text: 'No se pudo actualizar la cantidad',
-          icon: 'error',
-          confirmButtonText: 'Aceptar'
-        });
+        this.toastr.error('No se pudo actualizar la cantidad','',{toastClass:'custom-toast'});
       }
     });
   }
@@ -145,27 +134,18 @@ export class CarritoComponent implements OnInit, OnDestroy {
       if (result.isConfirmed) {
         const idUsuario = this.datos.getID_Uss();
         if (!idUsuario) {
-          Swal.fire('Error', 'Usuario no identificado', 'error');
+          this.toastr.error('Usuario no identificado','',{toastClass:'custom-toast'});
           return;
         }
 
         this.userService.deleteCarrito(Id).subscribe({
           next: () => {
-            Swal.fire(
-              '¡Eliminado!',
-              'El libro ha sido eliminado del carrito',
-              'success'
-            );
+            this.toastr.success('El libro ha sido eliminado del carrito','',{toastClass:'custom-toast'});
             this.cargarCarrito(); // Recargar el carrito
             this.userService.notificarActualizacionCarrito(); // Actualizar contador en header
           },
           error: (error) => {
-            console.error('Error al eliminar libro:', error);
-            Swal.fire({
-              title: 'Error',
-              text: error.error?.message || 'No se pudo eliminar el libro del carrito',
-              icon: 'error'
-            });
+            this.toastr.error(error.error?.message || 'No se pudo eliminar el libro del carrito','',{toastClass:'custom-toast'});
           }
         });
       }
@@ -208,12 +188,7 @@ export class CarritoComponent implements OnInit, OnDestroy {
     if (nuevaCantidad <= libro.Cantidad_disponible) {
       this.actualizarCantidad(libro, nuevaCantidad);
     } else {
-      Swal.fire({
-        title: 'Cantidad no disponible',
-        text: `Solo hay ${libro.Cantidad_disponible} unidades disponibles`,
-        icon: 'warning',
-        confirmButtonText: 'Entendido'
-      });
+      this.toastr.warning(`Solo hay ${libro.Cantidad_disponible} unidades disponibles`, 'Cantidad no disponible', { toastClass: 'custom-toast' });
     }
   }
 }

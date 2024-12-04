@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UsersService } from '../../../../core/services/users/users.service';
 import { SweetalertService } from '../../../../core/services/sweetalert/sweetalert.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-pago-sucursal',
@@ -25,7 +26,8 @@ export class PagoSucursalComponent implements OnInit {
     private router: Router,
     private userService: UsersService,
     private sweetalert: SweetalertService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private toastr: ToastrService
   ) {
     this.pagoForm = this.fb.group({
       cantidadRecibida: ['', [Validators.required, Validators.min(0)]],
@@ -47,7 +49,7 @@ export class PagoSucursalComponent implements OnInit {
         this.pagar = this.venta?.Total;
       },
       error: (error) => {
-        this.sweetalert.showNoReload('Error al cargar los detalles de la venta');
+        this.toastr.error('Error al cargar los detalles de la venta','',{toastClass:'custom-toast'});
         this.router.navigate(['/ventas-por-entregar']);
       }
     });
@@ -56,7 +58,7 @@ export class PagoSucursalComponent implements OnInit {
         this.detalleVenta = data;
       },
       error: (error) => {
-        this.sweetalert.showNoReload('Error al cargar los detalles de la venta');
+        this.toastr.error('Error al cargar los detalles de la venta','',{toastClass:'custom-toast'});
         this.router.navigate(['/ventas-por-entregar']);
       }
     });
@@ -72,26 +74,19 @@ export class PagoSucursalComponent implements OnInit {
     if (this.pagoForm.valid) {
       const cambio = this.calcularCambio();
       if (cambio < 0) {
-        this.sweetalert.showNoReload('La cantidad recibida es menor al total');
+        this.toastr.info('La cantidad recibida es menor al total','',{toastClass:'custom-toast'});
         return;
       }
 
-      // this.userService.procesarPagoSucursal(this.idVenta).subscribe({
-      //   next: (response) => {
-          this.userService.eliminarPagoPendiente(this.idVenta,this.pagoForm.get('codigoPago')?.value).subscribe({
-            next: () => {
-              this.sweetalert.showReload('Pago procesado correctamente');
-              this.router.navigate(['/ventas-por-entregar']);
-            },
-            error: (error) => {
-              this.sweetalert.showNoReload('Error al eliminar el pago pendiente');
-            } 
-          });
-      //   },
-      //   error: (error) => {
-      //     this.sweetalert.showNoReload('Error al procesar el pago');
-      //   }
-      // });
+      this.userService.eliminarPagoPendiente(this.idVenta,this.pagoForm.get('codigoPago')?.value).subscribe({
+        next: () => {
+          this.toastr.success('Pago procesado correctamente','',{toastClass:'custom-toast'});
+          this.router.navigate(['/ventas-por-entregar']);
+        },
+        error: (error) => {
+          this.toastr.error('Error al eliminar el pago pendiente','',{toastClass:'custom-toast'});
+        } 
+      });
     }
   }
 
