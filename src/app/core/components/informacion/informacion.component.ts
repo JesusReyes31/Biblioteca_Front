@@ -495,7 +495,6 @@ export class InformacionComponent {
               if (error.error?.message) {
                 mensaje = error.error.message;
               }
-              console.log(mensaje);
               this.toastr.error(mensaje,'',{toastClass:'custom-toast'});
             }
           });
