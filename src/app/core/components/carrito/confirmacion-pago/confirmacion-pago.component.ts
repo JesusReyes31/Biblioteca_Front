@@ -27,33 +27,32 @@ export class ConfirmacionPagoComponent {
     private ventasService: VentasService,
     private toastr: ToastrService
   ) {
-    const navigation = this.router.getCurrentNavigation();
-    if (navigation?.extras.state) {
-      this.librosCarrito = navigation.extras.state['librosCarrito'];
-      this.subtotal = navigation.extras.state['subtotal'];
-      this.shipping = navigation.extras.state['shipping'];
-      this.total = navigation.extras.state['total'];
-      this.metodoPago = navigation.extras.state['metodoPago'];
-    }else{
+    if (JSON.parse(sessionStorage.getItem('librosCarrito')!)) {
+      this.librosCarrito = JSON.parse(sessionStorage.getItem('librosCarrito')!);
+      this.subtotal = parseFloat(sessionStorage.getItem('subtotal')!);
+      this.shipping = parseFloat(sessionStorage.getItem('shipping')!);
+      this.total = parseFloat(sessionStorage.getItem('total')!);
+      this.metodoPago = JSON.parse(sessionStorage.getItem('metodoPago')!);
+      sessionStorage.clear();
+    } else {
       this.toastr.error('No se encontraron datos del carrito','',{toastClass:'custom-toast'});
-      window.location.href = '/carrito';
+      this.router.navigate(['/carrito']);
     }
   }
   ngOnInit(): void {
-    this.librosCarrito = sessionStorage.getItem('librosCarrito') ? JSON.parse(sessionStorage.getItem('librosCarrito')!) : [];
-    this.subtotal = parseFloat(sessionStorage.getItem('subtotal') || '0');
-    this.shipping = parseFloat(sessionStorage.getItem('shipping') || '4');
-    this.total = parseFloat(sessionStorage.getItem('total') || '0');
-    this.metodoPago = sessionStorage.getItem('metodoPago') ? JSON.parse(sessionStorage.getItem('metodoPago')!) : null;
-    sessionStorage.clear();
+    // Eliminar este método o dejarlo vacío ya que ahora manejamos
+    // el sessionStorage en el constructor
   }
-  @HostListener('window:beforeunload')
-  antesRecargar():void{
+  private guardarEnSessionStorage(): void {
     sessionStorage.setItem('librosCarrito', JSON.stringify(this.librosCarrito));
     sessionStorage.setItem('subtotal', this.subtotal.toString());
     sessionStorage.setItem('shipping', this.shipping.toString());
     sessionStorage.setItem('total', this.total.toString());
     sessionStorage.setItem('metodoPago', JSON.stringify(this.metodoPago));
+  }
+  @HostListener('window:beforeunload')
+  antesRecargar(): void {
+    this.guardarEnSessionStorage();
   }
   
 
@@ -89,8 +88,10 @@ export class ConfirmacionPagoComponent {
       didOpen: () => {
         (window as any).descargarImagen = () => this.descargarImagen();
       }
-    }).then(() => {
-      this.registrarVenta('pendiente');
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.registrarVenta('pendiente');
+      }
     });
   }
 
@@ -103,7 +104,7 @@ export class ConfirmacionPagoComponent {
           <input type="password" 
                  id="cvv" 
                  class="swal2-input" 
-                 maxlength="4" 
+                 maxlength="3" 
                  placeholder="CVV"
                  style="width: 100px !important">
         </div>
@@ -151,29 +152,27 @@ export class ConfirmacionPagoComponent {
           next: () => {
             this.userService.deleteAllCarrito().subscribe({
               next: () => {
-                Swal.fire({
-                  title: '¡Compra Realizada!',
-                  text: this.metodoPago.tipo ? 
+                this.userService.getReciboCompra(response.ID_Venta).subscribe({
+                  next: (blob: Blob) => {
+                    const url = window.URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `recibo-${response.ID_Venta}.pdf`;
+                    link.click();
+                    window.URL.revokeObjectURL(url);
+                  },
+                  error: (error) => console.error('Error al descargar el recibo:', error)
+                });
+                this.toastr.success(this.metodoPago.tipo ? 
                         'Recuerda que tienes 4 días para realizar tu pago en sucursal' : 
                         'Tu compra se ha procesado correctamente, pasa con el recibo para recoger tus libros',
-                  icon: 'success',
-                  confirmButtonText: 'Aceptar'
-                }).then(() => {
-                  this.router.navigate(['/catalogo']);
-                });
+                        '',{toastClass:'custom-toast'});
+                this.router.navigate(['/catalogo']);
               },
               error: (error) => {
                 console.error('Error al eliminar el carrito:', error);
-                Swal.fire({
-                  title: '¡Compra Realizada!',
-                  text: this.metodoPago.tipo ? 
-                        'Recuerda que tienes 4 días para realizar tu pago en sucursal' : 
-                        'Tu compra se ha procesado correctamente, pasa con el recibo para recoger tus libros',
-                  icon: 'success',
-                  confirmButtonText: 'Aceptar'
-                }).then(() => {
-                  this.router.navigate(['/catalogo']);
-                });
+                this.toastr.error('Hubo un problema al procesar tu compra, inténtalo de nuevo más tarde','',{toastClass:'custom-toast'});
+                this.router.navigate(['/carrito']);
               }
             });
           },
@@ -234,14 +233,11 @@ export class ConfirmacionPagoComponent {
     });
   }
   volver(){
-    this.router.navigate(['/pago-carrito'], {
-      state: {
-        librosCarrito: this.librosCarrito,
-        subtotal: this.subtotal,
-        shipping: this.shipping,
-        total: this.total,
-        metodoPago: this.metodoPago
-      }
-    });
+    sessionStorage.setItem('librosCarrito', JSON.stringify(this.librosCarrito));
+    sessionStorage.setItem('subtotal', this.subtotal.toString());
+    sessionStorage.setItem('shipping', this.shipping.toString());
+    sessionStorage.setItem('total', this.total.toString());
+    sessionStorage.setItem('metodoPago', JSON.stringify(this.metodoPago));
+    this.router.navigate(['/pago-carrito']);
   }
 }

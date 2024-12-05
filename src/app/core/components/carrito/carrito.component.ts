@@ -157,23 +157,12 @@ export class CarritoComponent implements OnInit, OnDestroy {
   }
 
   pagar() {
+    sessionStorage.setItem('librosCarrito', JSON.stringify(this.librosCarrito));
+    sessionStorage.setItem('subtotal', this.subtotal.toString());
+    sessionStorage.setItem('shipping', this.shipping.toString());
+    sessionStorage.setItem('total', this.total.toString());
     // Enviamos la información del carrito a través del router state
-    this.router.navigate(['/pago-carrito'], {
-      state: {
-        librosCarrito: this.librosCarrito,
-        subtotal: this.subtotal,
-        shipping: this.shipping,
-        total: this.total
-      }
-    });
-  }
-
-  pagarConPaypal() {
-    // Implementar lógica de pago con PayPal
-  }
-
-  pagarConTarjeta() {
-    // Implementar lógica de pago con tarjeta
+    this.router.navigate(['/pago-carrito']);
   }
 
   decrementarCantidad(libro: any) {

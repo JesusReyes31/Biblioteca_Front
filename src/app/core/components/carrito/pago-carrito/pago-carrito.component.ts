@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UsersService } from '../../../services/users/users.service';
@@ -28,18 +28,28 @@ export class PagoCarritoComponent {
     private toastr: ToastrService
   ) {
     // Recuperar datos del carrito
-    const navigation = this.router.getCurrentNavigation();
-    if (navigation?.extras.state) {
-      this.librosCarrito = navigation.extras.state['librosCarrito'];
-      this.subtotal = navigation.extras.state['subtotal'];
-      this.shipping = navigation.extras.state['shipping'];
-      this.total = navigation.extras.state['total'];  
-      this.metodoPagoSeleccionado = navigation.extras.state['metodoPago'];
+    if (sessionStorage.getItem('librosCarrito')) {
+      this.librosCarrito = JSON.parse(sessionStorage.getItem('librosCarrito')!);
+      this.subtotal = parseFloat(sessionStorage.getItem('subtotal')!);
+      this.shipping = parseFloat(sessionStorage.getItem('shipping')!);
+      this.total = parseFloat(sessionStorage.getItem('total')!);  
+      this.metodoPagoSeleccionado = JSON.parse(sessionStorage.getItem('metodoPago')!);
+      sessionStorage.clear();
     }else{
       this.toastr.error('No se encontraron datos del carrito','',{toastClass:'custom-toast'});
       this.router.navigate(['/carrito']);
     }
   }
+
+  @HostListener('window:beforeunload')
+  antesRecargar(): void {
+    sessionStorage.setItem('librosCarrito', JSON.stringify(this.librosCarrito));
+    sessionStorage.setItem('subtotal', this.subtotal.toString());
+    sessionStorage.setItem('shipping', this.shipping.toString());
+    sessionStorage.setItem('total', this.total.toString());
+    sessionStorage.setItem('metodoPago', JSON.stringify(this.metodoPagoSeleccionado));
+  }
+
 
   async ngOnInit() {
     try {
@@ -236,20 +246,17 @@ export class PagoCarritoComponent {
       this.toastr.warning('Por favor selecciona un método de pago para continuar','Método de pago requerido',{toastClass:'custom-toast'});
       return;
     }
-
+    sessionStorage.setItem('librosCarrito', JSON.stringify(this.librosCarrito));
+    sessionStorage.setItem('subtotal', this.subtotal.toString());
+    sessionStorage.setItem('shipping', this.shipping.toString());
+    sessionStorage.setItem('total', this.total.toString());
+    sessionStorage.setItem('metodoPago', JSON.stringify(this.metodoPagoSeleccionado));
     // Si hay método de pago seleccionado, continuamos con la navegación
-    this.router.navigate(['/confirmacion-pago'], {
-      state: {
-        librosCarrito: this.librosCarrito,
-        subtotal: this.subtotal,
-        shipping: this.shipping,
-        total: this.total,
-        metodoPago: this.metodoPagoSeleccionado
-      }
-    });
+    this.router.navigate(['/confirmacion-pago']);
   }
 
   volverAlCarrito() {
+    sessionStorage.clear();
     this.router.navigate(['/carrito']);
   }
 }

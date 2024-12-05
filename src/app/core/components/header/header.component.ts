@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 // import { NotificationService, UserNotification } from '../../services/notifications/notification.service';
 import Swal from 'sweetalert2';
 import { DatosService } from '../../services/users/datos.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-header',
@@ -33,7 +34,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   constructor(private router:Router,
     private SearchService: SearchService,
     private userService: UsersService,
-    private datos:DatosService
+    private datos:DatosService,
+    private toastr: ToastrService,
     //  private notificationService: NotificationService
     ) {
     document.addEventListener('click', (event) => {
@@ -124,10 +126,37 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.router.navigate(['catalogo']);
     // Aquí puedes implementar la lógica de búsqueda, por ejemplo, haciendo una llamada a una API.
   }
-  salir(){
-    this.datos.clean();
-    sessionStorage.clear();
-    this.router.navigate(['/login'])
+  salir() {
+    // Verificar si hay una sesión activa
+    const token = this.datos.getAuthToken();
+    const tipoUss = this.datos.getTipoUss();
+    if (token && tipoUss !== 'Anonimo') {
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: '¿Deseas cerrar la sesión?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, cerrar sesión',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Limpiar datos y sesión
+          this.datos.clean();
+          sessionStorage.clear();
+          
+          // Mostrar mensaje de éxito
+          this.toastr.success('¡Sesión cerrada!', 'Has cerrado sesión correctamente');
+          
+          // Redirigir al login
+          this.router.navigate(['/login']);
+        }
+      });
+    } else {
+      // Si no hay sesión activa, solo redirigir
+      this.router.navigate(['/login']);
+    }
   }
   openNotifications() {
     // Aquí va la lógica para manejar las notificaciones
@@ -135,6 +164,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   irAlCarrito(): void {
     this.router.navigate(['/carrito']);
   }
+  
   // toggleNotifications(event: Event) {
   //   event.stopPropagation();
   //   this.showNotifications = !this.showNotifications;

@@ -436,7 +436,7 @@ export class InformacionComponent {
         }
         mensajeHTML += `<p>¿Cuántos ejemplares deseas agregar?</p>`;
 
-        const { value: cantidadAgregar } = await Swal.fire({
+        let { value: cantidadAgregar } = await Swal.fire({
           title: 'Agregar al carrito',
           html: mensajeHTML,
           input: 'number',
@@ -466,6 +466,15 @@ export class InformacionComponent {
             return null;
           }
         });
+        let ll = false;
+        if((cantidadAgregar+libroEnCarrito.Cantidad) > cantidadDisponible){
+          cantidadAgregar = cantidadDisponible-libroEnCarrito.Cantidad;
+          if(cantidadAgregar <= 0){
+            this.toastr.info('Ya están todos los ejemplares disponibles en el carrito','',{toastClass:'custom-toast'});
+          }
+          ll = true;
+        }
+
         if (cantidadAgregar) {
           this.userService.agregarAlCarrito(
             parseInt(idUsuario),
@@ -473,7 +482,12 @@ export class InformacionComponent {
             parseInt(cantidadAgregar)
           ).subscribe({
             next: (response) => {
-              this.toastr.success('Libro(s) agregado(s) al carrito exitosamente','',{toastClass:'custom-toast'});
+              if(ll){
+                this.toastr.success('Se agregaron todos los ejemplares disponibles','',{toastClass:'custom-toast'});
+              }
+              else{
+                this.toastr.success('Libro(s) agregado(s) al carrito exitosamente','',{toastClass:'custom-toast'});
+              }
               this.userService.notificarActualizacionCarrito();
             },
             error: (error) => {
@@ -481,6 +495,7 @@ export class InformacionComponent {
               if (error.error?.message) {
                 mensaje = error.error.message;
               }
+              console.log(mensaje);
               this.toastr.error(mensaje,'',{toastClass:'custom-toast'});
             }
           });
