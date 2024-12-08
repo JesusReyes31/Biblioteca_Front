@@ -466,13 +466,16 @@ export class InformacionComponent {
             return null;
           }
         });
+        cantidadAgregar = parseInt(cantidadAgregar);
         let ll = false;
-        if((cantidadAgregar+libroEnCarrito.Cantidad) > cantidadDisponible){
-          cantidadAgregar = cantidadDisponible-libroEnCarrito.Cantidad;
-          if(cantidadAgregar <= 0){
-            this.toastr.info('Ya están todos los ejemplares disponibles en el carrito','',{toastClass:'custom-toast'});
+        if(libroEnCarrito){
+          if((cantidadAgregar+libroEnCarrito.Cantidad) > cantidadDisponible){
+            cantidadAgregar = cantidadDisponible-libroEnCarrito.Cantidad;
+            if(cantidadAgregar <= 0){
+              this.toastr.info('Ya están todos los ejemplares disponibles en el carrito','',{toastClass:'custom-toast'});
+            }
+            ll = true;
           }
-          ll = true;
         }
 
         if (cantidadAgregar) {
