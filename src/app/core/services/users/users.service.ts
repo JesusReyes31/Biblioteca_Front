@@ -77,6 +77,11 @@ export class UsersService {
     }
   }
 
+  getAllBooks(): Observable<any> {
+    const headers = new HttpHeaders({ 'authorization':`${this.datos.getAuthToken()}`,'Content-Type': 'application/json' });
+    return this.http.get<any>(`${this.apiUrl}books/get/all/books`,{headers});
+  }
+
   //Reservas
   getReservas(): Observable<any> {
     const token = this.datos.getAuthToken(); // Obtén el token del sessionStorage

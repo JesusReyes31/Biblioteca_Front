@@ -16,7 +16,6 @@ export class SearchService {
       cancelButtonText: 'Cancelar',
       confirmButtonColor: '#3598D9',
       cancelButtonColor: '#d33',
-      reverseButtons: true,
       preConfirm: (bookName) => {
         if (!bookName) {
           Swal.showValidationMessage('Debes escribir un valor válido');

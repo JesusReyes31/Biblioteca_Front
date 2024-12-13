@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Renderer2, ViewChild, OnDestroy } from '@angular/core';
 import { SidebarComponent } from '../../core/components/sidebar/sidebar.component';
 import { HeaderComponent } from '../../core/components/header/header.component';
 import { FooterComponent } from '../../core/components/footer/footer.component';
@@ -18,7 +18,7 @@ import { DatosService } from '../../core/services/users/datos.service';
   templateUrl: './cliente.component.html',
   styleUrls: ['cliente.component.css']
 })
-export class ClienteComponent {
+export class ClienteComponent implements OnDestroy {
   url:string = '';
   tipoUss:string = '';
   librosRecomendados: any[] = [];
@@ -40,6 +40,8 @@ export class ClienteComponent {
     Personal_Prestamo?: number;
     Libros?: number;
   } = {};
+  private routerSubscription: any;
+
   constructor(
     private footer: FooterService,
     private router: Router,
@@ -47,12 +49,41 @@ export class ClienteComponent {
     private datos:DatosService
   ) {
     // Suscribirse a cambios de ruta
-    this.router.events.subscribe((event) => {
+    this.routerSubscription = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.url = event.url;
+        // Reiniciar el componente cuando se navega a la ruta raíz
+        if (this.url === '/') {
+          this.reiniciarComponente();
+        }
       }
     });
   }
+
+  // Método para reiniciar el componente
+  private reiniciarComponente(): void {
+    if(!this.datos.getNombre()){
+      this.datos.setData({Nombre:'Anonimo',tipoUss:'Anonimo'})
+    }
+    
+    this.tipoUss = this.datos.getTipoUss() || 'Anonimo';
+    
+    if(this.tipoUss == 'Cliente' || this.tipoUss == 'Anonimo' || this.tipoUss == 'Prestamos' || this.tipoUss == 'Inventario'){
+      this.cargarLibrosRecomendados();
+    } else if (this.tipoUss == 'Admin Sucursal') {
+      this.cargarEstadisticas();
+    } else if (this.tipoUss == 'Admin') {
+      this.cargarEstadisticasAdmin();
+    }
+  }
+
+  // Importante: Limpiar la suscripción cuando el componente se destruye
+  ngOnDestroy(): void {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+  }
+
   ngOnInit(){
     if(!this.datos.getNombre()){
       this.datos.setData({Nombre:'Anonimo',tipoUss:'Anonimo'})

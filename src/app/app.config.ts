@@ -14,7 +14,8 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withFetch(),withInterceptors([loadingInterceptor])),
     provideAnimations(),
     provideToastr({
-      timeOut:3000, preventDuplicates:true
+      timeOut:3000, 
+      preventDuplicates:true
     }),
   ]
 };

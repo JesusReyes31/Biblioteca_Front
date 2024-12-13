@@ -10,11 +10,6 @@
           (click)="reporteSeleccionado = 'inventario'">
           General de Inventario
         </button>
-        <!-- <button 
-          [class.active]="reporteSeleccionado === 'libros-genero'"
-          (click)="reporteSeleccionado = 'libros-genero'">
-          Libros por Género
-        </button> -->
         <button 
           [class.active]="reporteSeleccionado === 'prestamos-usuario'"
           (click)="reporteSeleccionado = 'prestamos-usuario'">
@@ -29,6 +24,11 @@
 
       <div class="tab-group">
         <button 
+          [class.active]="reporteSeleccionado === 'prestamos-libros'"
+          (click)="reporteSeleccionado = 'prestamos-libros'">
+          Préstamos por Libro
+        </button>
+        <button 
           [class.active]="reporteSeleccionado === 'pendientes'"
           (click)="reporteSeleccionado = 'pendientes'">
           Pendientes de entrega
@@ -39,24 +39,6 @@
           Ventas Realizadas
         </button>
       </div>
-
-      <!-- <div class="tab-group">
-        <button 
-          [class.active]="reporteSeleccionado === 'todos'"
-          (click)="reporteSeleccionado = 'todos'">
-          Todos
-        </button>
-        <button 
-          [class.active]="reporteSeleccionado === 'personal'"
-          (click)="reporteSeleccionado = 'personal'">
-          Personal
-        </button>
-        <button 
-          [class.active]="reporteSeleccionado === 'clientes'"
-          (click)="reporteSeleccionado = 'clientes'">
-          Clientes
-        </button>
-      </div> -->
     </div>
 
     <!-- Formulario de fechas -->

@@ -7,7 +7,24 @@
       </div>
       <div class="campo">
         <label for="Titulo">Título</label>
-        <input id="Titulo" formControlName="Titulo" type="text" required />
+        <div class="autocomplete-container">
+          <input 
+            id="Titulo" 
+            formControlName="Titulo" 
+            type="text" 
+            required 
+            (blur)="showTitleSuggestions = false"
+          />
+          <div class="suggestions-list" *ngIf="showTitleSuggestions && filteredTitles.length > 0">
+            <div 
+              *ngFor="let title of filteredTitles" 
+              class="suggestion-item"
+              (mousedown)="selectExistingBook(title)"
+            >
+              {{ title }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   

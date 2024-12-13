@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { UsersService } from '../../../core/services/users/users.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -17,13 +18,15 @@ interface Sucursal {
 @Component({
   selector: 'app-sucursales',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './sucursales.component.html',
   styleUrl: './sucursales.component.css'
 })
 export class SucursalesComponent implements OnInit {
   sucursales: Sucursal[] = [];
+  sucursalesFiltradas: Sucursal[] = [];
   loading: boolean = true;
+  searchTerm: string = '';
 
   constructor(
     private usersService: UsersService,
@@ -39,6 +42,7 @@ export class SucursalesComponent implements OnInit {
     this.usersService.getSucursales().subscribe({
       next: (data) => {
         this.sucursales = data;
+        this.sucursalesFiltradas = data;
         this.loading = false;
       },
       error: (error) => {
@@ -47,5 +51,17 @@ export class SucursalesComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  filtrarSucursales(): void {
+    const termino = this.searchTerm.toLowerCase();
+    this.sucursalesFiltradas = this.sucursales.filter(sucursal => 
+      sucursal.Nombre.toLowerCase().includes(termino) ||
+      sucursal.Estado.toLowerCase().includes(termino) ||
+      sucursal.Municipio.toLowerCase().includes(termino) ||
+      sucursal.Colonia.toLowerCase().includes(termino) ||
+      sucursal.Calle.toLowerCase().includes(termino) ||
+      sucursal.CP.toString().includes(termino)
+    );
   }
 }

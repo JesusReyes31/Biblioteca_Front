@@ -7,7 +7,7 @@
     </div>
     
     <div class="image-buttons">
-      <input type="file" (change)="onFileSelected($event)" style="display: none" #fileInput>
+      <input type="file" (change)="onFileSelected($event)" style="display: none" #fileInput accept=".png,.jpg,.jpeg">
       <button class="btn-gray" (click)="fileInput.click()">Subir Imagen de Usuario</button>
       <button class="btn-gray" (click)="uploadImage()">Actualizar Imagen</button>
     </div>

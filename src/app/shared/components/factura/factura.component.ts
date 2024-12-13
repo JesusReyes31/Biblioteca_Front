@@ -63,6 +63,8 @@ export class FacturaComponent implements OnInit {
         this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(pdfUrl);
       },
       error: (error:any) => {
+        console.log(error.message);
+        console.log(error);
         this.toastr.error('No se pudo cargar la factura','',{toastClass:'custom-toast'});
         this.volver();
       }

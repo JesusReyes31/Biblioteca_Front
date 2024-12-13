@@ -19,6 +19,7 @@ export class InventarioComponent {
   generos: string[] = [];
   sucursales: any[] = [];
   books: any[] = [];
+  allbooks: any[] = [];
   filteredRecords: any[] = [];
   searchTerm: string = '';
   selectedBook: any = {};
@@ -30,6 +31,8 @@ export class InventarioComponent {
   endIndex = 0;
   paginatedRecords: any[] = [];
   isEditMode: boolean = false;
+  filteredTitles: string[] = [];
+  showTitleSuggestions: boolean = false;
 
   constructor(private fb: FormBuilder, 
     private userService: UsersService,
@@ -47,11 +50,14 @@ export class InventarioComponent {
       Cantidad: ['', Validators.required],
       Precio: ['', Validators.required],
       Resumen: ['', Validators.required],
-      Imagen: ['', Validators.required],
+      Imagen: [''],
       ImagenURL: [''],
       OtroGenero: ['']
     });
-    this.loadBooks();
+    // this.loadBooks();
+    this.bookForm.get('Titulo')?.valueChanges.subscribe(value => {
+      this.filterTitles(value);
+    });
   }
 
   ngOnInit(): void {
@@ -83,7 +89,7 @@ export class InventarioComponent {
       reader.onload = (e: any) => {
         this.bookForm.patchValue({
           ImagenURL: e.target.result,
-          Imagen: e.target.result
+          // Imagen: e.target.result
         });
       };
       reader.readAsDataURL(file);
@@ -153,6 +159,10 @@ export class InventarioComponent {
         this.books = data;
         this.filteredRecords = [...this.books];
         this.updatePaginatedRecords();
+        this.userService.getAllBooks().subscribe((data) => {
+          this.allbooks = data;
+          console.log(this.allbooks);
+        });
       },
       error: (err) => {
         console.error('Error al cargar los libros:', err);
@@ -310,5 +320,41 @@ export class InventarioComponent {
           this.toastr.error('Error al generar el resumen', '', {toastClass:'custom-toast'});
         });
     }
+  }
+
+  filterTitles(value: string) {
+    if (!value) {
+      this.filteredTitles = [];
+      this.showTitleSuggestions = false;
+      return;
+    }
+
+    const filterValue = value.toLowerCase();
+    this.filteredTitles = this.allbooks
+      .filter(book => book.Titulo.toLowerCase().includes(filterValue))
+      .map(book => book.Titulo);
+    this.showTitleSuggestions = true;
+  }
+
+  selectExistingBook(titulo: string) {
+    const selectedBook = this.allbooks.find(book => book.Titulo === titulo);
+    if (selectedBook) {
+      if (selectedBook.Imagen) {
+        this.bookForm.get('Imagen')?.clearValidators();
+        this.bookForm.get('Imagen')?.updateValueAndValidity();
+      }
+
+      this.bookForm.patchValue({
+        ID: selectedBook.ID,
+        Titulo: selectedBook.Titulo,
+        Autor: selectedBook.Autor,
+        Genero: selectedBook.Genero,
+        ISBN: selectedBook.ISBN,
+        Anio_publicacion: selectedBook.Anio_publicacion,
+        Resumen: selectedBook.Resumen,
+        ImagenURL: selectedBook.Imagen
+      });
+    }
+    this.showTitleSuggestions = false;
   }
 }

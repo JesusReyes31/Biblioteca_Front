@@ -1,13 +1,23 @@
 <div class="sucursales-container">
   <h1>Nuestras Sucursales</h1>
   
+  <div class="search-container">
+    <input 
+      type="text" 
+      [(ngModel)]="searchTerm"
+      (input)="filtrarSucursales()"
+      placeholder="Buscar por nombre, dirección, estado..."
+      class="search-input"
+    >
+  </div>
+
   <div *ngIf="loading" class="loading-spinner">
     <div class="spinner"></div>
     <p>Cargando sucursales...</p>
   </div>
 
   <div *ngIf="!loading" class="sucursales-grid">
-    <div *ngFor="let sucursal of sucursales" class="sucursal-card">
+    <div *ngFor="let sucursal of sucursalesFiltradas" class="sucursal-card">
       <div class="sucursal-header">
         <h2>{{ sucursal.Nombre }}</h2>
         <span class="badge">Sucursal {{ sucursal.ID }}</span>
