@@ -57,24 +57,32 @@ cd grafbackend
 npm run dev
 ```
 
+
 ### 🧪 Ejemplo de uso
-```bash
-1. Crear proyecto (si no existe ninguno).
-2. Al seleccionar el proyecto, se mostrarán los diagramas UML que se pueden hacer, al dar clic en cada uno se creará una versión automáticamente en la BD ( se pueden crear nuevas versiones de cada diagrama con el botón Nueva Version).
-3. Entrar a cada uno de los diagramas UML, editarlos y al finalizar cada uno, dar clic en Guardar (botón que se encuentra a un lado de Nueva Versión).
-    3.1 Diagrama de Casos de Uso. Crear el diagrama arrastrando actores y casos de uso (deben estar dentro de un área de sistema).
-    3.2 Diagrama de Secuencias. Editarlo añadiendo las líneas y acciones (las cuales se pueden conectar).
-    3.3 Diagrama de Paquetes. Editarlo añadiendo paquetes y nodos.
-    3.4 Diagrama de Componentes. Editarlo añadiendo componentes e interfaces (Requerida y ofrecida).
-    3.5 Diagrama de Clases. Editarlo añadiendo las clases, relaciones, atributos y métodos (esto 2 últimos se pueden editar dando clic al lapiz que está al lado del nombre de la clase).
-        3.5.1 Para crear relaciones de cualquier tipo se deben seleccionar las 2 clases que se quieren unir (primero la Clase padre y luego la clase hija).
-        3.5.2 Las relaciones que se crean generan un nuevo espacio en la edición de la clase llamado Relaciones el cual muestra todas las que tiene como clase hija para mapear y vincular los campos.
-        Cada una de las relaciones se tiene que mapear para vincular el campo de la clase padre a la clase hija, esto se hace seleccionando el campo (viene un select con todos los campos de la clase padre) el cual se va a vincular, luego se selecciona si el campo en la clase hija (la que se está editando) es nuevo (solo se pedirá el nombre del campo) o si ya existe (se tendrá que elegír en el select el campo con el cual se va a vincular) despues se activará el botón de Mapear campo, damos clic y ya está vinculado el campo de la clase padre en la clase hija.
-4. Ya que se editaron todos los diagramas, damos clic en el botón Generar Código (Se encuentra en la parte superior derecha).
-5. Seleccionamos las versiones de cada uno de los diagramas y damos clic en siguiente.
-6. Agregamos o seleccionamos las credenciales de conexion para el proyecto que se va a crear (Host, Usuario, Contraseña y Nombre de la BD, y el puerto donde se correrá el Backend)
-    6.1 En caso de que se cree la credencial al finalizar se da clic en Guardar y aparecerá seleccionada la credencial que se acaba de añadir.
-7. Se da clic en Generar y se espera a que se procese en instale todo.
-8. Ya que se temrine todo y se muestre que el proyecto se generó con éxito, el proyecto creado lo vamos a encontrar en C:\Users\[TuNombreDeUsuario]\Proyectos\Nombre_Proyecto
-      
-```
+
+1. **Crear un proyecto** (si no existe ninguno).
+2. **Seleccionar el proyecto**. Se mostrarán los diagramas UML disponibles. Al dar clic en uno, se crea una versión automáticamente en la BD. Puedes crear nuevas versiones con el botón **"Nueva Versión"**.
+3. **Editar los diagramas UML**. Entra a cada uno, edítalo, y haz clic en **Guardar** cuando termines:
+   - **3.1 Diagrama de Casos de Uso**: Arrastra actores y casos de uso (dentro del área de sistema).
+   - **3.2 Diagrama de Secuencias**: Añade líneas y acciones (pueden conectarse).
+   - **3.3 Diagrama de Paquetes**: Añade paquetes y nodos.
+   - **3.4 Diagrama de Componentes**: Añade componentes e interfaces (Requerida y Ofrecida).
+   - **3.5 Diagrama de Clases**:
+     - Añade clases, relaciones, atributos y métodos. Usa el ícono de lápiz para editar atributos/métodos.
+     - **Relaciones entre clases**:
+       - Selecciona dos clases (padre e hija).
+       - Se mostrará un apartado “Relaciones” donde podrás vincular campos.
+       - Selecciona un campo de la clase padre, luego:
+         - Si el campo de la clase hija **no existe**, se te pedirá nombrarlo.
+         - Si **ya existe**, selecciónalo en el desplegable.
+       - Haz clic en **"Mapear campo"** para completar la relación.
+4. Una vez editados todos los diagramas, haz clic en **Generar Código** (parte superior derecha).
+5. Selecciona las versiones de los diagramas y da clic en **Siguiente**.
+6. **Agregar credenciales de conexión** para el proyecto (Host, Usuario, Contraseña, Nombre de la BD, Puerto).
+   - Si se crea una nueva, al guardar aparecerá seleccionada automáticamente.
+7. Haz clic en **Generar** y espera a que se instale todo.
+8. Una vez finalizado y con éxito, encontrarás el proyecto generado en:
+
+   ```
+   C:\Users\[TuNombreDeUsuario]\Proyectos\Nombre_Proyecto
+   ```
